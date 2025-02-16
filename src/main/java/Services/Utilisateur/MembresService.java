@@ -1,7 +1,7 @@
-package Services;
+package Services.Utilisateur;
 
-import Models.Membres;
-import utils.Mydatasource;
+import Models.Utilisateur.Utilisateurs;
+import Utils.Mydatasource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,12 +10,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MembresService implements Imembres<Membres> {
+public class MembresService implements Imembres<Utilisateurs> {
 
     Connection connection = Mydatasource.getInstance().getConnection();
 
     @Override
-    public void AjouterMem(Membres membre) {
+    public void AjouterMem(Utilisateurs membre) {
         String req = "INSERT INTO Membres (Nom, Prénom, Email, CIN, Adresse, NumTel) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
@@ -36,7 +36,7 @@ public class MembresService implements Imembres<Membres> {
     }
 
     @Override
-    public void ModifierMem(Membres membre) {
+    public void ModifierMem(Utilisateurs membre) {
         String req = "UPDATE Membres SET Nom = ?, Prénom = ?, Email = ?, CIN = ?, Adresse = ?, NumTel = ? WHERE Id = ?";
 
         try {
@@ -62,7 +62,7 @@ public class MembresService implements Imembres<Membres> {
     }
 
     @Override
-    public void SupprimerMem(Membres membre) {
+    public void SupprimerMem(Utilisateurs membre) {
         String req = "DELETE FROM Membres WHERE Id = ?";
 
         try {
@@ -82,16 +82,16 @@ public class MembresService implements Imembres<Membres> {
     }
 
     @Override
-    public List<Membres> RechercherMem() {
+    public List<Utilisateurs> RechercherMem() {
         String req = "SELECT * FROM Membres";
-        List<Membres> membres = new ArrayList<>();
+        List<Utilisateurs> membres = new ArrayList<>();
 
         try {
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(req);
 
             while (rs.next()) {
-                Membres m = new Membres();
+                Utilisateurs m = new Utilisateurs();
                 m.setId(rs.getInt("Id"));
                 m.setNom(rs.getString("Nom"));
                 m.setPrenom(rs.getString("Prénom"));
@@ -111,9 +111,9 @@ public class MembresService implements Imembres<Membres> {
     }
 
     // Méthode optionnelle pour rechercher un membre par ID
-    public Membres rechercherMem(int id) {
+    public Utilisateurs rechercherMem(int id) {
         String req = "SELECT * FROM Membres WHERE Id = ?";
-        Membres membre = null;
+        Utilisateurs membre = null;
 
         try {
             PreparedStatement ps = connection.prepareStatement(req);
@@ -121,7 +121,7 @@ public class MembresService implements Imembres<Membres> {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                membre = new Membres();
+                membre = new Utilisateurs();
                 membre.setId(rs.getInt("Id"));
                 membre.setNom(rs.getString("Nom"));
                 membre.setPrenom(rs.getString("Prénom"));

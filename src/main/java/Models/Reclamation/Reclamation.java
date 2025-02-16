@@ -1,4 +1,4 @@
-package Models;
+package Models.Reclamation;
 
 public class Reclamation {
 

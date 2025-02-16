@@ -1,8 +1,8 @@
-package Services;
+package Services.Reclamation.Crud;
 
-import Models.Reclamation;
-import Services.Ireclamation;
-import utils.Mydatasource;
+import Models.Reclamation.Reclamation;
+import Services.Reclamation.Interface.Ireclamation;
+import Utils.Mydatasource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,18 +13,20 @@ import java.util.List;
 
 public class ReclamationService implements Ireclamation<Reclamation> {
 
-    Connection connection = Mydatasource.getInstance().getConnection();
+    private Connection connection;
+
+    public ReclamationService() {
+        this.connection = Mydatasource.getInstance().getConnection();
+    }
 
     @Override
     public void AjouterRec(Reclamation reclamation) {
-        String req = "INSERT INTO Reclamation (id, idUser, titre, description) VALUES (?, ?, ?, ?)";
+        String req = "INSERT INTO Reclamation (idUser, titre, description) VALUES (?, ?, ?)";
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(req);
-            ps.setInt(1, reclamation.getId()); // id
-            ps.setInt(2, reclamation.getIdUser()); // idUser
-            ps.setString(3, reclamation.getTitre()); // titre
-            ps.setString(4, reclamation.getDescription()); // description
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, reclamation.getIdUser()); // idUser
+            ps.setString(2, reclamation.getTitre()); // titre
+            ps.setString(3, reclamation.getDescription()); // description
 
             ps.executeUpdate();
             System.out.println("Réclamation ajoutée avec succès !");
@@ -36,13 +38,12 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
     @Override
     public void ModifierRec(Reclamation reclamation) {
-        String req = "UPDATE Reclamation SET id = ?, idUser = ?, titre = ?, description = ? WHERE 1";
-        try {
-            PreparedStatement ps = connection.prepareStatement(req);
-            ps.setInt(1, reclamation.getId());
-            ps.setInt(2, reclamation.getIdUser());
-            ps.setString(3, reclamation.getTitre());
-            ps.setString(4, reclamation.getDescription());
+        String req = "UPDATE Reclamation SET idUser = ?, titre = ?, description = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, reclamation.getIdUser());
+            ps.setString(2, reclamation.getTitre());
+            ps.setString(3, reclamation.getDescription());
+            ps.setInt(4, reclamation.getId());
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
@@ -58,12 +59,12 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
     @Override
     public void SupprimerRec(Reclamation reclamation) {
-        String req = "DELETE FROM Reclamation WHERE 0";
+        String req = "DELETE FROM Reclamation WHERE id = ?";
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(req);
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, reclamation.getId());
+
             int rowsDeleted = ps.executeUpdate();
-
             if (rowsDeleted > 0) {
                 System.out.println("Réclamation supprimée avec succès !");
             } else {
@@ -83,9 +84,8 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                 "JOIN Membres m ON r.idUser = m.Id";
         List<Reclamation> reclamations = new ArrayList<>();
 
-        try {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(req);
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(req)) {
 
             while (rs.next()) {
                 Reclamation r = new Reclamation();

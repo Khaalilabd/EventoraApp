@@ -8,10 +8,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class MainFX extends Application {
+public class FXMain extends Application {
     @Override
     public void start(Stage stage)  {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterPersonne.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterRec.fxml"));
         try {
             Parent root = loader.load();
 

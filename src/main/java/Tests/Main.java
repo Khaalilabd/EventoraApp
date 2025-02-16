@@ -1,10 +1,10 @@
 package Tests;
 
-import Models.Membres;
-import Services.MembresService;
-import Services.Ireclamation;
-import Services.ReclamationService;
-import Models.Reclamation;
+import Models.Utilisateur.Utilisateurs;
+import Services.Utilisateur.MembresService;
+import Services.Reclamation.Interface.Ireclamation;
+import Services.Reclamation.Crud.ReclamationService;
+import Models.Reclamation.Reclamation;
 import java.util.List;
 import java.util.Scanner;
 
@@ -45,7 +45,7 @@ public class Main {
                     String adresse = scanner.nextLine();
                     System.out.print("Entrez le numéro de téléphone du membre: ");
                     String numTel = scanner.nextLine();
-                    Membres nouveauMembre = new Membres(nom, prenom, email, cin, adresse, numTel);
+                    Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel);
                     membresService.AjouterMem(nouveauMembre);
                     break;
 
@@ -56,7 +56,7 @@ public class Main {
                     scanner.nextLine();
                     System.out.print("Entrez la nouvelle adresse du membre: ");
                     String newAdresse = scanner.nextLine();
-                    Membres membreModifie = new Membres();
+                    Utilisateurs membreModifie = new Utilisateurs();
                     membreModifie.setId(idMemMod);
                     membreModifie.setAdresse(newAdresse);
                     membresService.ModifierMem(membreModifie);
@@ -67,15 +67,15 @@ public class Main {
                     System.out.print("Entrez l'ID du membre à supprimer: ");
                     int idMemSupp = scanner.nextInt();
                     scanner.nextLine();
-                    Membres membreASupprimer = new Membres();
+                    Utilisateurs membreASupprimer = new Utilisateurs();
                     membreASupprimer.setId(idMemSupp);
                     membresService.SupprimerMem(membreASupprimer);
                     break;
 
                 case 4:
                     // Afficher tous les membres
-                    List<Membres> membres = membresService.RechercherMem();
-                    for (Membres m : membres) {
+                    List<Utilisateurs> membres = membresService.RechercherMem();
+                    for (Utilisateurs m : membres) {
                         System.out.println(m);
                     }
                     break;

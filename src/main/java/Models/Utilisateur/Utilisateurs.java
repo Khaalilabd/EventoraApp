@@ -1,6 +1,6 @@
-package Models;
+package Models.Utilisateur;
 
-public class Membres {
+public class Utilisateurs {
     private int id;
     private String nom;
     private String prenom;
@@ -9,7 +9,7 @@ public class Membres {
     private String adresse;
     private String numTel;
 
-    public Membres(String nom, String prenom, String cin, String email, String adresse, String numTel) {
+    public Utilisateurs(String nom, String prenom, String cin, String email, String adresse, String numTel) {
         this.nom = nom;
         this.prenom = prenom;
         this.cin = cin;
@@ -18,7 +18,7 @@ public class Membres {
         this.numTel = numTel;
     }
 
-    public Membres() {
+    public Utilisateurs() {
         this.nom = nom;
         this.prenom = prenom;
         this.cin = cin;
@@ -27,7 +27,7 @@ public class Membres {
         this.numTel = numTel;
     }
 
-    public Membres(int id, String nom, String prenom, String cin, String email, String adresse, String numTel) {
+    public Utilisateurs(int id, String nom, String prenom, String cin, String email, String adresse, String numTel) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
