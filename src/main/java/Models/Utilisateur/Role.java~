@@ -1,0 +1,4 @@
+package Models.Utilisateur;
+
+public enum Role {
+}

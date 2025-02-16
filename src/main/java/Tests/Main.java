@@ -1,7 +1,5 @@
 package Tests;
 
-import Models.Utilisateur.Utilisateurs;
-import Services.Utilisateur.MembresService;
 import Services.Reclamation.Interface.Ireclamation;
 import Services.Reclamation.Crud.ReclamationService;
 import Models.Reclamation.Reclamation;
@@ -11,7 +9,6 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        MembresService membresService = new MembresService();
         Ireclamation<Reclamation> reclamationService = new ReclamationService();
         Scanner scanner = new Scanner(System.in);
         int choix;
@@ -33,52 +30,17 @@ public class Main {
 
             switch (choix) {
                 case 1:
-                    // Ajouter un membre
-                    System.out.print("Entrez le nom du membre: ");
-                    String nom = scanner.nextLine();
-                    System.out.print("Entrez le prénom du membre: ");
-                    String prenom = scanner.nextLine();
-                    System.out.print("Entrez l'email du membre: ");
-                    String email = scanner.nextLine();
-                    System.out.print("Entrez le CIN du membre: ");
-                    String cin = scanner.nextLine();
-                    System.out.print("Entrez l'adresse du membre: ");
-                    String adresse = scanner.nextLine();
-                    System.out.print("Entrez le numéro de téléphone du membre: ");
-                    String numTel = scanner.nextLine();
-                    Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel);
-                    membresService.AjouterMem(nouveauMembre);
-                    break;
+
 
                 case 2:
-                    // Modifier un membre
-                    System.out.print("Entrez l'ID du membre à modifier: ");
-                    int idMemMod = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.print("Entrez la nouvelle adresse du membre: ");
-                    String newAdresse = scanner.nextLine();
-                    Utilisateurs membreModifie = new Utilisateurs();
-                    membreModifie.setId(idMemMod);
-                    membreModifie.setAdresse(newAdresse);
-                    membresService.ModifierMem(membreModifie);
-                    break;
+
 
                 case 3:
-                    // Supprimer un membre
-                    System.out.print("Entrez l'ID du membre à supprimer: ");
-                    int idMemSupp = scanner.nextInt();
-                    scanner.nextLine();
-                    Utilisateurs membreASupprimer = new Utilisateurs();
-                    membreASupprimer.setId(idMemSupp);
-                    membresService.SupprimerMem(membreASupprimer);
+
                     break;
 
                 case 4:
-                    // Afficher tous les membres
-                    List<Utilisateurs> membres = membresService.RechercherMem();
-                    for (Utilisateurs m : membres) {
-                        System.out.println(m);
-                    }
+
                     break;
 
                 case 5:

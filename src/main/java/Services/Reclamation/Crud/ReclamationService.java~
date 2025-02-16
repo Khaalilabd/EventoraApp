@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ReclamationService implements Ireclamation<Reclamation> {
 
-    private final Connection connection;
+    private Connection connection;
 
     public ReclamationService() {
         this.connection = Mydatasource.getInstance().getConnection();
@@ -25,11 +25,11 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             ps.setInt(1, reclamation.getIdUser());
             ps.setString(2, reclamation.getTitre());
             ps.setString(3, reclamation.getDescription());
-            ps.setString(4, reclamation.getType().getLabel());
+            ps.setString(4, reclamation.getType().getLabel()); // Ajout du type
 
             ps.executeUpdate();
             System.out.println("Réclamation ajoutée avec succès !");
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Erreur lors de l'ajout de la réclamation : " + e.getMessage());
             e.printStackTrace();
         }
@@ -38,12 +38,11 @@ public class ReclamationService implements Ireclamation<Reclamation> {
     @Override
     public void ModifierRec(Reclamation reclamation) {
         String req = "UPDATE Reclamation SET idUser = ?, titre = ?, description = ?, type = ? WHERE id = ?";
-
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, reclamation.getIdUser());
             ps.setString(2, reclamation.getTitre());
             ps.setString(3, reclamation.getDescription());
-            ps.setString(4, reclamation.getType().getLabel());
+            ps.setString(4, reclamation.getType().getLabel()); // Mise à jour du type
             ps.setInt(5, reclamation.getId());
 
             int rowsUpdated = ps.executeUpdate();
@@ -52,7 +51,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             } else {
                 System.out.println("Aucune réclamation trouvée avec cet ID !");
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Erreur lors de la mise à jour de la réclamation : " + e.getMessage());
             e.printStackTrace();
         }
@@ -71,7 +70,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             } else {
                 System.out.println("Aucune réclamation trouvée avec cet ID !");
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Erreur lors de la suppression de la réclamation : " + e.getMessage());
             e.printStackTrace();
         }
@@ -91,15 +90,16 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                 r.setIdUser(rs.getInt("idUser"));
                 r.setTitre(rs.getString("Titre"));
                 r.setDescription(rs.getString("Description"));
-                r.setType(TypeReclamation.fromLabel(rs.getString("Type"))); // Conversion du label en TypeReclamation
+                r.setType(TypeReclamation.fromLabel(rs.getString("Type"))); // Conversion
 
                 reclamations.add(r);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Erreur lors de la récupération des réclamations : " + e.getMessage());
             e.printStackTrace();
         }
 
         return reclamations;
     }
+
 }

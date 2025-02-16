@@ -1,9 +1,9 @@
-/* Appliquer un style général */
+
+
 .root {
     -fx-font-family: "Arial";
 }
 
-/* Styles des titres */
 .title-label {
     -fx-font-size: 28px;
     -fx-font-weight: bold;
@@ -17,16 +17,11 @@
     -fx-padding: 5px;
 }
 
-/* Styles des boutons de navigation */
 .nav-button {
     -fx-background-color: #6D4C41;
     -fx-text-fill: white;
     -fx-padding: 10px 20px;
     -fx-border-radius: 5px;
-}
-
-.nav-button:hover {
-    -fx-background-color: #5D4037;
 }
 
 .nav-button-active {
@@ -36,16 +31,6 @@
     -fx-border-radius: 5px;
 }
 
-/* Styles des boutons spécifiques */
-.submit-button {
-    -fx-background-color: #5D4037;
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-padding: 12px 25px;
-    -fx-border-radius: 8px;
-}
-
 .star-button {
     -fx-background-color: transparent;
     -fx-font-size: 22px;
@@ -53,7 +38,6 @@
     -fx-border-color: transparent;
 }
 
-/* Styles des champs de texte */
 .text-area {
     -fx-border-color: #6D4C41;
     -fx-border-radius: 8px;
@@ -62,6 +46,14 @@
     -fx-min-height: 100px;
 }
 
+.submit-button {
+    -fx-background-color: #5D4037;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 12px 25px;
+    -fx-border-radius: 8px;
+}
 /* Applique un style général au TableView */
 .styled-table {
     -fx-background-color: #ffffff;
@@ -70,18 +62,17 @@
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 4);
 }
 
-/* Style des en-têtes de colonnes */
+/* Style des colonnes */
 .styled-table .column-header-background {
     -fx-background-color: linear-gradient(to bottom, #B39188, #8E6B63);
 }
 
 .styled-table .column-header {
     -fx-text-fill: white;
-    -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 
-/* Style des lignes du tableau */
+/* Style des cellules */
 .styled-table .table-row-cell {
     -fx-background-color: #FAF2EA;
     -fx-border-color: transparent;
@@ -95,42 +86,62 @@
 .styled-table .table-row-cell:hover {
     -fx-background-color: #FFAE9D;
     -fx-text-fill: white;
-    -fx-transition: background-color 0.3s ease-in-out;
-}
-
-/* Style de la ligne sélectionnée */
-.styled-table .table-row-cell:selected {
-    -fx-background-color: #FFAE9D;
-    -fx-text-fill: white;
 }
 
 /* Boutons Modifier et Supprimer */
-.button-modifier, .button-supprimer {
-    -fx-font-size: 14px;
-    -fx-padding: 5px 10px;
-    -fx-border-radius: 5px;
-    -fx-border-width: 1px;
-    -fx-border-style: solid;
-}
-
-/* Bouton Modifier */
 .button-modifier {
     -fx-background-color: #FFD700;
     -fx-text-fill: black;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
     -fx-border-color: #E6B800;
+}
+
+.button-supprimer {
+    -fx-background-color: #FF6347;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 10px;
+    -fx-border-radius: 5px;
+    -fx-border-color: #D42A1E;
 }
 
 .button-modifier:hover {
     -fx-background-color: #E6B800;
 }
 
-/* Bouton Supprimer */
-.button-supprimer {
-    -fx-background-color: #FF6347;
-    -fx-text-fill: white;
-    -fx-border-color: #D42A1E;
-}
-
 .button-supprimer:hover {
     -fx-background-color: #D42A1E;
 }
+/* Appliquer un style général */
+.styled-table {
+    -fx-background-color: white;
+    -fx-border-color: #B39188;
+    -fx-border-radius: 8px;
+    -fx-padding: 10px;
+    -fx-pref-width: 650px;
+}
+
+/* En-têtes du tableau */
+.styled-table .column-header {
+    -fx-background-color: #B39188;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* Lignes alternées */
+.styled-table .table-row-cell:odd {
+    -fx-background-color: #F7E6DC;
+}
+.styled-table .table-row-cell:even {
+    -fx-background-color: white;
+}
+
+/* Sélection d'une ligne */
+.styled-table .table-row-cell:selected {
+    -fx-background-color: #FFAE9D;
+    -fx-text-fill: white;
+}
+
