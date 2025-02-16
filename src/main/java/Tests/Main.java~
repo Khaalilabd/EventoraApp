@@ -5,7 +5,7 @@ import Services.Utilisateur.MembresService;
 import Services.Reclamation.Interface.Ireclamation;
 import Services.Reclamation.Crud.ReclamationService;
 import Models.Reclamation.Reclamation;
-import Models.Reclamation.TypeReclamation;
+import Models.Reclamation.Reclamation.TypeReclamation;
 import java.util.List;
 import java.util.Scanner;
 

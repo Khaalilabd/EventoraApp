@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+
+<AnchorPane prefHeight="600" prefWidth="900" style="-fx-background-color: #FAF2EA;"
+            xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Reclamation.Controllers.AjouterFeedback">
+
+    <!-- Barre de navigation latérale -->
+    <VBox alignment="TOP_CENTER" prefHeight="600" prefWidth="200" style="-fx-background-color: #8D6E63; -fx-padding: 20px;">
+        <Label style="-fx-font-size: 22px; -fx-text-fill: #FFFFFF; -fx-font-weight: bold; -fx-padding: 10px;" text="Menu" />
+        <VBox spacing="15">
+            <Button fx:id="btnHome" text="Home" styleClass="nav-button" />
+            <Button fx:id="btnSettings" text="Settings" styleClass="nav-button" />
+            <Button fx:id="btnFeedback" text="Feedback" styleClass="nav-button-active" />
+            <Button fx:id="btnServices" text="Services" styleClass="nav-button" />
+            <Button fx:id="btnPacks" text="Packs" styleClass="nav-button" />
+        </VBox>
+        <Pane minHeight="350" />
+        <Button fx:id="btnLogout" text="Déconnexion" styleClass="logout-button" />
+    </VBox>
+
+    <!-- Contenu principal -->
+    <VBox alignment="CENTER" layoutX="250" layoutY="50" prefHeight="500" prefWidth="600" spacing="20">
+        <Label text="Feedback Us" styleClass="title-label" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #4E342E; -fx-padding: 10px;"/>
+        <Label text="Share your experience with us" styleClass="subtitle-label" style="-fx-font-size: 18px; -fx-text-fill: #6D4C41; -fx-padding: 5px;"/>
+
+        <!-- Notation par étoiles -->
+        <HBox alignment="CENTER" spacing="10">
+            <JFXButton fx:id="star1" text="★" styleClass="star-button" />
+            <JFXButton fx:id="star2" text="★" styleClass="star-button" />
+            <JFXButton fx:id="star3" text="★" styleClass="star-button" />
+            <JFXButton fx:id="star4" text="★" styleClass="star-button" />
+            <JFXButton fx:id="star5" text="★" styleClass="star-button" />
+        </HBox>
+
+        <!-- Champ texte -->
+        <JFXTextArea fx:id="descField" promptText="Write your experience..." styleClass="text-area" style="-fx-border-color: #6D4C41; -fx-border-radius: 8px; -fx-padding: 10px; -fx-background-color: #FFFFFF; -fx-min-height: 100px;"/>
+
+        <!-- Recommandation -->
+        <JFXCheckBox fx:id="recommendCheck" text="Recommend Us to Others?" styleClass="checkbox"/>
+
+        <!-- Bouton Soumettre -->
+        <JFXButton fx:id="submitButton" text="Submit Now" styleClass="submit-button" style="-fx-background-color: #5D4037; -fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 12px 25px; -fx-border-radius: 8px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2); -fx-cursor: hand;"/>
+    </VBox>
+</AnchorPane>

@@ -2,16 +2,21 @@ package Models.Reclamation;
 
 public class Reclamation {
 
+    public enum TypeReclamation {
+        PACKS, SERVICE, PROBLEME_TECHNIQUE, PLAINTE_AGENT_CONTROLE, AUTRE
+    }
+
     private int id;
-    private int idUser;
+    private int idUser; // Clé étrangère vers la table Membres
     private String titre;
     private String description;
-    private TypeReclamation type;
+    private TypeReclamation type; // Ajout de l'attribut type
 
-    // Constructeurs
+    // Constructeur par défaut
     public Reclamation() {
     }
 
+    // Constructeur sans ID (pour l'ajout)
     public Reclamation(int idUser, String titre, String description, TypeReclamation type) {
         this.idUser = idUser;
         this.titre = titre;
@@ -19,6 +24,7 @@ public class Reclamation {
         this.type = type;
     }
 
+    // Constructeur avec ID (pour la mise à jour ou la récupération)
     public Reclamation(int id, int idUser, String titre, String description, TypeReclamation type) {
         this.id = id;
         this.idUser = idUser;
@@ -27,6 +33,7 @@ public class Reclamation {
         this.type = type;
     }
 
+    // Constructeur avec uniquement l'ID (pour la suppression ou la recherche)
     public Reclamation(int id) {
         this.id = id;
     }
@@ -80,7 +87,7 @@ public class Reclamation {
                 ", idUser=" + idUser +
                 ", titre='" + titre + '\'' +
                 ", description='" + description + '\'' +
-                ", type='" + type.getLabel() + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

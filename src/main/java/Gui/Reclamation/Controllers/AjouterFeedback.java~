@@ -1,0 +1,71 @@
+package Gui.Reclamation.Controllers;
+
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
+
+public class AjouterFeedback {
+
+    @FXML
+    private TextArea descField;
+
+    @FXML
+    private CheckBox happyCheckBox, goodCheckBox, averageCheckBox, badCheckBox;
+
+    @FXML
+    private CheckBox recommendCheckBox;
+
+    @FXML
+    private Button submitButton, cancelButton;
+
+    @FXML
+    private void initialize() {
+        submitButton.setOnAction(event -> handleSubmit());
+        cancelButton.setOnAction(event -> handleCancel());
+    }
+
+    private void handleSubmit() {
+        String feedbackText = descField.getText().trim();
+        boolean recommend = recommendCheckBox.isSelected();
+
+        // Vérifier si une expérience a été cochée
+        String experience = "";
+        if (happyCheckBox.isSelected()) experience += "Happy ";
+        if (goodCheckBox.isSelected()) experience += "Good ";
+        if (averageCheckBox.isSelected()) experience += "Average ";
+        if (badCheckBox.isSelected()) experience += "Bad ";
+
+        if (experience.isEmpty()) {
+            showAlert("Error", "Please select an experience.");
+            return;
+        }
+
+        if (feedbackText.isEmpty()) {
+            showAlert("Error", "Please enter your experience.");
+            return;
+        }
+
+        // Affichage des résultats (peut être enregistré en BDD)
+        System.out.println("Feedback: " + feedbackText);
+        System.out.println("Experience: " + experience.trim());
+        System.out.println("Recommend: " + recommend);
+
+        showAlert("Success", "Thank you for your feedback!");
+    }
+
+    private void handleCancel() {
+        descField.clear();
+        happyCheckBox.setSelected(false);
+        goodCheckBox.setSelected(false);
+        averageCheckBox.setSelected(false);
+        badCheckBox.setSelected(false);
+        recommendCheckBox.setSelected(false);
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}

@@ -1,17 +1,18 @@
 package Gui.Reclamation.Controllers;
 
 import Models.Reclamation.Reclamation;
+import Models.Reclamation.TypeReclamation;
 import Services.Reclamation.Crud.ReclamationService;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 public class AjouterRec {
 
     @FXML
     private TextField titleField;
+
+    @FXML
+    private ComboBox<TypeReclamation> typeField; // ComboBox pour le type
 
     @FXML
     private TextArea descField;
@@ -22,54 +23,48 @@ public class AjouterRec {
     @FXML
     private Button cancelButton;
 
-    private ReclamationService reclamationService = new ReclamationService();
+    private final ReclamationService reclamationService = new ReclamationService();
 
     @FXML
     public void initialize() {
-        // Initialisation des actions des boutons
-        submitButton.setOnAction(event -> handleSubmit());
-        cancelButton.setOnAction(event -> handleCancel());
+        // Remplir la ComboBox avec les valeurs de l'Enum TypeReclamation
+        typeField.getItems().setAll(TypeReclamation.values());
+
+        submitButton.setOnAction(event -> ajouterReclamation());
+        cancelButton.setOnAction(event -> annuler());
     }
 
-    private void handleSubmit() {
-        String title = titleField.getText();
+    private void ajouterReclamation() {
+        String titre = titleField.getText();
         String description = descField.getText();
+        TypeReclamation type = typeField.getValue();
 
-        // Vérification que les champs ne sont pas vides
-        if (title.isEmpty() || description.isEmpty()) {
-            showAlert(Alert.AlertType.WARNING, "Champs vides", "Veuillez remplir tous les champs.");
+        if (titre.isEmpty() || description.isEmpty() || type == null) {
+            showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
 
-        // Créer un objet Reclamation
-        Reclamation reclamation = new Reclamation();
-        reclamation.setTitre(title);
-        reclamation.setDescription(description);
-        reclamation.setIdUser(2); // idUser par défaut (à remplacer par l'ID de l'utilisateur connecté)
-
-        // Ajouter la réclamation via le service
+        Reclamation reclamation = new Reclamation(1, titre, description, type); // Remplace "1" par l'ID utilisateur réel
         reclamationService.AjouterRec(reclamation);
-
-        // Afficher une alerte de succès
-        showAlert(Alert.AlertType.INFORMATION, "Succès", "Réclamation ajoutée avec succès !");
-
-        // Réinitialisation des champs après soumission
-        titleField.clear();
-        descField.clear();
+        showAlert("Succès", "Réclamation ajoutée avec succès !");
+        clearFields();
     }
 
-    private void handleCancel() {
-        // Réinitialisation des champs en cas d'annulation
-        titleField.clear();
-        descField.clear();
-        System.out.println("Opération annulée.");
+    private void annuler() {
+        clearFields();
     }
 
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
+    private void clearFields() {
+        titleField.clear();
+        descField.clear();
+        typeField.setValue(null);
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
-        alert.setHeaderText(null); // Pas de texte d'en-tête
-        alert.setContentText(message);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
         alert.showAndWait();
     }
 }
