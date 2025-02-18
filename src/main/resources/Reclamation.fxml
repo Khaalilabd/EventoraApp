@@ -93,13 +93,16 @@
                text="Vous avez rencontré un problème ou vous voulez poser une Réclamation ?\nPas de panique, Eventora vous propose tout un système de réclamation." />
 
         <!-- Bouton Ajouter centré -->
-        <Button text="Ajouter"
+        <Button fx:id="ajouterButton"
+                text="Ajouter"
                 style="-fx-background-color: #1ABC9C;
-                       -fx-text-fill: white;
-                       -fx-font-size: 16px;
-                       -fx-padding: 10 20;
-                       -fx-border-radius: 10;
-                       -fx-background-radius: 10;"/>
+               -fx-text-fill: white;
+               -fx-font-size: 16px;
+               -fx-padding: 10 20;
+               -fx-border-radius: 10;
+               -fx-background-radius: 10;"
+                onAction="#handleAddAction" /> <!-- Ajouter cette ligne -->
+
     </VBox>
 
 </AnchorPane>
