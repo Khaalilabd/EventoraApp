@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<AnchorPane prefHeight="687.0" prefWidth="1022.0" style="-fx-background-color: #F2F2F2;"
+            stylesheets="style.css" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Utilisateurs.Controllers.AfficherUtilisateur">
+    <HBox prefHeight="687.0" prefWidth="1022.0" spacing="0">
+        <VBox prefHeight="687.0" prefWidth="220" styleClass="menu-vbox" alignment="TOP_CENTER">
+            <ImageView fitHeight="100" fitWidth="100" preserveRatio="true">
+                <image>
+                    <Image url="@/Images/EVENTORA.png"/>
+                </image>
+            </ImageView>
+
+            <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu"/>
+
+            <VBox spacing="10">
+                <Button text="🏠 Accueil" styleClass="menu-button"/>
+                <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
+                <Button text="📲 Réservation" styleClass="menu-button"/>
+                <Button text="🎁 Services" styleClass="menu-button"/>
+                <Button text="⭐ FeedBack" styleClass="menu-button"/>
+                <Button styleClass="menu-button" text="🚨 Réclamations"/>
+                <Button text="🔧 Paramètres" styleClass="menu-button"/>
+                <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+            </VBox>
+        </VBox>
+
+        <VBox alignment="CENTER" layoutX="240" layoutY="50" prefHeight="687.0" prefWidth="802.0" spacing="20"
+              styleClass="main-content">
+            <Label text="Liste des Utilisateurs" styleClass="title-label"/>
+
+            <TableView fx:id="tableView" prefHeight="500.0" prefWidth="762.0">
+                <columns>
+                    <TableColumn fx:id="colId" prefWidth="100.0" text="ID"/>
+                    <TableColumn fx:id="colNom" prefWidth="150.0" text="Nom"/>
+                    <TableColumn fx:id="colPrenom" prefWidth="150.0" text="Prénom"/>
+                    <TableColumn fx:id="colEmail" prefWidth="200.0" text="Email"/>
+                    <TableColumn fx:id="colCin" prefWidth="150.0" text="CIN"/>
+                    <TableColumn fx:id="colAdresse" prefWidth="200.0" text="Adresse"/>
+                    <TableColumn fx:id="colNumTel" prefWidth="150.0" text="Numéro de téléphone"/>
+                    <TableColumn fx:id="colRole" prefWidth="100.0" text="Rôle"/>
+                </columns>
+            </TableView>
+            <HBox alignment="CENTER">
+                <Button fx:id="supprimerButton" text="Supprimer" onAction="#supprimerUtilisateur" styleClass="action-button cancel-button"/>
+            </HBox>
+        </VBox>
+    </HBox>
+</AnchorPane>

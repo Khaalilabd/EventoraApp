@@ -1,6 +1,7 @@
 package Tests;
 
 import Models.Utilisateur.Utilisateurs;
+import Models.Utilisateur.Role;
 import Services.Utilisateur.MembresService;
 import Services.Reclamation.Interface.Ireclamation;
 import Services.Reclamation.Crud.ReclamationService;
@@ -28,7 +29,7 @@ public class Main {
             System.out.println("0. Quitter");
             System.out.print("Choisissez une option: ");
             choix = scanner.nextInt();
-            scanner.nextLine(); // Pour consommer la nouvelle ligne après nextInt()
+            scanner.nextLine(); // Pour éviter les erreurs de lecture
 
             switch (choix) {
                 case 1:
@@ -45,7 +46,31 @@ public class Main {
                     String adresse = scanner.nextLine();
                     System.out.print("Entrez le numéro de téléphone du membre: ");
                     String numTel = scanner.nextLine();
-                    Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel);
+
+                    // Demander le rôle
+                    System.out.println("Choisissez un rôle: 1- ADMIN, 2- AGENT, 3- MEMBRE");
+                    int choixRole = scanner.nextInt();
+                    scanner.nextLine(); // Consommer la ligne restante après nextInt()
+
+                    Role role;
+                    switch (choixRole) {
+                        case 1:
+                            role = Role.ADMIN;
+                            break;
+                        case 2:
+                            role = Role.AGENT;
+                            break;
+                        case 3:
+                            role = Role.MEMBRE;
+                            break;
+                        default:
+                            System.out.println("Choix invalide. Le rôle par défaut sera MEMBRE.");
+                            role = Role.MEMBRE;
+                            break;
+                    }
+
+                    // Créer et ajouter l'utilisateur
+                    Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel, role);
                     membresService.AjouterMem(nouveauMembre);
                     break;
 

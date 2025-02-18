@@ -8,26 +8,22 @@ public class Utilisateurs {
     private String email;
     private String adresse;
     private String numTel;
+    private Role role;
 
-    public Utilisateurs(String nom, String prenom, String cin, String email, String adresse, String numTel) {
+    public Utilisateurs(String nom, String prenom, String cin, String email, String adresse, String numTel, Role role) {
         this.nom = nom;
         this.prenom = prenom;
         this.cin = cin;
         this.email = email;
         this.adresse = adresse;
         this.numTel = numTel;
+        this.role = this.role;
     }
 
     public Utilisateurs() {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.cin = cin;
-        this.email = email;
-        this.adresse = adresse;
-        this.numTel = numTel;
     }
 
-    public Utilisateurs(int id, String nom, String prenom, String cin, String email, String adresse, String numTel) {
+    public Utilisateurs(int id, String nom, String prenom, String cin, String email, String adresse, String numTel, Role role) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -35,6 +31,7 @@ public class Utilisateurs {
         this.email = email;
         this.adresse = adresse;
         this.numTel = numTel;
+        this.role = role;
     }
 
     public int getId() {
@@ -93,6 +90,14 @@ public class Utilisateurs {
         this.numTel = numTel;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public String toString() {
         return "Membre{" +
@@ -103,6 +108,7 @@ public class Utilisateurs {
                 ", email='" + email + '\'' +
                 ", adresse='" + adresse + '\'' +
                 ", numTel='" + numTel + '\'' +
+                ", role=" + role +
                 '}';
     }
 }
