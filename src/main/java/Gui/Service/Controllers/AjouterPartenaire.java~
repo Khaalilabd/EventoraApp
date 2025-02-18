@@ -119,7 +119,7 @@ public class AjouterPartenaire {
 
     public void gotoAfficherPartenaire(ActionEvent event) {
         try{
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherPartenaire.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("AfficherPartenaire.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));

@@ -85,7 +85,7 @@ public class AjouterService {
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            System.out.println("Erreur lors du chargement de la page d'affichage des services : " + e.getMessage());
+            System.out.println("Erreur lors du chargement de la page d'affichage des réclamations : " + e.getMessage());
             e.printStackTrace();
         }
     }

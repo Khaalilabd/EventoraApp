@@ -39,7 +39,7 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
 
     @Override
     public void ModifierPartenaire(Partenaire partenaire) {
-        String req = "UPDATE `sponsors` SET `nom_sponsors`=?,`email_sponsors`=?,`telephone_sponsors`=?,`adresse_sponsors`=?,`site_web`=?,`montant_sponsors`=?,`type_sponsors`=? WHERE `id_sponsors`=?";
+        String req = "UPDATE `sponsors` SET ,`nom_sponsors`=?,`email_sponsors`=?,`telephone_sponsors`=?,`adresse_sponsors`=?,`site_web`=?,`montant_sponsors`=?,`type_sponsors`=? WHERE `id_sponsors`=?";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, partenaire.getNom_sponsors());

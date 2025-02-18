@@ -94,7 +94,7 @@ public class ModifierService {
         // Appel à la méthode ModifierRec du service
         serviceService.ModifierService(serviceToEdit);
 
-        showAlert("Succès", "Réclamation modifiée avec succès !");
+        showAlert("Succès", "Le service a bis modifiée avec succès !");
         clearFields();
         goToAfficherService(event);
     }
@@ -126,7 +126,7 @@ public class ModifierService {
 
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -136,7 +136,7 @@ public class ModifierService {
 
     private void goToAfficherService(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheService.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherService.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

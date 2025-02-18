@@ -62,13 +62,10 @@
                 <TableColumn fx:id="locationColumn" prefWidth="120" text="Location" />
                 <TableColumn fx:id="sponsorColumn" prefWidth="120" text="Sponsor" />
                 <TableColumn fx:id="descriptionColumn" prefWidth="200" text="Description" />
-
                 <TableColumn fx:id="prixColumn" prefWidth="80" text="Prix" />
-                <!-- Add the colActions column here -->
-                <TableColumn fx:id="colActions" prefWidth="120" text="Actions"/>
+
             </columns>
         </TableView>
-
 
     </VBox>
 

@@ -47,7 +47,6 @@ public class Service {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        // Charger l'interface Reclamation.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);

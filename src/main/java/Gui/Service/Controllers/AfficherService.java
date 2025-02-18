@@ -47,6 +47,7 @@ public class AfficherService {
     private final ServiceService serviceService;
 
     public AfficherService() {
+
         this.serviceService = new ServiceService();
     }
 
@@ -114,7 +115,7 @@ public class AfficherService {
 
     private void handleEdit(Service service) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierRec.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierService.fxml"));
             AnchorPane modifRecLayout = loader.load();
 
             ModifierService controller = loader.getController();
@@ -162,7 +163,7 @@ public class AfficherService {
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         // Charger l'interface Reclamation.fxml
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

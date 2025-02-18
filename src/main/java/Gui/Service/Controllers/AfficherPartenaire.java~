@@ -1,6 +1,5 @@
 package Gui.Service.Controllers;
-
-import Services.Service.Crud.ServiceService;
+import Services.Service.Crud.PartenaireService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -14,57 +13,58 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import Models.Service.Service;
+import Models.Service.Partenaire;
 import java.io.IOException;
 import java.util.List;
-
-public class AfficherService {
+public class AfficherPartenaire {
+    @FXML
+    private TableView<Partenaire> tableView;
 
     @FXML
-    private TableView<Service> tableView;
+    private TableColumn<Partenaire, Integer> idColumn;
 
     @FXML
-    private TableColumn<Service, Integer> idColumn;
+    private TableColumn<Partenaire, String> nomColumn;
 
     @FXML
-    private TableColumn<Service, String> titleColumn;
+    private TableColumn<Partenaire, String> emailColumn;
 
     @FXML
-    private TableColumn<Service, String> locationColumn;
+    private TableColumn<Partenaire, String> adresseColumn;
 
     @FXML
-    private TableColumn<Service, String> sponsorColumn;
+    private TableColumn<Partenaire, String> site_webColumn;
 
     @FXML
-    private TableColumn<Service, String> descriptionColumn;
+    private TableColumn<Partenaire, String> montantColumn;
 
     @FXML
-    private TableColumn<Service, String> prixColumn;
+    private TableColumn<Partenaire, String> typeColumn;
 
     @FXML
-    private TableColumn<Service, String> colActions;
+    private TableColumn<Partenaire, String> colActions;
 
-    private final ServiceService serviceService;
+    private final PartenaireService partenaireService ;
 
-    public AfficherService() {
-        this.serviceService = new ServiceService();
+    public AfficherPartenaire() {
+        this.partenaireService = new PartenaireService();
     }
 
-    @FXML
     public void initialize() {
-        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
-        titleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitre()));
-        locationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocation().getLabel()));
-        sponsorColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSponsors().getLabel()));
-        descriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
-        prixColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrix()));
+        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId_sponsors()).asObject());
+        nomColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNom_sponsors()));
+        emailColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail_sponsors()));
+        adresseColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAdresse_sponsors()));
+        site_webColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSite_web()));
+        montantColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMontant_sponsors()));
+        typeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType_sponsors().getLabel()));
         addActionsColumn();
-        loadServices();
+        loadPartenaires();
     }
 
-    private void loadServices() {
-        List<Service> services = serviceService.RechercherService();
-        tableView.getItems().setAll(services);
+    private void loadPartenaires() {
+        List<Partenaire> partenaires = partenaireService.RechercherPartenaire();
+        tableView.getItems().setAll(partenaires);
     }
 
     private void addActionsColumn() {
@@ -75,8 +75,8 @@ public class AfficherService {
 
             {
                 // Chargement des icônes dans les boutons
-                Image editIcon = new Image(getClass().getResourceAsStream("resources/Images/modif.png"));
-                Image deleteIcon = new Image(getClass().getResourceAsStream("resources/Images/supp.png"));
+                Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
+                Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
 
                 // Icônes pour les boutons
                 ImageView editImageView = new ImageView(editIcon);
@@ -112,13 +112,13 @@ public class AfficherService {
         });
     }
 
-    private void handleEdit(Service service) {
+    private void handleEdit(Partenaire partenaire) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierRec.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierPartenaire.fxml"));
             AnchorPane modifRecLayout = loader.load();
 
-            ModifierService controller = loader.getController();
-            controller.setServiceToEdit(service);
+            ModifierPartenaire controller = loader.getController();
+            controller.setPartenaireToEdit(partenaire);
 
             Scene currentScene = tableView.getScene();
             currentScene.setRoot(modifRecLayout);
@@ -127,32 +127,32 @@ public class AfficherService {
         }
     }
 
-    private void handleDelete(Service service) {
-        System.out.println("Supprimer le service avec ID : " + service.getId());
-        serviceService.SupprimerService(service);
-        loadServices();  // Recharger la liste des services après suppression
+    private void handleDelete(Partenaire partenaire) {
+        System.out.println("Supprimer le partenaire avec ID : " + partenaire.getId_sponsors());
+        partenaireService.SupprimerPartenaire(partenaire);
+        loadPartenaires();
     }
 
     @FXML
-    private void addService() throws IOException {
+    private void addPartenaire() throws IOException {
         // Charger l'interface AjouterService.fxml
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterService.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterPartenaire.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = new Stage();
         stage.setScene(scene);
-        stage.setTitle("Ajouter un service");
+        stage.setTitle("Ajouter un partenaire");
         stage.show();
     }
 
     @FXML
     private void refreshList() {
-        loadServices(); // Recharger les services
+        loadPartenaires();
     }
 
     @FXML
-    private void tableRowFactory(TableView<Service> tableView) {
+    private void tableRowFactory(TableView<Partenaire> tableView) {
         tableView.setRowFactory(tv -> {
-            TableRow<Service> row = new TableRow<>();
+            TableRow<Partenaire> row = new TableRow<>();
             row.setOnMouseEntered(event -> row.setStyle("-fx-background-color: #BDC3C7;"));
             row.setOnMouseExited(event -> row.setStyle("-fx-background-color: transparent;"));
             return row;
@@ -160,11 +160,11 @@ public class AfficherService {
     }
 
     @FXML
-    private void goToService(ActionEvent event) throws IOException {
+    private void goToPartenaire(ActionEvent event) throws IOException {
         // Charger l'interface Reclamation.fxml
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Partenaire.fxml"));
+        AnchorPane partenaireLayout = loader.load();
+        Scene scene = new Scene(partenaireLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
