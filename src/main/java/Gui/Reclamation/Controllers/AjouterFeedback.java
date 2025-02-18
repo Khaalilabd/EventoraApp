@@ -21,6 +21,7 @@ public class AjouterFeedback {
 
     private int rating = 0;
 
+
     @FXML
     private void initialize() {
         JFXButton[] stars = {star1, star2, star3, star4, star5};

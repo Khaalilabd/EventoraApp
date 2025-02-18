@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.geometry.Pos?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.text.Font?>
@@ -12,14 +11,13 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Reclamation.Controllers.AjouterRec"
-            prefHeight="600.0" prefWidth="900.0"
-            style="-fx-background-color: #F4F1F1;"> <!-- Couleur de fond plus douce -->
+            fx:controller="Gui.Reclamation.Controllers.Reclamation"
+            prefHeight="600.0" prefWidth="900.0">
 
     <!-- Barre de navigation latérale -->
     <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #34495E; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0, 5);" alignment="TOP_CENTER" spacing="20">
         <!-- Logo -->
-        <ImageView fitWidth="120" fitHeight="120" preserveRatio="true">
+        <ImageView fitWidth="120" fitHeight="120" preserveRatio="true" >
             <image>
                 <Image url="@/Images/EVENTORA.png" />
             </image>
@@ -90,28 +88,19 @@
 
     <!-- Contenu principal -->
     <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
-        <!-- Titre -->
-        <Label text="Déposer une Réclamation" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #2C1A18; -fx-padding: 15px;"/>
+        <!-- Texte avec retour à la ligne -->
+        <Label wrapText="true" prefWidth="500" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 10; -fx-text-alignment: center;"
+               text="Vous avez rencontré un problème ou vous voulez poser une Réclamation ?\nPas de panique, Eventora vous propose tout un système de réclamation." />
 
-        <!-- Champ Titre de la Réclamation -->
-        <TextField fx:id="titleField" promptText="Titre de la Réclamation"
-                   style="-fx-font-size: 18px; -fx-padding: 15px; -fx-border-color: #8E7D70; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: #FFFFFF;"/>
-
-        <!-- Sélection du Type de Réclamation -->
-        <ComboBox fx:id="typeField" promptText="Sélectionner un type"
-                  style="-fx-font-size: 18px; -fx-padding: 15px; -fx-border-color: #8E7D70; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: #FFFFFF;">
-        </ComboBox>
-
-        <!-- Description -->
-        <TextArea fx:id="descField" promptText="Expliquez votre problème..."
-                  style="-fx-font-size: 18px; -fx-padding: 15px; -fx-border-color: #8E7D70; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: #FFFFFF;"/>
-
-        <!-- Boutons -->
-        <HBox spacing="20" alignment="CENTER">
-            <Button text="Soumettre" fx:id="submitButton"
-                    style="-fx-background-color: #D65B6C; -fx-text-fill: white; -fx-font-size: 18px; -fx-padding: 15px 25px; -fx-border-radius: 10px;"/>
-            <Button text="Annuler" fx:id="cancelButton"
-                    style="-fx-background-color: #C4A78B; -fx-text-fill: white; -fx-font-size: 18px; -fx-padding: 15px 25px; -fx-border-radius: 10px;"/>
-        </HBox>
+        <!-- Bouton Ajouter centré -->
+        <Button fx:id="ajouterButton"
+                text="Ajouter"
+                style="-fx-background-color: #1ABC9C;
+               -fx-text-fill: white;
+               -fx-font-size: 16px;
+               -fx-padding: 10 20;
+               -fx-border-radius: 10;
+               -fx-background-radius: 10;" />
     </VBox>
+
 </AnchorPane>

@@ -33,6 +33,9 @@ public class AjouterRec {
 
     private final ReclamationService reclamationService = new ReclamationService();
 
+    // ID utilisateur simulé, il faut le récupérer dynamiquement selon le contexte
+    private int userId = 1;  // Remplacez-le par l'ID utilisateur dynamique lors de l'authentification
+
     @FXML
     public void initialize() {
         // Remplir la ComboBox avec les valeurs de l'Enum TypeReclamation
@@ -52,21 +55,27 @@ public class AjouterRec {
             return;
         }
 
-        Reclamation reclamation = new Reclamation(1, titre, description, type); // ID user à remplacer dynamiquement
+        // Création de l'objet réclamation avec les données récupérées
+        Reclamation reclamation = new Reclamation(userId, titre, description, type);
+
+        // Appel à la méthode AjouterRec pour ajouter la réclamation
         reclamationService.AjouterRec(reclamation);
 
+        // Affichage de l'alerte de succès
         showAlert("Succès", "Réclamation ajoutée avec succès !");
+
+        // Réinitialisation des champs du formulaire
         clearFields();
 
-        // Redirection vers AfficherRec.fxml
+        // Redirection vers la page d'affichage des réclamations
         goToAfficherRec(event);
     }
 
     private void goToAfficherRec(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherRec.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheRec.fxml"));
 
-            Parent root = loader.load(); // ✅ Correction : on charge bien le fichier FXML
+            Parent root = loader.load(); //
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));

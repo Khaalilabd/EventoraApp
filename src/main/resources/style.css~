@@ -1,147 +1,83 @@
-
-
+/* style.css */
+/* Style général */
 .root {
-    -fx-font-family: "Arial";
+    -fx-font-family: 'Arial';
+    -fx-background-color: #F5F5F5; /* Fond principal */
 }
 
-.title-label {
-    -fx-font-size: 28px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #4E342E;
-    -fx-padding: 10px;
-}
-
-.subtitle-label {
-    -fx-font-size: 18px;
-    -fx-text-fill: #6D4C41;
-    -fx-padding: 5px;
-}
-
-.nav-button {
-    -fx-background-color: #6D4C41;
-    -fx-text-fill: white;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-}
-
-.nav-button-active {
-    -fx-background-color: #5D4037;
-    -fx-text-fill: white;
-    -fx-padding: 10px 20px;
-    -fx-border-radius: 5px;
-}
-
-.star-button {
-    -fx-background-color: transparent;
+/* Titre du menu */
+.menu-title {
     -fx-font-size: 22px;
-    -fx-text-fill: #FFD700;
-    -fx-border-color: transparent;
+    -fx-text-fill: #FFFFFF; /* Texte blanc */
+    -fx-font-weight: bold;
+    -fx-padding: 10px 0;
 }
 
-.text-area {
-    -fx-border-color: #6D4C41;
-    -fx-border-radius: 8px;
-    -fx-padding: 10px;
-    -fx-background-color: #FFFFFF;
-    -fx-min-height: 100px;
+/* Boutons de navigation */
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF; /* Texte blanc */
+    -fx-font-size: 16px;
+    -fx-padding: 10px 20px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-border-width: 0 0 1px 0; /* Ligne de séparation fine */
+    -fx-border-color: #BDC3C7; /* Couleur des séparateurs */
 }
 
-.submit-button {
-    -fx-background-color: #5D4037;
+.nav-button:hover {
+    -fx-background-color: #34495E; /* Couleur de survol */
+}
+
+.nav-button.active {
+    -fx-background-color: #3498DB; /* Couleur du bouton actif */
+}
+
+/* Bouton de déconnexion */
+.logout-button {
+    -fx-background-color: #E74C3C; /* Rouge pour le bouton de déconnexion */
     -fx-text-fill: white;
     -fx-font-size: 16px;
-    -fx-font-weight: bold;
-    -fx-padding: 12px 25px;
-    -fx-border-radius: 8px;
-}
-/* Applique un style général au TableView */
-.styled-table {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #B39188;
-    -fx-border-radius: 10px;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.15), 8, 0, 0, 4);
-}
-
-/* Style des colonnes */
-.styled-table .column-header-background {
-    -fx-background-color: linear-gradient(to bottom, #B39188, #8E6B63);
-}
-
-.styled-table .column-header {
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-
-/* Style des cellules */
-.styled-table .table-row-cell {
-    -fx-background-color: #FAF2EA;
-    -fx-border-color: transparent;
-}
-
-.styled-table .table-row-cell:odd {
-    -fx-background-color: #E8D6CF;  /* Alternance des couleurs */
-}
-
-/* Effet de survol */
-.styled-table .table-row-cell:hover {
-    -fx-background-color: #FFAE9D;
-    -fx-text-fill: white;
-}
-
-/* Boutons Modifier et Supprimer */
-.button-modifier {
-    -fx-background-color: #FFD700;
-    -fx-text-fill: black;
-    -fx-font-size: 14px;
-    -fx-padding: 5px 10px;
+    -fx-padding: 10px 20px;
     -fx-border-radius: 5px;
-    -fx-border-color: #E6B800;
 }
 
-.button-supprimer {
-    -fx-background-color: #FF6347;
+.logout-button:hover {
+    -fx-background-color: #C0392B; /* Rouge plus foncé au survol */
+}
+
+/* Titre principal */
+.main-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2C3E50; /* Texte bleu foncé */
+    -fx-padding: 20px 0;
+}
+
+/* Sous-titre */
+.subtitle {
+    -fx-font-size: 18px;
+    -fx-text-fill: #2C3E50; /* Texte bleu foncé */
+    -fx-padding: 10px 0;
+}
+
+/* Boutons d'action */
+.action-button {
+    -fx-background-color: #3498DB; /* Bleu vif */
     -fx-text-fill: white;
     -fx-font-size: 14px;
-    -fx-padding: 5px 10px;
+    -fx-padding: 8px 16px; /* Taille réduite */
     -fx-border-radius: 5px;
-    -fx-border-color: #D42A1E;
+    -fx-background-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-border-color: #2980B9; /* Bordure bleue */
 }
 
-.button-modifier:hover {
-    -fx-background-color: #E6B800;
+.action-button:hover {
+    -fx-background-color: #2980B9; /* Bleu plus foncé au survol */
 }
 
-.button-supprimer:hover {
-    -fx-background-color: #D42A1E;
+/* Séparateurs */
+.separator {
+    -fx-background-color: #BDC3C7; /* Couleur des séparateurs */
+    -fx-padding: 0 0 1px 0; /* Épaisseur de la ligne */
 }
-/* Appliquer un style général */
-.styled-table {
-    -fx-background-color: white;
-    -fx-border-color: #B39188;
-    -fx-border-radius: 8px;
-    -fx-padding: 10px;
-    -fx-pref-width: 650px;
-}
-
-/* En-têtes du tableau */
-.styled-table .column-header {
-    -fx-background-color: #B39188;
-    -fx-text-fill: white;
-    -fx-font-size: 16px;
-    -fx-font-weight: bold;
-}
-
-/* Lignes alternées */
-.styled-table .table-row-cell:odd {
-    -fx-background-color: #F7E6DC;
-}
-.styled-table .table-row-cell:even {
-    -fx-background-color: white;
-}
-
-/* Sélection d'une ligne */
-.styled-table .table-row-cell:selected {
-    -fx-background-color: #FFAE9D;
-    -fx-text-fill: white;
-}
-

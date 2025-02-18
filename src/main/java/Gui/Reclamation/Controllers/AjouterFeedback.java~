@@ -1,71 +1,67 @@
 package Gui.Reclamation.Controllers;
 
+import com.jfoenix.controls.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 
 public class AjouterFeedback {
 
     @FXML
-    private TextArea descField;
+    private JFXTextArea descField;
 
     @FXML
-    private CheckBox happyCheckBox, goodCheckBox, averageCheckBox, badCheckBox;
+    private JFXCheckBox recommendCheck;
 
     @FXML
-    private CheckBox recommendCheckBox;
+    private JFXButton submitButton;
 
     @FXML
-    private Button submitButton, cancelButton;
+    private JFXButton star1, star2, star3, star4, star5;
+
+    private int rating = 0;
 
     @FXML
     private void initialize() {
+        JFXButton[] stars = {star1, star2, star3, star4, star5};
+        for (int i = 0; i < stars.length; i++) {
+            int ratingValue = i + 1;
+            stars[i].addEventHandler(MouseEvent.MOUSE_CLICKED, event -> updateRating(ratingValue));
+        }
+
         submitButton.setOnAction(event -> handleSubmit());
-        cancelButton.setOnAction(event -> handleCancel());
+    }
+
+    private void updateRating(int value) {
+        rating = value;
+        JFXButton[] stars = {star1, star2, star3, star4, star5};
+        for (int i = 0; i < stars.length; i++) {
+            stars[i].setStyle(i < rating ? "-fx-text-fill: gold;" : "-fx-text-fill: gray;");
+        }
     }
 
     private void handleSubmit() {
-        String feedbackText = descField.getText().trim();
-        boolean recommend = recommendCheckBox.isSelected();
+        String description = descField.getText();
+        boolean recommend = recommendCheck.isSelected();
 
-        // Vérifier si une expérience a été cochée
-        String experience = "";
-        if (happyCheckBox.isSelected()) experience += "Happy ";
-        if (goodCheckBox.isSelected()) experience += "Good ";
-        if (averageCheckBox.isSelected()) experience += "Average ";
-        if (badCheckBox.isSelected()) experience += "Bad ";
-
-        if (experience.isEmpty()) {
-            showAlert("Error", "Please select an experience.");
+        if (description.trim().isEmpty()) {
+            showAlert("Error", "Please provide feedback.");
             return;
         }
 
-        if (feedbackText.isEmpty()) {
-            showAlert("Error", "Please enter your experience.");
-            return;
-        }
-
-        // Affichage des résultats (peut être enregistré en BDD)
-        System.out.println("Feedback: " + feedbackText);
-        System.out.println("Experience: " + experience.trim());
-        System.out.println("Recommend: " + recommend);
+        System.out.println("Rating: " + rating);
+        System.out.println("Feedback: " + description);
+        System.out.println("Recommend: " + (recommend ? "Yes" : "No"));
 
         showAlert("Success", "Thank you for your feedback!");
     }
 
-    private void handleCancel() {
-        descField.clear();
-        happyCheckBox.setSelected(false);
-        goodCheckBox.setSelected(false);
-        averageCheckBox.setSelected(false);
-        badCheckBox.setSelected(false);
-        recommendCheckBox.setSelected(false);
-    }
-
     private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+        JFXAlert alert = new JFXAlert<>();
+        JFXDialogLayout layout = new JFXDialogLayout();
+        layout.setHeading(new Label(title));
+        layout.setBody(new Label(message));
+        alert.setContent(layout);
+        alert.show();
     }
 }
