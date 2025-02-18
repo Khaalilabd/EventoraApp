@@ -37,7 +37,7 @@ public class ModifierRec {
 
     @FXML
     public void initialize() {
-        // Code d'initialisation ici
+        typeField.getItems().setAll(TypeReclamation.values()); // Ajoute tous les types de réclamation à la liste du ComboBox
 
         submitButton.setOnAction(this::modifierReclamation);
         cancelButton.setOnAction(event -> annuler());
@@ -93,11 +93,16 @@ public class ModifierRec {
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
+
         alert.setTitle(title);
-        alert.setHeaderText(null);
+        alert.setHeaderText(null);  // On peut personnaliser ou laisser vide
         alert.setContentText(content);
+
         alert.showAndWait();
     }
+
 
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {

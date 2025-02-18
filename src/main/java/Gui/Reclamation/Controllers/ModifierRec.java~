@@ -1,3 +1,20 @@
+package Gui.Reclamation.Controllers;
+
+import Models.Reclamation.Reclamation;
+import Models.Reclamation.TypeReclamation;
+import Services.Reclamation.Crud.ReclamationService;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
 public class ModifierRec {
 
     @FXML
@@ -20,7 +37,8 @@ public class ModifierRec {
 
     @FXML
     public void initialize() {
-        // Code d'initialisation ici
+        typeField.getItems().setAll(TypeReclamation.values()); // Ajoute tous les types de réclamation à la liste du ComboBox
+
         submitButton.setOnAction(this::modifierReclamation);
         cancelButton.setOnAction(event -> annuler());
     }
@@ -28,6 +46,11 @@ public class ModifierRec {
     // Méthode pour pré-remplir les champs avec les données de la réclamation à modifier
     public void setReclamationToEdit(Reclamation reclamation) {
         this.reclamationToEdit = reclamation;
+
+        // Vérification : affichage des valeurs reçues dans la console pour debug
+        System.out.println("Titre: " + reclamation.getTitre());
+        System.out.println("Description: " + reclamation.getDescription());
+        System.out.println("Type: " + reclamation.getType());
 
         // Pré-remplir les champs avec les données de la réclamation existante
         titleField.setText(reclamation.getTitre());
@@ -69,12 +92,21 @@ public class ModifierRec {
     }
 
     private void showAlert(String title, String content) {
+        // Créer une alerte de type INFORMATION
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        // Ajouter le fichier CSS pour l'alerte
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
+
+        // Titre et contenu de l'alerte
         alert.setTitle(title);
-        alert.setHeaderText(null);
+        alert.setHeaderText(null);  // On peut personnaliser ou laisser vide
         alert.setContentText(content);
+
+        // Afficher l'alerte
         alert.showAndWait();
     }
+
 
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {

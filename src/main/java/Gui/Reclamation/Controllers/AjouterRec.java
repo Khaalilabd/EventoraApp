@@ -90,9 +90,13 @@ public class AjouterRec {
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
+
         alert.setTitle(title);
-        alert.setHeaderText(null);
+        alert.setHeaderText(null);  // On peut personnaliser ou laisser vide
         alert.setContentText(content);
+
         alert.showAndWait();
     }
     @FXML
