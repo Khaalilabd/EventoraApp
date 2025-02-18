@@ -14,104 +14,46 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Reclamation.Controllers.AjouterRec"
             prefHeight="600.0" prefWidth="900.0"
-            style="-fx-background-color: #F4F1F1;"> <!-- Couleur de fond plus douce -->
+            stylesheets="style.css"
+            style="-fx-background-color: #F4F1F1;">
 
     <!-- Barre de navigation latérale -->
-    <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #34495E; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0, 5);" alignment="TOP_CENTER" spacing="20">
-        <!-- Logo -->
-        <ImageView fitWidth="120" fitHeight="120" preserveRatio="true">
-            <image>
-                <Image url="@/Images/EVENTORA.png" />
-            </image>
-        </ImageView>
+    <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
 
-        <!-- Menu -->
-        <Label text="Eventora Menu" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #ECF0F1; -fx-padding: 10;" alignment="CENTER"/>
+        <!-- Titre -->
+        <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
 
         <!-- Menu Buttons -->
-        <Button style="-fx-background-color: transparent; -fx-pref-height: 50; -fx-padding: 10; -fx-alignment: CENTER; -fx-text-fill: white; -fx-font-size: 16px;">
-            <graphic>
-                <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="@/Images/home.png" />
-                </ImageView>
-            </graphic>
-            <text>
-                Accueil
-            </text>
-        </Button>
-
-        <Button style="-fx-background-color: transparent; -fx-pref-height: 50; -fx-padding: 10; -fx-alignment: CENTER; -fx-text-fill: white; -fx-font-size: 16px;">
-            <graphic>
-                <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="@/Images/settings.png" />
-                </ImageView>
-            </graphic>
-            <text>
-                Paramètres
-            </text>
-        </Button>
-
-        <Button style="-fx-background-color: transparent; -fx-pref-height: 50; -fx-padding: 10; -fx-alignment: CENTER; -fx-text-fill: white; -fx-font-size: 16px; -fx-background-radius: 10;">
-            <graphic>
-                <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="@/Images/reclamation.png" />
-                </ImageView>
-            </graphic>
-            <text>
-                Réclamations
-            </text>
-        </Button>
-
-        <Button style="-fx-background-color: transparent; -fx-pref-height: 50; -fx-padding: 10; -fx-alignment: CENTER; -fx-text-fill: white; -fx-font-size: 16px;">
-            <graphic>
-                <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="@/Images/serivices.png" />
-                </ImageView>
-            </graphic>
-            <text>
-                Services
-            </text>
-        </Button>
-
-        <Button style="-fx-background-color: transparent; -fx-pref-height: 50; -fx-padding: 10; -fx-alignment: CENTER; -fx-text-fill: white; -fx-font-size: 16px;">
-            <graphic>
-                <ImageView fitHeight="40" fitWidth="40">
-                    <Image url="@/Images/logout.png" />
-                </ImageView>
-            </graphic>
-            <text>
-                Déconnexion
-            </text>
-        </Button>
-
-        <!-- Footer -->
-        <Pane minHeight="200"/>
+        <VBox spacing="10">
+            <Button text="🏠 Accueil" styleClass="menu-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
+            <Button text="📲 Réservation" styleClass="menu-button"/>
+            <Button text="🎁 Services" styleClass="menu-button"/>
+            <Button text="⭐ FeedBack" styleClass="menu-button"/>
+            <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation" />
+            <Button text="🔧 Paramètres" styleClass="menu-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </VBox>
     </VBox>
 
     <!-- Contenu principal -->
     <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
         <!-- Titre -->
-        <Label text="Déposer une Réclamation" style="-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #2C1A18; -fx-padding: 15px;"/>
+        <Label text="Déposer une Réclamation" styleClass="main-title"/>
 
         <!-- Champ Titre de la Réclamation -->
-        <TextField fx:id="titleField" promptText="Titre de la Réclamation"
-                   style="-fx-font-size: 18px; -fx-padding: 15px; -fx-border-color: #8E7D70; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: #FFFFFF;"/>
+        <TextField fx:id="titleField" promptText="Titre de la Réclamation" styleClass="input-field"/>
 
         <!-- Sélection du Type de Réclamation -->
-        <ComboBox fx:id="typeField" promptText="Sélectionner un type"
-                  style="-fx-font-size: 18px; -fx-padding: 15px; -fx-border-color: #8E7D70; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: #FFFFFF;">
-        </ComboBox>
+        <ComboBox fx:id="typeField" promptText="Sélectionner un type" styleClass="input-field"/>
 
         <!-- Description -->
-        <TextArea fx:id="descField" promptText="Expliquez votre problème..."
-                  style="-fx-font-size: 18px; -fx-padding: 15px; -fx-border-color: #8E7D70; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-background-color: #FFFFFF;"/>
+        <TextArea fx:id="descField" promptText="Expliquez votre problème..." styleClass="input-field"/>
 
         <!-- Boutons -->
         <HBox spacing="20" alignment="CENTER">
-            <Button text="Soumettre" fx:id="submitButton"
-                    style="-fx-background-color: #D65B6C; -fx-text-fill: white; -fx-font-size: 18px; -fx-padding: 15px 25px; -fx-border-radius: 10px;"/>
-            <Button text="Annuler" fx:id="cancelButton"
-                    style="-fx-background-color: #C4A78B; -fx-text-fill: white; -fx-font-size: 18px; -fx-padding: 15px 25px; -fx-border-radius: 10px;"/>
+            <Button text="Soumettre" fx:id="submitButton" styleClass="submit-button"/>
+            <Button text="Annuler" fx:id="cancelButton" styleClass="cancel-button"/>
         </HBox>
     </VBox>
 </AnchorPane>

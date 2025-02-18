@@ -10,6 +10,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -55,19 +56,10 @@ public class AjouterRec {
             return;
         }
 
-        // Création de l'objet réclamation avec les données récupérées
         Reclamation reclamation = new Reclamation(userId, titre, description, type);
-
-        // Appel à la méthode AjouterRec pour ajouter la réclamation
         reclamationService.AjouterRec(reclamation);
-
-        // Affichage de l'alerte de succès
         showAlert("Succès", "Réclamation ajoutée avec succès !");
-
-        // Réinitialisation des champs du formulaire
         clearFields();
-
-        // Redirection vers la page d'affichage des réclamations
         goToAfficherRec(event);
     }
 
@@ -103,4 +95,14 @@ public class AjouterRec {
         alert.setContentText(content);
         alert.showAndWait();
     }
+    @FXML
+    private void goToReclamation(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
+        AnchorPane reclamationLayout = loader.load();
+        Scene scene = new Scene(reclamationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }

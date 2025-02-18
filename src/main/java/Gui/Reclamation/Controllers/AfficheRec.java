@@ -2,17 +2,22 @@ package Gui.Reclamation.Controllers;
 
 import Services.Reclamation.Crud.ReclamationService;
 import Models.Reclamation.Reclamation;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Button;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import javafx.util.Callback;
-import javafx.scene.control.TableCell;
 
+import java.io.IOException;
 import java.util.List;
 
 public class AfficheRec {
@@ -43,16 +48,12 @@ public class AfficheRec {
 
     @FXML
     public void initialize() {
-        // Définir les sources des données pour chaque colonne
-        colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colTitre.setCellValueFactory(new PropertyValueFactory<>("titre"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
+        colTitre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitre()));
+        colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
         colType.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().getLabel()));
 
-        // Ajouter la colonne avec les boutons Modifier et Supprimer
         addActionsColumn();
-
-        // Charger les réclamations
         loadReclamations();
     }
 
@@ -68,11 +69,32 @@ public class AfficheRec {
             @Override
             public TableCell<Reclamation, String> call(TableColumn<Reclamation, String> param) {
                 return new TableCell<Reclamation, String>() {
-                    final Button editButton = new Button("Modifier");
-                    final Button deleteButton = new Button("Supprimer");
+                    final Button editButton = new Button();
+                    final Button deleteButton = new Button();
                     final HBox hBox = new HBox(10);
 
                     {
+                        // Chargement des icônes dans les boutons
+                        Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
+                        Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
+
+                        // Icônes pour les boutons
+                        ImageView editImageView = new ImageView(editIcon);
+                        ImageView deleteImageView = new ImageView(deleteIcon);
+
+                        editImageView.setFitHeight(20);
+                        editImageView.setFitWidth(20);
+                        deleteImageView.setFitHeight(20);
+                        deleteImageView.setFitWidth(20);
+
+                        // Ajout des icônes dans les boutons
+                        editButton.setGraphic(editImageView);
+                        deleteButton.setGraphic(deleteImageView);
+
+                        // Style des boutons
+                        editButton.getStyleClass().add("table-button");
+                        deleteButton.getStyleClass().addAll("table-button", "delete");
+
                         hBox.getChildren().addAll(editButton, deleteButton);
                     }
 
@@ -84,7 +106,6 @@ public class AfficheRec {
                         } else {
                             editButton.setOnAction(event -> handleEdit(getTableRow().getItem()));
                             deleteButton.setOnAction(event -> handleDelete(getTableRow().getItem()));
-
                             setGraphic(hBox);
                         }
                     }
@@ -95,6 +116,7 @@ public class AfficheRec {
 
     private void handleEdit(Reclamation reclamation) {
         System.out.println("Modifier la réclamation avec ID : " + reclamation.getId());
+        // Logique pour modifier la réclamation
     }
 
     private void handleDelete(Reclamation reclamation) {
@@ -104,24 +126,40 @@ public class AfficheRec {
     }
 
     @FXML
-    private void goToHome() {
-        System.out.println("Navigation vers la page d'accueil");
+    private void addReclamation() throws IOException {
+        // Charger l'interface AjouterRec.fxml
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterRec.fxml"));
+        Scene scene = new Scene(loader.load());
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.setTitle("Ajouter une réclamation");
+        stage.show();
     }
 
     @FXML
-    private void goToReclamations() {
-        System.out.println("Navigation vers les réclamations");
+    private void refreshList() {
+        loadReclamations();
     }
 
     @FXML
-    private void logout() {
-        System.out.println("Déconnexion");
+    private void tableRowFactory(TableView<Reclamation> tableView) {
+        tableView.setRowFactory(tv -> {
+            TableRow<Reclamation> row = new TableRow<>();
+            row.setOnMouseEntered(event -> row.setStyle("-fx-background-color: #BDC3C7;"));
+            row.setOnMouseExited(event -> row.setStyle("-fx-background-color: transparent;"));
+            return row;
+        });
     }
 
     @FXML
-    private void addReclamation() {
-        System.out.println("Ajout d'une réclamation");
+    private void goToReclamation(ActionEvent event) throws IOException {
+        // Charger l'interface Reclamation.fxml
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
+        AnchorPane reclamationLayout = loader.load();
+        Scene scene = new Scene(reclamationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
+
 }
-
-
