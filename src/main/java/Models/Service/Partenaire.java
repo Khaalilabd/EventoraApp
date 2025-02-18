@@ -1,8 +1,7 @@
 package Models.Service;
 
-import java.util.Date;
 
-public class Sponsor {
+public class Partenaire {
     private int id_sponsors;
     private String nom_sponsors;
     private String email_sponsors;
@@ -10,17 +9,16 @@ public class Sponsor {
     private String adresse_sponsors;
     private String site_web;
     private String montant_sponsors;
-    private TypeSponsors type_sponsors;
-    private Date date_sponsoring;
+    private TypePartenaire type_sponsors;
 
-    public Sponsor() {
+    public Partenaire() {
 
     }
-    public Sponsor(int id_sponsors) {
+    public Partenaire(int id_sponsors) {
         this.id_sponsors = id_sponsors;
     }
 
-    public Sponsor(int id_sponsors, String nom_sponsors, String email_sponsors, String telephone_sponsors, String adresse_sponsors, String site_web, String montant_sponsors, TypeSponsors type, Date date_sponsoring) {
+    public Partenaire(int id_sponsors, String nom_sponsors, String email_sponsors, String telephone_sponsors, String adresse_sponsors, String site_web, String montant_sponsors, TypePartenaire type_sponsors) {
         this.id_sponsors = id_sponsors;
         this.nom_sponsors = nom_sponsors;
         this.email_sponsors = email_sponsors;
@@ -29,10 +27,9 @@ public class Sponsor {
         this.site_web = site_web;
         this.montant_sponsors = montant_sponsors;
         this.type_sponsors = type_sponsors;
-        this.date_sponsoring = date_sponsoring;
     }
 
-    public Sponsor(String nom_sponsors, String email_sponsors, String telephone_sponsors, String adresse_sponsors, String site_web, String montant_sponsors, TypeSponsors type, Date date_sponsoring) {
+    public Partenaire(String nom_sponsors, String email_sponsors, String telephone_sponsors, String adresse_sponsors, String site_web, String montant_sponsors, TypePartenaire type_sponsors) {
         this.nom_sponsors = nom_sponsors;
         this.email_sponsors = email_sponsors;
         this.telephone_sponsors = telephone_sponsors;
@@ -40,7 +37,6 @@ public class Sponsor {
         this.site_web = site_web;
         this.montant_sponsors = montant_sponsors;
         this.type_sponsors = type_sponsors;
-        this.date_sponsoring = date_sponsoring;
     }
 
     public int getId_sponsors() {
@@ -99,20 +95,13 @@ public class Sponsor {
         this.montant_sponsors = montant_sponsors;
     }
 
-    public TypeSponsors getType_sponsors() {
+    public TypePartenaire getType_sponsors() {
         return type_sponsors;
     }
 
-    public void setType_sponsors(TypeSponsors type_sponsors) {
+    public void setType_sponsors(TypePartenaire type_sponsors) {
         this.type_sponsors = type_sponsors;
     }
 
-    public Date getDate_sponsoring() {
-        return date_sponsoring;
-    }
-
-    public void setDate_sponsoring(Date date_sponsoring) {
-        this.date_sponsoring = date_sponsoring;
-    }
 }
 

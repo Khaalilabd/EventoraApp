@@ -27,6 +27,11 @@ public enum Sponsors {
         throw new IllegalArgumentException("Type de sponsor invalide : " + label);
     }
 
-
+    @Override
+    public String toString() {
+        return "Sponsors{" +
+                "label='" + label + '\'' +
+                '}';
+    }
 }
 

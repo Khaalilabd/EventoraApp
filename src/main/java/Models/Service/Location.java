@@ -26,10 +26,5 @@ public enum Location {
         throw new IllegalArgumentException("Type de location invalide : " + label);
     }
 
-    @Override
-    public String toString() {
-        return "Location{" +
-                "label='" + label + '\'' +
-                '}';
-    }
+
 }

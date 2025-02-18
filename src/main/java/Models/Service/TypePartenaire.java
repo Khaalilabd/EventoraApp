@@ -1,6 +1,6 @@
 package Models.Service;
 
-public enum TypeSponsors {
+public enum TypePartenaire {
     FINANCIER("Financier"),
     TECHNIQUE("Technique"),
     MEDIA("Media"),
@@ -10,7 +10,7 @@ public enum TypeSponsors {
 
     private final String label;
 
-    TypeSponsors(String label) {
+    TypePartenaire(String label) {
         this.label = label;
     }
 
@@ -18,8 +18,8 @@ public enum TypeSponsors {
         return label;
     }
 
-    public static TypeSponsors fromLabel(String label) {
-        for (TypeSponsors type : TypeSponsors.values()) {
+    public static TypePartenaire fromLabel(String label) {
+        for (TypePartenaire type : TypePartenaire.values()) {
             if (type.label.equalsIgnoreCase(label)) {
                 return type;
             }
@@ -27,10 +27,4 @@ public enum TypeSponsors {
         throw new IllegalArgumentException("Type de sponsors invalide : " + label);
     }
 
-    @Override
-    public String toString() {
-        return "type_sponsors{" +
-                "label='" + label + '\'' +
-                '}';
-    }
 }
