@@ -11,9 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="687.0" prefWidth="1022.0" style="-fx-background-color: #F2F2F2;"
+<AnchorPane prefHeight="600.0" prefWidth="900" style="-fx-background-color: #F2F2F2;"
             stylesheets="style.css" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Reclamation.Controllers.AfficheRec">
-    <HBox prefHeight="687.0" prefWidth="1022.0" spacing="0">
+    <HBox prefHeight="600.0" prefWidth="900" spacing="0">
         <!-- Barre de navigation latérale -->
         <VBox prefHeight="687.0" prefWidth="220" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
             <ImageView fitHeight="100" fitWidth="100" preserveRatio="true">

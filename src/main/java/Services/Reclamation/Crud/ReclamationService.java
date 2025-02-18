@@ -37,14 +37,15 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
     @Override
     public void ModifierRec(Reclamation reclamation) {
-        String req = "UPDATE Reclamation SET idUser = ?, titre = ?, description = ?, type = ? WHERE id = ?";
+        // Modifier la requête pour ne pas toucher à l'idUser ni l'id
+        String req = "UPDATE Reclamation SET titre = ?, description = ?, type = ? WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(req)) {
-            ps.setInt(1, reclamation.getIdUser());
-            ps.setString(2, reclamation.getTitre());
-            ps.setString(3, reclamation.getDescription());
-            ps.setString(4, reclamation.getType().getLabel());
-            ps.setInt(5, reclamation.getId());
+            // Ne pas modifier l'idUser, donc ne pas l'inclure dans la requête
+            ps.setString(1, reclamation.getTitre());
+            ps.setString(2, reclamation.getDescription());
+            ps.setString(3, reclamation.getType().getLabel());
+            ps.setInt(4, reclamation.getId());  // Le paramètre id reste pour identifier la réclamation à modifier
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
@@ -57,6 +58,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void SupprimerRec(Reclamation reclamation) {

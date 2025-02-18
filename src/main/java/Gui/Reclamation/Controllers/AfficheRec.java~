@@ -116,18 +116,21 @@ public class AfficheRec {
 
     private void handleEdit(Reclamation reclamation) {
         try {
+            // Charger l'interface ModifRec.fxml
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierRec.fxml"));
             AnchorPane modifRecLayout = loader.load();
 
+            // Passer la réclamation à l'interface ModifRec
             ModifierRec controller = loader.getController();
-            controller.setReclamationToEdit(reclamation);
+            controller.setReclamationToEdit(reclamation);  // Utilisation de setReclamationToEdit()
 
+            // Récupérer la fenêtre actuelle et remplacer son contenu par le layout de modification
             Scene currentScene = tableView.getScene();
-            currentScene.setRoot(modifRecLayout);
+            currentScene.setRoot(modifRecLayout);  // Remplacer le root de la scène par le layout ModifRec
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+    
 
 
 }
