@@ -1,7 +1,5 @@
 package Services.Reclamation.Interface;
 
-import Models.Reclamation.Feedback;
-
 import java.util.List;
 
 public interface IfeedBack<T> {
@@ -9,8 +7,5 @@ public interface IfeedBack<T> {
     void ModifierFeedBack(T t);
     void SupprimerFeedBack(T t);
     List<T> RechercherFeedBack();
-
-    List<Feedback> rechercherParUser(int idUser);
-
-    List<Feedback> rechercherParVote(int vote);
+    // T rechercherParId(int id);  // Recherche par ID
 }

@@ -1,32 +1,40 @@
 package Models.Reclamation;
 
-public class FeedBack {
+public class Feedback {
 
     private int id;
     private int idUser; // Clé étrangère vers la table Membres
     private int vote;
     private String description;
+    private byte[] image; // Nouveau champ pour l'image (en tant que tableau de bytes)
 
-    public FeedBack() {
+    // Constructeur par défaut
+    public Feedback() {
     }
 
-    public FeedBack(int idUser, int vote, String description) {
+    // Constructeur sans id (lors de la création)
+    public Feedback(int idUser, int vote, String description, byte[] image) {
         this.idUser = idUser;
         this.vote = vote;
         this.description = description;
+        this.image = image;
     }
 
-    public FeedBack(int id, int idUser, int vote, String description) {
+    // Constructeur avec id (lors de la modification ou récupération de l'élément)
+    public Feedback(int id, int idUser, int vote, String description, byte[] image) {
         this.id = id;
         this.idUser = idUser;
         this.vote = vote;
         this.description = description;
+        this.image = image;
     }
 
-    public FeedBack(int id) {
+    // Constructeur avec id uniquement (pour certaines situations)
+    public Feedback(int id) {
         this.id = id;
     }
 
+    // Getters et Setters
     public int getId() {
         return id;
     }
@@ -59,13 +67,22 @@ public class FeedBack {
         this.description = description;
     }
 
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
+
     @Override
     public String toString() {
-        return "FeedBack{" +
+        return "Feedback{" +
                 "id=" + id +
                 ", idUser=" + idUser +
                 ", vote=" + vote +
                 ", description='" + description + '\'' +
+                ", image=" + (image != null ? "Image exists" : "No image") + // Afficher un message si l'image existe
                 '}';
     }
 }
