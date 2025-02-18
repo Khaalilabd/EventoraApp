@@ -108,5 +108,18 @@ public class AjouterRec {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    private void goToFeedback(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Feedback.fxml"));
+            AnchorPane feedbackLayout = loader.load();
+            Scene feedbackScene = new Scene(feedbackLayout);
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.setScene(feedbackScene);
+            currentStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

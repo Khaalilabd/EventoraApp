@@ -50,6 +50,6 @@
         <JFXCheckBox fx:id="recommendCheck" text="Recommend Us to Others?" styleClass="checkbox"/>
 
         <!-- Bouton Soumettre -->
-        <JFXButton fx:id="submitButton" text="Submit" onAction="#handleSubmit" styleClass="submit-button"/>
+        <JFXButton fx:id="submitButton" text="Submit" onAction="#handleSubmit" />
     </VBox>
 </AnchorPane>
