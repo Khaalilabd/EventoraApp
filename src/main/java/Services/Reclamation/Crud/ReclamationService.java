@@ -1,6 +1,7 @@
 package Services.Reclamation.Crud;
 
 import Models.Reclamation.Reclamation;
+import Models.Reclamation.Statut;
 import Models.Reclamation.TypeReclamation;
 import Services.Reclamation.Interface.Ireclamation;
 import Utils.Mydatasource;
@@ -19,14 +20,18 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
     @Override
     public void AjouterRec(Reclamation reclamation) {
-        String req = "INSERT INTO Reclamation (idUser, titre, description, type) VALUES (?, ?, ?, ?)";
+        if (reclamation.getStatut() == null) {
+            reclamation.setStatut(Statut.EN_ATTENTE);
+        }
 
+        String req = "INSERT INTO reclamation (idUser, titre, description, type, statut) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
+
             ps.setInt(1, reclamation.getIdUser());
             ps.setString(2, reclamation.getTitre());
             ps.setString(3, reclamation.getDescription());
             ps.setString(4, reclamation.getType().getLabel());
-
+            ps.setString(5, reclamation.getStatut().getLabel());
             ps.executeUpdate();
             System.out.println("Réclamation ajoutée avec succès !");
         } catch (SQLException e) {
@@ -34,6 +39,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void ModifierRec(Reclamation reclamation) {
@@ -81,7 +87,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
     @Override
     public List<Reclamation> RechercherRec() {
-        String req = "SELECT Id, idUser, Titre, Description, Type FROM Reclamation";
+        String req = "SELECT Id, idUser, Titre, Description, Type, Statut FROM reclamation";
         List<Reclamation> reclamations = new ArrayList<>();
 
         try (Statement st = connection.createStatement();
@@ -93,7 +99,8 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                 r.setIdUser(rs.getInt("idUser"));
                 r.setTitre(rs.getString("Titre"));
                 r.setDescription(rs.getString("Description"));
-                r.setType(TypeReclamation.fromLabel(rs.getString("Type"))); // Conversion du label en TypeReclamation
+                r.setType(TypeReclamation.fromLabel(rs.getString("Type")));
+                r.setStatut(Statut.fromLabel(rs.getString("statut")));
 
                 reclamations.add(r);
             }
@@ -104,6 +111,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
         return reclamations;
     }
+
     @Override
     public List<Reclamation> RechercherRecParMotCle(String motCle) {
         String req = "SELECT Id, idUser, Titre, Description, Type FROM Reclamation WHERE Titre LIKE ? OR Description LIKE ? OR Type LIKE ?";
@@ -134,5 +142,28 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
         return reclamations;
     }
+    @Override
+    public void ModifierStatut(Reclamation reclamation) {
+        // Requête pour mettre à jour le statut de la réclamation dans la base de données
+        String req = "UPDATE reclamation SET statut = ? WHERE id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, reclamation.getStatut().getLabel());
+            ps.setInt(2, reclamation.getId());
+
+            // Exécution de la requête de mise à jour
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Statut de la réclamation mis à jour avec succès !");
+            } else {
+                System.out.println("Aucune réclamation trouvée avec cet ID !");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la mise à jour du statut de la réclamation : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
 
 }

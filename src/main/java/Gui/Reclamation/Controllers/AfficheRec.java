@@ -1,5 +1,6 @@
 package Gui.Reclamation.Controllers;
 
+import Models.Reclamation.Statut;
 import Services.Reclamation.Crud.ReclamationService;
 import Models.Reclamation.Reclamation;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -37,6 +38,9 @@ public class AfficheRec {
     @FXML
     private TableColumn<Reclamation, String> colActions;
     @FXML
+    private TableColumn<Reclamation, String> colStatut;
+
+    @FXML
     private TextField searchField;
 
     private ReclamationService reclamationService;
@@ -51,8 +55,15 @@ public class AfficheRec {
         colTitre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitre()));
         colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
         colType.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().getLabel()));
+        colStatut.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatut().getLabel()));
+
         addActionsColumn();
         loadReclamations();
+
+        // Recherche dynamique
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            searchReclamation(newValue);
+        });
     }
 
     private void loadReclamations() {
@@ -68,9 +79,13 @@ public class AfficheRec {
                 return new TableCell<Reclamation, String>() {
                     final Button editButton = new Button();
                     final Button deleteButton = new Button();
+                    final Button btnResolved = new Button("✅");
+                    final Button btnInProgress = new Button("⏳");
+                    final Button btnRejected = new Button("❌");
                     final HBox hBox = new HBox(10);
 
                     {
+                        // Ajouter les icônes et les boutons pour chaque action
                         Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
                         Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
                         ImageView editImageView = new ImageView(editIcon);
@@ -83,19 +98,38 @@ public class AfficheRec {
                         deleteButton.setGraphic(deleteImageView);
                         editButton.getStyleClass().add("table-button");
                         deleteButton.getStyleClass().addAll("table-button", "delete");
-                        hBox.getChildren().addAll(editButton, deleteButton);
+
+                        // Actions pour changer le statut
+                        btnResolved.setOnAction(event -> handleStatutChange(getTableRow().getItem(), Statut.RESOLUE));
+                        btnInProgress.setOnAction(event -> handleStatutChange(getTableRow().getItem(), Statut.EN_COURS));
+                        btnRejected.setOnAction(event -> handleStatutChange(getTableRow().getItem(), Statut.REJETEE));
+
+                        // Ajouter les boutons dans le HBox
+                        hBox.getChildren().addAll(editButton, deleteButton, btnResolved, btnRejected, btnInProgress);
                     }
+
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
                         if (empty) {
                             setGraphic(null);
                         } else {
+                            // Ajouter les actions des boutons pour chaque ligne
                             editButton.setOnAction(event -> handleEdit(getTableRow().getItem()));
                             deleteButton.setOnAction(event -> handleDelete(getTableRow().getItem()));
                             setGraphic(hBox);
                         }
                     }
+
+                    // Gestion du changement de statut
+                    private void handleStatutChange(Reclamation reclamation, Statut newStatut) {
+                        if (reclamation != null) {
+                            reclamation.setStatut(newStatut);
+                            reclamationService.ModifierStatut(reclamation);
+                            loadReclamations(); // Recharger les réclamations après la modification
+                        }
+                    }
+
                 };
             }
         });
@@ -122,13 +156,10 @@ public class AfficheRec {
         loadReclamations();
     }
 
-    @FXML
-    private void searchReclamation(ActionEvent event) {
-        String motCle = searchField.getText().toLowerCase();
+    // Recherche dynamique dès que l'utilisateur tape
+    private void searchReclamation(String motCle) {
+        List<Reclamation> resultatRecherche = reclamationService.RechercherRecParMotCle(motCle.toLowerCase());
 
-        List<Reclamation> resultatRecherche = reclamationService.RechercherRecParMotCle(motCle);
-
-        // Mettre à jour la TableView avec la liste filtrée
         ObservableList<Reclamation> data = FXCollections.observableArrayList(resultatRecherche);
         tableView.setItems(data);
     }

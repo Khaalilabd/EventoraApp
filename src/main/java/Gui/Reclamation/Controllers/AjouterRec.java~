@@ -44,17 +44,22 @@ public class AjouterRec {
         String titre = titleField.getText();
         String description = descField.getText();
         TypeReclamation type = typeField.getValue();
+
         if (titre.isEmpty() || description.isEmpty() || type == null) {
             showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
+
         Reclamation reclamation = new Reclamation(userId, titre, description, type);
-        reclamation.setStatut(Statut.EN_ATTENTE);
+        reclamation.setStatut(Statut.EN_ATTENTE);  // "En_Attente" devient "En_attente" dans la base de données
+
         reclamationService.AjouterRec(reclamation);
+
         showAlert("Succès", "Réclamation ajoutée avec succès !");
         clearFields();
         goToAfficherRec(event);
     }
+
 
     private void goToAfficherRec(ActionEvent event) {
         try {

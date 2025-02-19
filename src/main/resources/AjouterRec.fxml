@@ -29,9 +29,8 @@
             <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
             <Button text="📲 Réservation" styleClass="menu-button"/>
             <Button text="🎁 Services" styleClass="menu-button"/>
-            <Button text="💎 Packs" styleClass="menu-button"/>
             <Button text="⭐ FeedBack" styleClass="menu-button" onAction="#goToFeedback"/>
-            <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
+            <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation" />
             <Button text="🔧 Paramètres" styleClass="menu-button"/>
             <Button text="🛑 Déconnexion" styleClass="logout-button"/>
         </VBox>
