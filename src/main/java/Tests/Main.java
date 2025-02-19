@@ -1,6 +1,11 @@
 package Tests;
 
+import Models.Pack.Location;
+import Models.Pack.Pack;
+import Models.Pack.TypePack;
 import Models.Utilisateur.Utilisateurs;
+import Services.Pack.Crud.PackService;
+import Services.Pack.Crud.TypePackService;
 import Services.Utilisateur.MembresService;
 import Services.Reclamation.Interface.Ireclamation;
 import Services.Reclamation.Crud.ReclamationService;
@@ -10,126 +15,19 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        MembresService membresService = new MembresService();
-        Ireclamation<Reclamation> reclamationService = new ReclamationService();
-        Scanner scanner = new Scanner(System.in);
-        int choix;
+        TypePackService ps = new TypePackService();
+        //ps.ajouter(new TypePack("birthday"));
 
-        do {
-            System.out.println("\nMenu:");
-            System.out.println("1. Ajouter un membre");
-            System.out.println("2. Modifier un membre");
-            System.out.println("3. Supprimer un membre");
-            System.out.println("4. Afficher tous les membres");
-            System.out.println("5. Ajouter une réclamation");
-            System.out.println("6. Modifier une réclamation");
-            System.out.println("7. Supprimer une réclamation");
-            System.out.println("8. Afficher toutes les réclamations");
-            System.out.println("0. Quitter");
-            System.out.print("Choisissez une option: ");
-            choix = scanner.nextInt();
-            scanner.nextLine(); // Pour consommer la nouvelle ligne après nextInt()
+        // Type existant
+        //TypePack typePack = new TypePack("mariage");
+        PackService p = new PackService();
 
-            switch (choix) {
-                case 1:
-                    // Ajouter un membre
-                    System.out.print("Entrez le nom du membre: ");
-                    String nom = scanner.nextLine();
-                    System.out.print("Entrez le prénom du membre: ");
-                    String prenom = scanner.nextLine();
-                    System.out.print("Entrez l'email du membre: ");
-                    String email = scanner.nextLine();
-                    System.out.print("Entrez le CIN du membre: ");
-                    String cin = scanner.nextLine();
-                    System.out.print("Entrez l'adresse du membre: ");
-                    String adresse = scanner.nextLine();
-                    System.out.print("Entrez le numéro de téléphone du membre: ");
-                    String numTel = scanner.nextLine();
-                    Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel);
-                    membresService.AjouterMem(nouveauMembre);
-                    break;
+        // Création d'un pack avec ce type
+        //p.ajouter(new Pack("Luxurious wedding", "A fairytail like wedding", 500.0, Location.HOTEL, typePack, 100));
+        //p.ajouter(new Pack("Dream Birthday", "Celebrate your birthday in style", 200.0, Location.SALLE_DE_FETE, new TypePack("birthday"), 50));
+        //p.supprimer(new Pack("Dream Birthday"));
 
-                case 2:
-                    // Modifier un membre
-                    System.out.print("Entrez l'ID du membre à modifier: ");
-                    int idMemMod = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.print("Entrez la nouvelle adresse du membre: ");
-                    String newAdresse = scanner.nextLine();
-                    Utilisateurs membreModifie = new Utilisateurs();
-                    membreModifie.setId(idMemMod);
-                    membreModifie.setAdresse(newAdresse);
-                    membresService.ModifierMem(membreModifie);
-                    break;
+        p.rechercher();
 
-                case 3:
-                    // Supprimer un membre
-                    System.out.print("Entrez l'ID du membre à supprimer: ");
-                    int idMemSupp = scanner.nextInt();
-                    scanner.nextLine();
-                    Utilisateurs membreASupprimer = new Utilisateurs();
-                    membreASupprimer.setId(idMemSupp);
-                    membresService.SupprimerMem(membreASupprimer);
-                    break;
-
-                case 4:
-                    // Afficher tous les membres
-                    List<Utilisateurs> membres = membresService.RechercherMem();
-                    for (Utilisateurs m : membres) {
-                        System.out.println(m);
-                    }
-                    break;
-
-                case 5:
-                    // Ajouter une réclamation
-                    System.out.print("Entrez l'ID de la réclamation: ");
-                    int idRec = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.print("Entrez le titre de la réclamation: ");
-                    String titre = scanner.nextLine();
-                    System.out.print("Entrez la description de la réclamation: ");
-                    String description = scanner.nextLine();
-                    Reclamation nouvelleReclamation = new Reclamation(idRec, titre, description);
-                    reclamationService.AjouterRec(nouvelleReclamation);
-                    break;
-
-                case 6:
-                    // Modifier une réclamation
-                    System.out.print("Entrez l'ID de la réclamation à modifier: ");
-                    int idRecMod = scanner.nextInt();
-                    scanner.nextLine();
-                    System.out.print("Entrez le nouveau titre de la réclamation: ");
-                    String newTitre = scanner.nextLine();
-                    System.out.print("Entrez la nouvelle description de la réclamation: ");
-                    String newDescription = scanner.nextLine();
-                    Reclamation reclamationModifiee = new Reclamation(idRecMod, newTitre, newDescription);
-                    reclamationService.ModifierRec(reclamationModifiee);
-                    break;
-
-                case 7:
-                    // Supprimer une réclamation
-                    System.out.print("Entrez l'ID de la réclamation à supprimer: ");
-                    int idRecSupp = scanner.nextInt();
-                    scanner.nextLine();
-                    Reclamation reclamationASupprimer = new Reclamation(idRecSupp, "", "");
-                    reclamationService.SupprimerRec(reclamationASupprimer);
-                    break;
-
-                case 8:
-                    // Afficher toutes les réclamations
-                    System.out.println("Liste des réclamations: " + reclamationService.RechercherRec());
-                    break;
-
-                case 0:
-                    System.out.println("Au revoir!");
-                    break;
-
-                default:
-                    System.out.println("Option invalide. Veuillez réessayer.");
-                    break;
-            }
-        } while (choix != 0);
-
-        scanner.close();
     }
 }
