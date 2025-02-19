@@ -4,6 +4,8 @@ import Services.Reclamation.Crud.ReclamationService;
 import Models.Reclamation.Reclamation;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -24,21 +26,18 @@ public class AfficheRec {
 
     @FXML
     private TableView<Reclamation> tableView;
-
     @FXML
     private TableColumn<Reclamation, Integer> colId;
-
     @FXML
     private TableColumn<Reclamation, String> colTitre;
-
     @FXML
     private TableColumn<Reclamation, String> colDescription;
-
     @FXML
     private TableColumn<Reclamation, String> colType;
-
     @FXML
     private TableColumn<Reclamation, String> colActions;
+    @FXML
+    private TextField searchField;
 
     private ReclamationService reclamationService;
 
@@ -52,7 +51,6 @@ public class AfficheRec {
         colTitre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitre()));
         colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
         colType.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().getLabel()));
-
         addActionsColumn();
         loadReclamations();
     }
@@ -64,7 +62,6 @@ public class AfficheRec {
 
     private void addActionsColumn() {
         colActions.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
-
         colActions.setCellFactory(new Callback<TableColumn<Reclamation, String>, TableCell<Reclamation, String>>() {
             @Override
             public TableCell<Reclamation, String> call(TableColumn<Reclamation, String> param) {
@@ -74,30 +71,20 @@ public class AfficheRec {
                     final HBox hBox = new HBox(10);
 
                     {
-                        // Chargement des icônes dans les boutons
                         Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
                         Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
-
-                        // Icônes pour les boutons
                         ImageView editImageView = new ImageView(editIcon);
                         ImageView deleteImageView = new ImageView(deleteIcon);
-
                         editImageView.setFitHeight(20);
                         editImageView.setFitWidth(20);
                         deleteImageView.setFitHeight(20);
                         deleteImageView.setFitWidth(20);
-
-                        // Ajout des icônes dans les boutons
                         editButton.setGraphic(editImageView);
                         deleteButton.setGraphic(deleteImageView);
-
-                        // Style des boutons
                         editButton.getStyleClass().add("table-button");
                         deleteButton.getStyleClass().addAll("table-button", "delete");
-
                         hBox.getChildren().addAll(editButton, deleteButton);
                     }
-
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -127,20 +114,27 @@ public class AfficheRec {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-}
+    }
 
     private void handleDelete(Reclamation reclamation) {
         System.out.println("Supprimer la réclamation avec ID : " + reclamation.getId());
         reclamationService.SupprimerRec(reclamation);
-        loadReclamations();  // Recharger la liste des réclamations après suppression
+        loadReclamations();
+    }
+
+    @FXML
+    private void searchReclamation(ActionEvent event) {
+        String motCle = searchField.getText().toLowerCase();
+
+        List<Reclamation> resultatRecherche = reclamationService.RechercherRecParMotCle(motCle);
+
+        // Mettre à jour la TableView avec la liste filtrée
+        ObservableList<Reclamation> data = FXCollections.observableArrayList(resultatRecherche);
+        tableView.setItems(data);
     }
 
     @FXML
     private void addReclamation() throws IOException {
-        // Charger l'interface AjouterRec.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterRec.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = new Stage();
@@ -151,7 +145,7 @@ public class AfficheRec {
 
     @FXML
     private void refreshList() {
-        loadReclamations();  // Recharger les réclamations
+        loadReclamations();
     }
 
     @FXML
@@ -166,7 +160,6 @@ public class AfficheRec {
 
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        // Charger l'interface Reclamation.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);
@@ -174,6 +167,7 @@ public class AfficheRec {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     private void goToFeedback(ActionEvent event) {
         try {

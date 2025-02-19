@@ -19,42 +19,32 @@ import java.io.IOException;
 public class ModifierFeedback {
 
     @FXML
-    private JFXTextArea descField; // Champ de texte pour la description
-
+    private JFXTextArea descField;
     @FXML
-    private JFXCheckBox recommendCheck; // Case à cocher pour la recommandation
-
+    private JFXCheckBox recommendCheck;
     @FXML
-    private JFXButton star1, star2, star3, star4, star5; // Boutons d'étoiles
-
+    private JFXButton star1, star2, star3, star4, star5;
     @FXML
-    private JFXButton submitButton; // Bouton de soumission
-
+    private JFXButton submitButton;
     @FXML
-    private Button cancelButton; // Bouton d'annulation
-
-    private final FeedBackService feedbackService = new FeedBackService(); // Service de gestion des feedbacks
-    private int selectedStars = 0; // Variable pour stocker les étoiles sélectionnées
+    private Button cancelButton;
+    private final FeedBackService feedbackService = new FeedBackService();
+    private int selectedStars = 0;
 
     @FXML
     public void initialize() {
-        // Configuration des boutons d'étoiles
         star1.setOnAction(e -> selectStars(1));
         star2.setOnAction(e -> selectStars(2));
         star3.setOnAction(e -> selectStars(3));
         star4.setOnAction(e -> selectStars(4));
         star5.setOnAction(e -> selectStars(5));
-
-        // Action des boutons
         submitButton.setOnAction(this::handleSubmit);
         cancelButton.setOnAction(this::handleCancel);
     }
 
     private void selectStars(int stars) {
         selectedStars = stars;
-        // Mettre à jour l'apparence des étoiles (par exemple, changer leur couleur)
         resetStarButtons();
-        // Modifier la couleur des étoiles sélectionnées
         for (int i = 0; i < stars; i++) {
             JFXButton starButton = getStarButton(i);
             starButton.setStyle("-fx-font-size: 24px; -fx-text-fill: gold;");
@@ -62,7 +52,6 @@ public class ModifierFeedback {
     }
 
     private void resetStarButtons() {
-        // Réinitialiser la couleur de toutes les étoiles
         star1.setStyle("-fx-font-size: 24px; -fx-text-fill: gray;");
         star2.setStyle("-fx-font-size: 24px; -fx-text-fill: gray;");
         star3.setStyle("-fx-font-size: 24px; -fx-text-fill: gray;");
@@ -85,21 +74,13 @@ public class ModifierFeedback {
     private void handleSubmit(ActionEvent event) {
         String description = descField.getText();
         int vote = selectedStars;
-
-        // Récupérer l'état de la case à cocher (si elle est cochée, recommend = Oui, sinon = Non)
         Recommend recommendation = recommendCheck.isSelected() ? Recommend.Oui : Recommend.Non;
-
         if (description.isEmpty() || vote == 0) {
             showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
-
-        // Créer un nouvel objet Feedback avec les données
         Feedback feedback = new Feedback(description, vote, recommendation);
-
-        // Appeler le service pour enregistrer le feedback
         feedbackService.ModifierFeedBack(feedback);
-
         showAlert("Succès", "Feedback envoyé avec succès !");
         clearFields();
         navigateToFeedbackPage(event);
@@ -108,20 +89,14 @@ public class ModifierFeedback {
     @FXML
     private void handleCancel(ActionEvent event) {
         try {
-            // Charger la scène AfficheFeedback
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheFeedback.fxml"));
-            AnchorPane feedbackPage = loader.load();  // Charger le fichier FXML
-
-            // Créer une nouvelle scène
+            AnchorPane feedbackPage = loader.load();
             Scene scene = new Scene(feedbackPage);
-
-            // Obtenir la fenêtre actuelle (Stage)
             Stage stage = (Stage) cancelButton.getScene().getWindow();
             stage.setScene(scene); // Changer la scène
-            stage.show(); // Afficher la nouvelle scène
+            stage.show();
 
         } catch (IOException e) {
-            // Gérer les erreurs de chargement
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Erreur de navigation");
             alert.setHeaderText("Une erreur est survenue lors du changement de page.");
@@ -134,8 +109,6 @@ public class ModifierFeedback {
         descField.clear();
         recommendCheck.setSelected(false);
         selectedStars = 0;
-
-        // Réinitialiser l'apparence des étoiles
         resetStarButtons();
     }
 
@@ -150,15 +123,10 @@ public class ModifierFeedback {
     @FXML
     private void navigateToFeedbackPage(ActionEvent event) {
         try {
-            // Charger la scène de la page "AfficheFeedback"
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheFeedback.fxml"));
             Parent root = loader.load();
-
-            // Obtenir la scène actuelle
             Scene currentScene = ((Node) event.getSource()).getScene();
             Stage stage = (Stage) currentScene.getWindow();
-
-            // Changer de scène
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {

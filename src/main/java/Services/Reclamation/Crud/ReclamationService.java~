@@ -104,35 +104,4 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
         return reclamations;
     }
-    @Override
-    public List<Reclamation> RechercherRecParMotCle(String motCle) {
-        String req = "SELECT Id, idUser, Titre, Description, Type FROM Reclamation WHERE Titre LIKE ? OR Description LIKE ? OR Type LIKE ?";
-        List<Reclamation> reclamations = new ArrayList<>();
-
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
-            // Utilisation de LIKE avec % pour rechercher le mot-clé dans les colonnes
-            ps.setString(1, "%" + motCle + "%");
-            ps.setString(2, "%" + motCle + "%");
-            ps.setString(3, "%" + motCle + "%");
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    Reclamation r = new Reclamation();
-                    r.setId(rs.getInt("Id"));
-                    r.setIdUser(rs.getInt("idUser"));
-                    r.setTitre(rs.getString("Titre"));
-                    r.setDescription(rs.getString("Description"));
-                    r.setType(TypeReclamation.fromLabel(rs.getString("Type"))); // Conversion du label en TypeReclamation
-
-                    reclamations.add(r);
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des réclamations par mot-clé : " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return reclamations;
-    }
-
 }

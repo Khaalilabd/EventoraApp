@@ -145,4 +145,29 @@ public class FeedBackService implements IfeedBack<Feedback> {
 
         return feedbacks;
     }
+    @Override
+    public List<Feedback> rechercherParMotCle(String motCle) {
+        String req = "SELECT * FROM Feedback WHERE description LIKE ?";
+        List<Feedback> feedbacks = new ArrayList<>();
+
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, "%" + motCle + "%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Feedback f = new Feedback();
+                f.setId(rs.getInt("id"));
+                f.setIdUser(rs.getInt("idUser"));
+                f.setVote(rs.getInt("vote"));
+                f.setDescription(rs.getString("description"));
+
+                feedbacks.add(f);
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la recherche par mot clé : " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return feedbacks;
+    }
 }

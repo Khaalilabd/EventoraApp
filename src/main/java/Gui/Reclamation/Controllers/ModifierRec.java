@@ -21,7 +21,7 @@ public class ModifierRec {
     private TextField titleField;
 
     @FXML
-    private ComboBox<TypeReclamation> typeField; // ComboBox pour le type
+    private ComboBox<TypeReclamation> typeField;
 
     @FXML
     private TextArea descField;
@@ -32,30 +32,25 @@ public class ModifierRec {
     @FXML
     private Button cancelButton;
 
-    private Reclamation reclamationToEdit; // Ajout de cette variable pour contenir la réclamation à modifier
+    private Reclamation reclamationToEdit;
     private final ReclamationService reclamationService = new ReclamationService();
 
     @FXML
     public void initialize() {
-        typeField.getItems().setAll(TypeReclamation.values()); // Ajoute tous les types de réclamation à la liste du ComboBox
+        typeField.getItems().setAll(TypeReclamation.values());
 
         submitButton.setOnAction(this::modifierReclamation);
         cancelButton.setOnAction(event -> annuler());
     }
 
-    // Méthode pour pré-remplir les champs avec les données de la réclamation à modifier
     public void setReclamationToEdit(Reclamation reclamation) {
         this.reclamationToEdit = reclamation;
-
-        // Vérification : affichage des valeurs reçues dans la console pour debug
         System.out.println("Titre: " + reclamation.getTitre());
         System.out.println("Description: " + reclamation.getDescription());
         System.out.println("Type: " + reclamation.getType());
-
-        // Pré-remplir les champs avec les données de la réclamation existante
         titleField.setText(reclamation.getTitre());
         descField.setText(reclamation.getDescription());
-        typeField.setValue(reclamation.getType()); // Sélectionner le type de réclamation
+        typeField.setValue(reclamation.getType());
     }
 
     private void modifierReclamation(ActionEvent event) {
@@ -67,15 +62,10 @@ public class ModifierRec {
             showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
-
-        // Mise à jour de la réclamation avec les nouvelles valeurs
         reclamationToEdit.setTitre(titre);
         reclamationToEdit.setDescription(description);
         reclamationToEdit.setType(type);
-
-        // Appel à la méthode ModifierRec du service
         reclamationService.ModifierRec(reclamationToEdit);
-
         showAlert("Succès", "Réclamation modifiée avec succès !");
         clearFields();
         goToAfficherRec(event);
@@ -93,13 +83,10 @@ public class ModifierRec {
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
         alert.getDialogPane().getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
-
         alert.setTitle(title);
-        alert.setHeaderText(null);  // On peut personnaliser ou laisser vide
+        alert.setHeaderText(null);
         alert.setContentText(content);
-
         alert.showAndWait();
     }
 
@@ -118,7 +105,6 @@ public class ModifierRec {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheRec.fxml"));
             Parent root = loader.load();
-
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

@@ -35,17 +35,14 @@ public class AjouterFeedback {
 
     @FXML
     private void initialize() {
-        // Initialisation du système de notation par étoiles
         JFXButton[] stars = {star1, star2, star3, star4, star5};
         for (int i = 0; i < stars.length; i++) {
             int ratingValue = i + 1;
             stars[i].addEventHandler(MouseEvent.MOUSE_CLICKED, event -> updateRating(ratingValue));
         }
-
         submitButton.setOnAction(event -> handleSubmit());
     }
 
-    // Mise à jour de la note (étoiles dorées ou grises)
     private void updateRating(int value) {
         rating = value;
         JFXButton[] stars = {star1, star2, star3, star4, star5};
@@ -54,14 +51,10 @@ public class AjouterFeedback {
         }
     }
 
-    // Gestion de la soumission du feedback
     @FXML
     private void handleSubmit() {
         String description = descField.getText();
-
-        // Vérifier la case recommend
         Recommend recommend = recommendCheck.isSelected() ? Recommend.Oui : Recommend.Non;
-
         if (description.trim().isEmpty()) {
             showAlert("Error", "Please provide feedback.");
             return;
@@ -69,13 +62,9 @@ public class AjouterFeedback {
         Feedback newFeedBack = new Feedback();
         newFeedBack.setVote(rating);
         newFeedBack.setDescription(description);
-        newFeedBack.setIdUser(1); // Exemple, à remplacer par l'ID de l'utilisateur actuel
-        newFeedBack.setRecommend(recommend); // Enregistrer directement l'énumération
-
-        // Ajouter le feedback dans la base de données
+        newFeedBack.setIdUser(1);
+        newFeedBack.setRecommend(recommend);
         feedBackService.AjouterFeedBack(newFeedBack);
-
-        // Afficher les informations de feedback pour débogage (facultatif)
         System.out.println("Rating: " + rating);
         System.out.println("Feedback: " + description);
         System.out.println("Recommend: " + recommend);
@@ -84,8 +73,6 @@ public class AjouterFeedback {
 
         goToAfficherFeedback();
     }
-
-    // Méthode pour afficher une alerte
     private void showAlert(String title, String message) {
         JFXAlert<?> alert = new JFXAlert<>();
         JFXDialogLayout layout = new JFXDialogLayout();
@@ -95,15 +82,13 @@ public class AjouterFeedback {
         alert.show();
     }
 
-    // Méthode pour rediriger vers AfficherFeedback
     @FXML
     private void goToAfficherFeedback() {
         try {
-            // Charger l'interface AfficherFeedback.fxml
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheFeedback.fxml")); // Vérifie que c'est le bon chemin
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheFeedback.fxml"));
             AnchorPane feedbackLayout = loader.load();
             Scene scene = new Scene(feedbackLayout);
-            Stage stage = (Stage) submitButton.getScene().getWindow(); // On récupère la scène de l'utilisateur
+            Stage stage = (Stage) submitButton.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
@@ -114,7 +99,6 @@ public class AjouterFeedback {
 
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        // Charger l'interface Reclamation.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);

@@ -15,11 +15,9 @@ public class Reclamation {
 
     @FXML
     private Button ajouterButton;
-
     @FXML
     private Button viewButton;
 
-    // Action pour ajouter une réclamation
     @FXML
     private void handleAddAction(ActionEvent event) {
         try {
@@ -34,7 +32,6 @@ public class Reclamation {
         }
     }
 
-    // Action pour afficher les réclamations
     @FXML
     private void handleViewAction(ActionEvent event) {
         try {

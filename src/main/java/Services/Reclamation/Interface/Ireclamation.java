@@ -7,5 +7,5 @@ public interface Ireclamation<T> {
     void ModifierRec(T t);
     void SupprimerRec(T t);
     List<T> RechercherRec();
-    // T rechercherParId(int id);  // Recherche par ID
+    List<T> RechercherRecParMotCle(String motCle); // Ajout de la méthode pour rechercher par mot-clé
 }

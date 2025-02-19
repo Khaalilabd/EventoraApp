@@ -2,15 +2,18 @@ package Gui.Reclamation.Controllers;
 
 import Services.Reclamation.Crud.FeedBackService;
 import Models.Reclamation.Feedback;
-import Models.Reclamation.Recommend;  // Importer l'énumération Recommend
+import Models.Reclamation.Recommend;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.chart.PieChart;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.Scene;
@@ -20,16 +23,12 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.application.Platform;
 import javafx.util.Callback;
-import javafx.util.StringConverter;
-
 import java.io.IOException;
 import java.util.List;
 
 public class AfficheFeedback {
-
     @FXML
     private TableView<Feedback> feedbackTable;
-
     @FXML
     private TableColumn<Feedback, Integer> colId;
     @FXML
@@ -39,9 +38,11 @@ public class AfficheFeedback {
     @FXML
     private TableColumn<Feedback, String> colDescription;
     @FXML
-    private TableColumn<Feedback, Recommend> colRecommend;  // Utiliser Recommend au lieu de String
+    private TableColumn<Feedback, Recommend> colRecommend;
     @FXML
     private TableColumn<Feedback, String> colActions;
+    @FXML
+    private TextField searchField;
 
     private FeedBackService feedbackService;
 
@@ -56,7 +57,6 @@ public class AfficheFeedback {
         colVote.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getVote()).asObject());
         colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
 
-        // Lier colRecommend à l'énumération Recommend et formater l'affichage avec un StringConverter
         colRecommend.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getRecommend()));
         colRecommend.setCellFactory(param -> new TableCell<Feedback, Recommend>() {
             @Override
@@ -65,11 +65,10 @@ public class AfficheFeedback {
                 if (empty || item == null) {
                     setText(null);
                 } else {
-                    setText(item.getLabel());  // Afficher le libellé de l'énumération
+                    setText(item.getLabel());
                 }
             }
         });
-
         addActionsColumn();
         loadFeedbacks();
     }
@@ -81,13 +80,11 @@ public class AfficheFeedback {
             Platform.runLater(() -> feedbackTable.getItems().setAll(feedbackList));
         } catch (Exception e) {
             e.printStackTrace();
-            // Gérer l'erreur de récupération des feedbacks
         }
     }
 
     private void addActionsColumn() {
         colActions.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
-
         colActions.setCellFactory(new Callback<TableColumn<Feedback, String>, TableCell<Feedback, String>>() {
             @Override
             public TableCell<Feedback, String> call(TableColumn<Feedback, String> param) {
@@ -95,28 +92,18 @@ public class AfficheFeedback {
                     final ImageView editImageView = new ImageView(new Image(getClass().getResourceAsStream("/Images/modif.png")));
                     final ImageView deleteImageView = new ImageView(new Image(getClass().getResourceAsStream("/Images/supp.png")));
                     final HBox hBox = new HBox(10);
-
                     {
-                        // Redimensionner les icônes pour qu'elles occupent toute la taille de la cellule
                         editImageView.setPreserveRatio(true);
                         deleteImageView.setPreserveRatio(true);
-
-                        // Ajouter les icônes dans le HBox
                         hBox.getChildren().addAll(editImageView, deleteImageView);
-
-                        // Centrer les icônes dans la cellule
                         hBox.setAlignment(Pos.CENTER);
                         hBox.setSpacing(15);
-
-                        // Appliquer un style (si nécessaire)
                         editImageView.getStyleClass().add("table-icon");
                         deleteImageView.getStyleClass().addAll("table-icon", "delete");
-
-                        // Appliquer un redimensionnement automatique des images pour remplir la cellule
-                        editImageView.fitWidthProperty().bind(widthProperty().multiply(0.4)); // Ajuste la largeur de l'image
-                        deleteImageView.fitWidthProperty().bind(widthProperty().multiply(0.4)); // Ajuste la largeur de l'image
-                        editImageView.fitHeightProperty().bind(heightProperty()); // Redimensionner en fonction de la hauteur
-                        deleteImageView.fitHeightProperty().bind(heightProperty()); // Redimensionner en fonction de la hauteur
+                        editImageView.fitWidthProperty().bind(widthProperty().multiply(0.4));
+                        deleteImageView.fitWidthProperty().bind(widthProperty().multiply(0.4));
+                        editImageView.fitHeightProperty().bind(heightProperty());
+                        deleteImageView.fitHeightProperty().bind(heightProperty());
                     }
 
                     @Override
@@ -126,12 +113,8 @@ public class AfficheFeedback {
                             setGraphic(null);
                         } else {
                             Feedback feedback = getTableRow().getItem();
-
-                            // Ajouter les événements sur les icônes
                             editImageView.setOnMouseClicked(event -> handleEdit(feedback));
                             deleteImageView.setOnMouseClicked(event -> handleDelete(feedback));
-
-                            // Définir le graphique de la cellule
                             setGraphic(hBox);
                         }
                     }
@@ -142,37 +125,26 @@ public class AfficheFeedback {
 
 
     private void handleEdit(Feedback feedback) {
-        // Gérer la modification du feedback
         System.out.println("Modifier le feedback avec ID : " + feedback.getId());
-
         try {
-            // Charger le fichier FXML pour l'interface de modification
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierFeedback.fxml"));
             AnchorPane modifierFeedbackLayout = loader.load();
-
-            // Passer l'objet Feedback à l'interface ModifierFeedback
             ModifierFeedback controller = loader.getController();
-            controller.setFeedback(feedback);  // Passer le feedback à l'interface de modification
-
-            // Créer une nouvelle scène pour l'interface de modification
+            controller.setFeedback(feedback);
             Scene scene = new Scene(modifierFeedbackLayout);
             Stage stage = (Stage) feedbackTable.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            // Gérer l'erreur de chargement de l'interface
         }
     }
 
 
     private void handleDelete(Feedback feedback) {
-        // Gérer la suppression du feedback
         System.out.println("Supprimer le feedback avec ID : " + feedback.getId());
         feedbackService.SupprimerFeedBack(feedback);
-        loadFeedbacks();  // Recharger les feedbacks après suppression
-
-        // Afficher un message de confirmation
+        loadFeedbacks();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Suppression réussie");
         alert.setHeaderText(null);
@@ -189,10 +161,38 @@ public class AfficheFeedback {
         stage.setScene(scene);
         stage.show();
     }
-
     @FXML
     private void refreshList() {
-        loadFeedbacks();  // Recharger les feedbacks
+        loadFeedbacks();
+    }
+    @FXML
+    private void handleShowPieChart(ActionEvent event) {
+        int ouiCount = 0;
+        int nonCount = 0;
+
+        for (Feedback feedback : feedbackTable.getItems()) {
+            if (feedback.getRecommend() == Recommend.Oui) {
+                ouiCount++;
+            } else if (feedback.getRecommend() == Recommend.Non) {
+                nonCount++;
+            }
+        }
+        PieChart.Data ouiData = new PieChart.Data("Oui (" + ouiCount + ")", ouiCount);
+        PieChart.Data nonData = new PieChart.Data("Non (" + nonCount + ")", nonCount);
+        PieChart pieChart = new PieChart();
+        pieChart.getData().addAll(ouiData, nonData);
+        pieChart.setTitle("Répartition des Recommandations");
+        for (PieChart.Data data : pieChart.getData()) {
+            if (data.getName().startsWith("Oui")) {
+                data.getNode().setStyle("-fx-pie-color: pink;");
+            } else if (data.getName().startsWith("Non")) {
+                data.getNode().setStyle("-fx-pie-color: #11a791;");
+            }
+        }
+        Stage chartStage = new Stage();
+        chartStage.setTitle("Graphique des Recommandations");
+        chartStage.setScene(new Scene(pieChart, 600, 400));
+        chartStage.show();
     }
 
     @FXML
@@ -206,12 +206,20 @@ public class AfficheFeedback {
     }
 
     @FXML
+    private void searchFeedback(ActionEvent event) {
+        String motCle = searchField.getText().toLowerCase();
+        List<Feedback> resultatRecherche = feedbackService.rechercherParMotCle(motCle);
+        ObservableList<Feedback> data = FXCollections.observableArrayList(resultatRecherche);
+        feedbackTable.setItems(data);
+    }
+
+    @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        Scene reclamationScene = new Scene(reclamationLayout);
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.setScene(reclamationScene);
+        currentStage.show();
     }
 }

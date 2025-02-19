@@ -16,7 +16,7 @@ public class FXMain extends Application {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setTitle("Ajouter");
+            stage.setTitle("EventoraAPP");
             stage.show();}
         catch (RuntimeException | IOException r){
             System.out.println(r.getMessage());

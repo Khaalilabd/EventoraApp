@@ -14,12 +14,9 @@ import java.io.IOException;
 public class Feedback {
 
     @FXML
-    private Button ajouterButton;  // Correspond à "fx:id=ajouterButton" dans Feedback.fxml
-
+    private Button ajouterButton;
     @FXML
-    private Button viewButton;  // Correspond à "fx:id=viewButton" dans Feedback.fxml
-
-    // Méthode pour charger une scène en fonction du fichier FXML donné
+    private Button viewButton;
     private void loadScene(ActionEvent event, String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
@@ -33,19 +30,15 @@ public class Feedback {
         }
     }
 
-    // Action pour ajouter un feedback
     @FXML
     private void handleAddAction(ActionEvent event) {
         loadScene(event, "/AjouterFeedback.fxml");
     }
 
-
-    // Action pour afficher les feedbacks
     @FXML
     private void handleViewAction(ActionEvent event) {
         loadScene(event, "/AfficheFeedback.fxml");
     }
-
     @FXML
     private void goToReclamation(ActionEvent event) {
         loadScene(event, "/Reclamation.fxml");
@@ -54,5 +47,4 @@ public class Feedback {
     private void goToFeedback(ActionEvent event) {
         loadScene(event, "/Feedback.fxml");
     }
-
 }
