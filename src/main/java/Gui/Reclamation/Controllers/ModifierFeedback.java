@@ -135,6 +135,15 @@ public class ModifierFeedback {
         }
     }
 
+    @FXML
+    private void goToFeedback(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Feedback.fxml"));
+        AnchorPane feedbackLayout = loader.load();
+        Scene feedbackScene = new Scene(feedbackLayout);
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.setScene(feedbackScene);
+        currentStage.show();
+    }
 
     public void setFeedback(Feedback feedback) {
         // Logique pour modifier les informations du feedback (si nécessaire)

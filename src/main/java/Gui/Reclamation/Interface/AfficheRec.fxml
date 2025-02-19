@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -29,13 +30,13 @@
                 <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
                 <Button text="📲 Réservation" styleClass="menu-button"/>
                 <Button text="🎁 Services" styleClass="menu-button"/>
+                <Button text="💎 Packs" styleClass="menu-button"/>
                 <Button text="⭐ FeedBack" styleClass="menu-button" onAction="#goToFeedback"/>
-                <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation" />
+                <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
                 <Button text="🔧 Paramètres" styleClass="menu-button"/>
                 <Button text="🛑 Déconnexion" styleClass="logout-button"/>
             </VBox>
         </VBox>
-
         <!-- Contenu principal -->
         <VBox alignment="CENTER" layoutX="240" layoutY="50" prefHeight="687.0" prefWidth="802.0" spacing="20" style="-fx-padding: 20px;">
             <Label prefHeight="55.0" prefWidth="422.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 10px;" text="⛔ Liste des Réclamations ⛔" textAlignment="CENTER">
@@ -44,10 +45,14 @@
                 </font>
             </Label>
 
-            <!-- Ajouter et Actualiser Buttons -->
+            <!-- Ajouter, Actualiser, et Rechercher Buttons -->
             <HBox spacing="10">
                 <Button text="Ajouter" onAction="#addReclamation" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
                 <Button text="Actualiser" onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+
+                <!-- Zone de recherche -->
+                <TextField fx:id="searchField" promptText="Rechercher..." style="-fx-min-width: 200px;"/>
+                <Button text="Rechercher" onAction="#searchReclamation" style="-fx-background-color: #FFC107; -fx-text-fill: white;"/>
             </HBox>
 
             <!-- Tableau des réclamations -->

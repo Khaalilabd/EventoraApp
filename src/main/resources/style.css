@@ -22,16 +22,19 @@
     -fx-pref-height: 45px;
     -fx-border-radius: 8px;
     -fx-background-radius: 8px;
-    -fx-border-color: transparent;
+    -fx-border-color: transparent;  /* Bordure transparente par défaut */
     -fx-padding: 10px;
     -fx-font-weight: 500;
+    -fx-transition: all 0.3s ease-in-out; /* Transition pour l'animation */
 }
 
 /* Contour coloré au survol */
 .menu-button:hover {
-    -fx-border-color: #1ABC9C;
-    -fx-border-width: 2px;
-    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-border-color: #1ABC9C; /* Couleur de la bordure au survol */
+    -fx-border-width: 2px; /* Bordure visible au survol */
+    -fx-background-color: rgba(255, 255, 255, 0.1); /* Effet de survol avec fond légèrement transparent */
+    -fx-scale-x: 1.05;  /* Agrandissement sur l'axe X */
+    -fx-scale-y: 1.05;  /* Agrandissement sur l'axe Y */
 }
 
 /* Texte principal */
@@ -186,6 +189,7 @@
     background-color: #e74c3c;
     color: white;
 }
+
 .main-text {
     -fx-font-size: 18px; /* Taille de police augmentée */
     -fx-font-weight: bold; /* Texte en gras */
@@ -194,4 +198,65 @@
     -fx-alignment: center; /* Centrer le texte */
     -fx-padding: 20px; /* Espacement autour du texte */
     -fx-line-spacing: 5px; /* Espacement entre les lignes */
+}
+
+/* Style principal avec effet Glassmorphism */
+.main-container {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 15px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 5);
+}
+
+/* Effet des boutons */
+.add-button, .view-button {
+    -fx-background-color: linear-gradient(to bottom, #4CAF50, #388E3C);
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 5);
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+.add-button:hover, .view-button:hover {
+    -fx-background-color: linear-gradient(to bottom, #66BB6A, #43A047);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Style du menu */
+.menu-title {
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-pref-height: 45px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+    -fx-padding: 10px;
+    -fx-font-weight: 500;
+    -fx-transition: all 0.3s ease-in-out; /* Transition pour l'animation */
+}
+
+.menu-button:hover {
+    -fx-border-color: #1ABC9C; /* Couleur de la bordure au survol */
+    -fx-border-width: 2px; /* Bordure visible uniquement au survol */
+    -fx-background-color: rgba(255, 255, 255, 0.1); /* Effet de survol avec fond légèrement transparent */
+    -fx-scale-x: 1.05;  /* Agrandissement sur l'axe X */
+    -fx-scale-y: 1.05;  /* Agrandissement sur l'axe Y */
+}
+
+/* Style du texte principal */
+.main-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #2C3E50;
+    -fx-font-weight: bold;
+    -fx-text-alignment: center;
 }
