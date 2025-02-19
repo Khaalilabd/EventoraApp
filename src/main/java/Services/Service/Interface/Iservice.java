@@ -7,4 +7,6 @@ public interface Iservice <T>{
     void ModifierService(T t);
     void SupprimerService(T t);
     List<T> RechercherService();
+
+
 }

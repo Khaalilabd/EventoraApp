@@ -3,9 +3,6 @@ package Gui.Service.Controllers;
 import Services.Service.Crud.ServiceService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -47,12 +44,7 @@ public class AfficherService {
     @FXML
     private TableColumn<Service, String> colActions;
 
-    @FXML
-    private TextField searchField;  // The search field for filtering services
-
     private final ServiceService serviceService;
-
-    private ObservableList<Service> servicesList = FXCollections.observableArrayList();
 
     public AfficherService() {
         this.serviceService = new ServiceService();
@@ -68,31 +60,11 @@ public class AfficherService {
         prixColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrix()));
         addActionsColumn();
         loadServices();
-
-        // Create a FilteredList to filter services based on the search input
-        FilteredList<Service> filteredData = new FilteredList<>(servicesList, p -> true);
-
-        // Add a listener to the search field
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filteredData.setPredicate(service -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true; // Show all services if the search field is empty
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                return service.getTitre().toLowerCase().contains(lowerCaseFilter) ||
-                        service.getLocation().getLabel().toLowerCase().contains(lowerCaseFilter) ||
-                        service.getSponsors().getLabel().toLowerCase().contains(lowerCaseFilter) ||
-                        service.getDescription().toLowerCase().contains(lowerCaseFilter);
-            });
-        });
-
-        // Ensure that the TableView displays the filtered data
-        tableView.setItems(filteredData);
     }
 
     private void loadServices() {
         List<Service> services = serviceService.RechercherService();
-        servicesList.setAll(services); // Update the list of services
+        tableView.getItems().setAll(services);
     }
 
     private void addActionsColumn() {
@@ -102,11 +74,11 @@ public class AfficherService {
             final HBox hBox = new HBox(10);
 
             {
-                // Loading icons for buttons
+                // Chargement des icônes dans les boutons
                 Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
                 Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
 
-                // Icons for buttons
+                // Icônes pour les boutons
                 ImageView editImageView = new ImageView(editIcon);
                 ImageView deleteImageView = new ImageView(deleteIcon);
 
@@ -115,11 +87,11 @@ public class AfficherService {
                 deleteImageView.setFitHeight(20);
                 deleteImageView.setFitWidth(20);
 
-                // Add icons to buttons
+                // Ajout des icônes dans les boutons
                 editButton.setGraphic(editImageView);
                 deleteButton.setGraphic(deleteImageView);
 
-                // Button styles
+                // Style des boutons
                 editButton.getStyleClass().add("table-button");
                 deleteButton.getStyleClass().addAll("table-button", "delete");
 
@@ -158,11 +130,12 @@ public class AfficherService {
     private void handleDelete(Service service) {
         System.out.println("Supprimer le service avec ID : " + service.getId());
         serviceService.SupprimerService(service);
-        loadServices();  // Reload the list of services after deletion
+        loadServices();  // Recharger la liste des services après suppression
     }
 
     @FXML
     private void addService() throws IOException {
+        // Charger l'interface AjouterService.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterService.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = new Stage();
@@ -173,7 +146,7 @@ public class AfficherService {
 
     @FXML
     private void refreshList() {
-        loadServices(); // Reload the services list
+        loadServices(); // Recharger les services
     }
 
     @FXML
@@ -188,6 +161,7 @@ public class AfficherService {
 
     @FXML
     private void goToService(ActionEvent event) throws IOException {
+        // Charger l'interface Reclamation.fxml
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);

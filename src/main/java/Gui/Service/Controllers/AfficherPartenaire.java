@@ -3,6 +3,9 @@ package Gui.Service.Controllers;
 import Services.Service.Crud.PartenaireService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -48,7 +51,12 @@ public class AfficherPartenaire {
     @FXML
     private TableColumn<Partenaire, String> colActions;
 
+    @FXML
+    private TextField searchField;  // Le champ de texte pour la recherche
+
     private final PartenaireService partenaireService;
+
+    private ObservableList<Partenaire> partenairesList = FXCollections.observableArrayList();
 
     public AfficherPartenaire() {
         this.partenaireService = new PartenaireService();
@@ -58,6 +66,25 @@ public class AfficherPartenaire {
         configureColumns();
         addActionsColumn();
         loadPartenaires();
+
+        // Créer une liste filtrée
+        FilteredList<Partenaire> filteredData = new FilteredList<>(partenairesList, p -> true);
+
+        // Ajouter un écouteur sur le champ de recherche
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(partenaire -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true; // Si rien n'est écrit, afficher tous les partenaires
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                return partenaire.getNom_sponsors().toLowerCase().contains(lowerCaseFilter) ||
+                        partenaire.getEmail_sponsors().toLowerCase().contains(lowerCaseFilter) ||
+                        partenaire.getAdresse_sponsors().toLowerCase().contains(lowerCaseFilter);
+            });
+        });
+
+        // Assurez-vous que la TableView affiche les données filtrées
+        tableView.setItems(filteredData);
     }
 
     private void configureColumns() {
@@ -72,7 +99,7 @@ public class AfficherPartenaire {
 
     private void loadPartenaires() {
         List<Partenaire> partenaires = partenaireService.RechercherPartenaire();
-        tableView.getItems().setAll(partenaires);
+        partenairesList.setAll(partenaires); // Mettre à jour la liste des partenaires
     }
 
     private void addActionsColumn() {
@@ -157,4 +184,7 @@ public class AfficherPartenaire {
         stage.setScene(scene);
         stage.show();
     }
+
+
+
 }

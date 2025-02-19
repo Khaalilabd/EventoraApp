@@ -35,7 +35,7 @@ public class Service {
     @FXML
     private void handleViewAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherService.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheService.fxml"));
             AnchorPane viewRecLayout = loader.load();
             Scene viewRecScene = new Scene(viewRecLayout);
             Stage currentStage = (Stage) viewButton.getScene().getWindow();

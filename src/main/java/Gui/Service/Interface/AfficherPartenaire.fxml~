@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="style.css"
-            xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Service.Controllers.AfficherPartenaire">
+<?import javafx.scene.control.TextField?>
+<AnchorPane stylesheets="style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Service.Controllers.AfficherPartenaire">
 
-    <!-- Barre de navigation latérale -->
+    <!-- Sidebar Menu -->
     <VBox prefHeight="687.0" prefWidth="220.0" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
         <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
         <VBox spacing="10">
@@ -25,22 +28,23 @@
         </VBox>
     </VBox>
 
-    <!-- Contenu principal -->
-    <VBox alignment="CENTER" layoutX="240.0" layoutY="0.0" prefHeight="687.0" prefWidth="802.0" spacing="20" style="-fx-padding: 20px;">
+    <!-- Main Content -->
+    <VBox alignment="CENTER" layoutX="220.0" prefHeight="687.0" prefWidth="822.0" spacing="20" style="-fx-padding: 20px;">
         <Label prefHeight="55.0" prefWidth="422.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 10px;" text="⛔ Liste des Partenaires ⛔" textAlignment="CENTER">
             <font>
                 <Font size="49.0" />
             </font>
         </Label>
 
-        <!-- Boutons Ajouter et Actualiser -->
+        <!-- Add and Refresh Buttons -->
         <HBox spacing="10">
             <Button onAction="#addPartenaire" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Ajouter" />
             <Button onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Actualiser" />
         </HBox>
+        <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="300.0" />
 
-        <!-- Tableau des partenaires -->
-        <TableView fx:id="tableView" prefHeight="577.0" prefWidth="762.0">
+        <!-- TableView for Partners -->
+        <TableView fx:id="tableView" prefHeight="356.0" prefWidth="699.0">
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="46.0" text="ID" />
                 <TableColumn fx:id="nomColumn" prefWidth="108.0" text="Nom" />
@@ -49,6 +53,7 @@
                 <TableColumn fx:id="site_webColumn" prefWidth="117.0" text="Site Web" />
                 <TableColumn fx:id="montantColumn" prefWidth="117.2" text="Montant" />
                 <TableColumn fx:id="typeColumn" prefWidth="207.0" text="Type de partenariat" />
+                <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions" />
             </columns>
         </TableView>
     </VBox>

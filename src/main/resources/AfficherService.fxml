@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.TextField?>
 <AnchorPane prefHeight="600.0" prefWidth="900.0"
             xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
@@ -52,7 +53,10 @@
         <HBox spacing="10">
             <Button text="Ajouter" onAction="#addService" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
             <Button text="Actualiser" onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+
         </HBox>
+        <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="300.0" />
+
 
         <!-- Tableau des réclamations -->
         <TableView fx:id="tableView" prefHeight="577.0" prefWidth="762.0">
@@ -63,9 +67,10 @@
                 <TableColumn fx:id="sponsorColumn" prefWidth="120" text="Sponsor" />
                 <TableColumn fx:id="descriptionColumn" prefWidth="200" text="Description" />
                 <TableColumn fx:id="prixColumn" prefWidth="80" text="Prix" />
-
+                <TableColumn fx:id="colActions" prefWidth="120" text="Actions" /> <!-- Add this line -->
             </columns>
         </TableView>
+
 
     </VBox>
 
