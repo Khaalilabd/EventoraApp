@@ -137,7 +137,7 @@ public class ServiceService implements Iservice<Service> {
         Map<Location, Integer> locationStats = new HashMap<>();
         String query = "SELECT location, COUNT(*) AS count FROM g_service GROUP BY location";
 
-        try (Connection connection = Mydatasource.getInstance().getConnection();
+        try (Connection connection = DatabaseConnection.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
 
@@ -156,12 +156,9 @@ public class ServiceService implements Iservice<Service> {
     // Récupérer les statistiques par TypeService
     public Map<TypeService, Integer> getTypeServiceStats() {
         Map<TypeService, Integer> typeServiceStats = new HashMap<>();
-        String query = "SELECT type_service, COUNT(*) AS count FROM g_service GROUP BY type_service";
+        String query = "SELECT type_service, COUNT(*) AS count FROM services GROUP BY type_service";
 
 
-        try (Connection connection = Mydatasource.getInstance().getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
 
             while (resultSet.next()) {
                 String typeServiceLabel = resultSet.getString("type_service");
@@ -169,8 +166,6 @@ public class ServiceService implements Iservice<Service> {
                 int count = resultSet.getInt("count");
                 typeServiceStats.put(typeService, count);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
         return typeServiceStats;
     }

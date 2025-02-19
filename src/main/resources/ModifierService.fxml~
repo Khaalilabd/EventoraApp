@@ -5,14 +5,10 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.paint.Color?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Service.Controllers.AjouterService"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Gui.Service.Controllers.ModifierService"
             prefHeight="600.0" prefWidth="900.0"
             stylesheets="style.css"
             style="-fx-background-color: #F4F1F1;">
@@ -24,47 +20,39 @@
         <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
 
         <!-- Menu Buttons -->
-        <VBox spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+        <VBox spacing="10">
             <Button text="🏠 Accueil" styleClass="menu-button"/>
             <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
             <Button text="📲 Réservation" styleClass="menu-button"/>
-            <Button text="🎁 Services" styleClass="menu-button" />
-
-            <!-- Sous-menu pour "Services" -->
-            <VBox fx:id="servicesBox" spacing="5" visible="false" managed="false" style="-fx-padding: 10; -fx-border-color: #ddd; -fx-border-width: 1; -fx-background-color: #fff;">
-                <Button text="🛠️ Gestion Partenaire" styleClass="menu-button"/>
-            </VBox>
-
+            <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
             <Button text="⭐ FeedBack" styleClass="menu-button"/>
-            <Button text="🚨 Réclamations" styleClass="menu-button"/>
+            <Button styleClass="menu-button" text="🚨 Réclamations" />
             <Button text="🔧 Paramètres" styleClass="menu-button"/>
             <Button text="🛑 Déconnexion" styleClass="logout-button"/>
         </VBox>
-
     </VBox>
 
     <!-- Contenu principal -->
     <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
         <!-- Titre -->
-        <Label text="Déposer un Service" styleClass="main-title"/>
-
+        <Label text="Modifier une Réclamation" styleClass="main-title"/>
 
         <!-- Champ Titre de la Réclamation -->
         <TextField fx:id="titleField" promptText="Titre de la Réclamation" styleClass="input-field"/>
-        <!-- Champ location -->
-        <ComboBox fx:id="locationfield" promptText="Type de location" styleClass="input-field"/>
-        <!-- Champ sponsor -->
-        <ComboBox fx:id="sponsorfield" promptText="Sponsor" styleClass="input-field"/>
-        <!-- Description -->
-        <TextArea fx:id="descriptionField" promptText="Expliquez votre problème..." styleClass="input-field"/>
-        <!-- Prix -->
-        <TextField fx:id="prixField" promptText="Prix" styleClass="input-field"/>
+        <ComboBox fx:id="locationfield" promptText="Sélectionner une location" styleClass="input-field"/>
 
+        <!-- Sélection du Type de Réclamation -->
+        <ComboBox fx:id="sponsorfield" promptText="Sélectionner un Sponsor" styleClass="input-field"/>
+
+        <!-- Description -->
+        <TextArea fx:id="descriptionField" promptText="Dire a nous quelque chose..." styleClass="input-field"/>
+        <TextField fx:id="prixField" promptText="Prix de service" styleClass="input-field"/>
 
         <!-- Boutons -->
         <HBox spacing="20" alignment="CENTER">
-            <Button text="Soumettre" fx:id="submitButton"  styleClass="submit-button"/>
+            <Button text="Sauvegarder" fx:id="submitButton" styleClass="submit-button"/>
             <Button text="Annuler" fx:id="cancelButton" styleClass="cancel-button"/>
         </HBox>
     </VBox>
+
 </AnchorPane>

@@ -2,81 +2,81 @@ package Models.Service;
 
 
 public class Partenaire {
-    private int id_sponsors;
-    private String nom_sponsors;
-    private String email_sponsors;
-    private String telephone_sponsors;
-    private String adresse_sponsors;
+    private int id_partenaire;
+    private String nom_partenaire;
+    private String email_partenaire;
+    private String telephone_partenaire;
+    private String adresse_partenaire;
     private String site_web;
-    private String montant_sponsors;
-    private TypePartenaire type_sponsors;
+    private String montant_partenaire;
+    private TypePartenaire type_partenaire;
 
     public Partenaire() {
 
     }
-    public Partenaire(int id_sponsors) {
-        this.id_sponsors = id_sponsors;
+    public Partenaire(int id_partenaire) {
+        this.id_partenaire = id_partenaire;
     }
 
-    public Partenaire(int id_sponsors, String nom_sponsors, String email_sponsors, String telephone_sponsors, String adresse_sponsors, String site_web, String montant_sponsors, TypePartenaire type_sponsors) {
-        this.id_sponsors = id_sponsors;
-        this.nom_sponsors = nom_sponsors;
-        this.email_sponsors = email_sponsors;
-        this.telephone_sponsors = telephone_sponsors;
-        this.adresse_sponsors = adresse_sponsors;
+    public Partenaire(int id_partenaire, String nom_partenaire, String email_partenaire, String telephone_partenaire, String adresse_partenaire, String site_web, String montant_partenaire, TypePartenaire type_partenaire) {
+        this.id_partenaire = id_partenaire;
+        this.nom_partenaire = nom_partenaire;
+        this.email_partenaire = email_partenaire;
+        this.telephone_partenaire = telephone_partenaire;
+        this.adresse_partenaire = adresse_partenaire;
         this.site_web = site_web;
-        this.montant_sponsors = montant_sponsors;
-        this.type_sponsors = type_sponsors;
+        this.montant_partenaire = montant_partenaire;
+        this.type_partenaire = type_partenaire;
     }
 
-    public Partenaire(String nom_sponsors, String email_sponsors, String telephone_sponsors, String adresse_sponsors, String site_web, String montant_sponsors, TypePartenaire type_sponsors) {
-        this.nom_sponsors = nom_sponsors;
-        this.email_sponsors = email_sponsors;
-        this.telephone_sponsors = telephone_sponsors;
-        this.adresse_sponsors = adresse_sponsors;
+    public Partenaire(String nom_partenaire, String email_partenaire, String telephone_partenaire, String adresse_partenaire, String site_web, String montant_partenaire, TypePartenaire type_partenaire) {
+        this.nom_partenaire = nom_partenaire;
+        this.email_partenaire = email_partenaire;
+        this.telephone_partenaire = telephone_partenaire;
+        this.adresse_partenaire = adresse_partenaire;
         this.site_web = site_web;
-        this.montant_sponsors = montant_sponsors;
-        this.type_sponsors = type_sponsors;
+        this.montant_partenaire = montant_partenaire;
+        this.type_partenaire = type_partenaire;
     }
 
-    public int getId_sponsors() {
-        return id_sponsors;
+    public int getId_partenaire() {
+        return id_partenaire;
     }
 
-    public void setId_sponsors(int id_sponsors) {
-        this.id_sponsors = id_sponsors;
+    public void setId_partenaire(int id_partenaire) {
+        this.id_partenaire = id_partenaire;
     }
 
-    public String getNom_sponsors() {
-        return nom_sponsors;
+    public String getNom_partenaire() {
+        return nom_partenaire;
     }
 
-    public void setNom_sponsors(String nom_sponsors) {
-        this.nom_sponsors = nom_sponsors;
+    public void setNom_partenaire(String nom_partenaire) {
+        this.nom_partenaire = nom_partenaire;
     }
 
-    public String getEmail_sponsors() {
-        return email_sponsors;
+    public String getEmail_partenaire() {
+        return email_partenaire;
     }
 
-    public void setEmail_sponsors(String email_sponsors) {
-        this.email_sponsors = email_sponsors;
+    public void setEmail_partenaire(String email_partenaire) {
+        this.email_partenaire = email_partenaire;
     }
 
-    public String getTelephone_sponsors() {
-        return telephone_sponsors;
+    public String getTelephone_partenaire() {
+        return telephone_partenaire;
     }
 
-    public void setTelephone_sponsors(String telephone_sponsors) {
-        this.telephone_sponsors = telephone_sponsors;
+    public void setTelephone_partenaire(String telephone_partenaire) {
+        this.telephone_partenaire = telephone_partenaire;
     }
 
-    public String getAdresse_sponsors() {
-        return adresse_sponsors;
+    public String getAdresse_partenaire() {
+        return adresse_partenaire;
     }
 
-    public void setAdresse_sponsors(String adresse_sponsors) {
-        this.adresse_sponsors = adresse_sponsors;
+    public void setAdresse_partenaire(String adresse_partenaire) {
+        this.adresse_partenaire = adresse_partenaire;
     }
 
     public String getSite_web() {
@@ -87,21 +87,22 @@ public class Partenaire {
         this.site_web = site_web;
     }
 
-    public String getMontant_sponsors() {
-        return montant_sponsors;
+    public String getMontant_partenaire() {
+        return montant_partenaire;
     }
 
-    public void setMontant_sponsors(String montant_sponsors) {
-        this.montant_sponsors = montant_sponsors;
+    public void setMontant_partenaire(String montant_partenaire) {
+        this.montant_partenaire = montant_partenaire;
     }
 
-    public TypePartenaire getType_sponsors() {
-        return type_sponsors;
+    public TypePartenaire getType_partenaire() {
+        return type_partenaire;
     }
 
-    public void setType_sponsors(TypePartenaire type_sponsors) {
-        this.type_sponsors = type_sponsors;
+    public void setType_partenaire(TypePartenaire type_partenaire) {
+        this.type_partenaire = type_partenaire;
     }
+
 
 }
 

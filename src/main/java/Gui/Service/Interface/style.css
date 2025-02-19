@@ -43,8 +43,8 @@
     -fx-text-alignment: center;
 }
 
-/* Bouton Ajouter */
-.add-button {
+/* Bouton de base */
+.add-button, .view-button {
     -fx-background-color: #1ABC9C;
     -fx-text-fill: white;
     -fx-font-size: 16px;
@@ -52,6 +52,13 @@
     -fx-padding: 10 20;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
+    -fx-transition: -fx-translate-y 0.3s ease-in-out, -fx-effect 0.3s ease-in-out;
+}
+
+/* Animation de survol */
+.add-button:hover, .view-button:hover {
+    -fx-translate-y: -3px; /* Le bouton flotte vers le haut */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 10); /* Ombre du bouton */
 }
 
 .add-button:hover {
@@ -187,11 +194,48 @@
     color: white;
 }
 .main-text {
-    -fx-font-size: 18px; /* Taille de police augmentée */
+    -fx-font-size: 12px; /* Taille de police augmentée */
     -fx-font-weight: bold; /* Texte en gras */
     -fx-font-family: "Arial", sans-serif; /* Police de caractères */
     -fx-text-fill: #2C3E50; /* Couleur du texte */
-    -fx-alignment: center; /* Centrer le texte */
-    -fx-padding: 20px; /* Espacement autour du texte */
+    -fx-padding: 10px; /* Espacement autour du texte */
     -fx-line-spacing: 5px; /* Espacement entre les lignes */
 }
+/* Style général pour tous les labels */
+Label {
+    -fx-font-family: "Arial";
+    -fx-font-size: 11px;
+    -fx-text-fill: #2C3E50;
+    -fx-padding: 5px 10px;
+}
+.table-row-cell {
+    -fx-pref-height: 60; /* Ajuste la hauteur des lignes */
+}
+
+.table-cell {
+    -fx-padding: 10 10; /* Contrôle les marges */
+}
+
+/* Style spécifique pour le titre principal */
+.main-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495E;
+    -fx-underline: true;
+    -fx-padding: 20px 0;
+}
+
+/* Style pour le titre du menu latéral */
+.menu-title {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ECF0F1;
+}
+
+/* Style pour les labels dans les champs de formulaire */
+.form-label {
+    -fx-font-size: 10px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #7F8C8D;
+}
+

@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class Mydatasource {
     private static Mydatasource instance;
-    private static final String URL = "jdbc:mysql://localhost:3306/eventora";
+    private static final String URL = "jdbc:mysql://localhost:3306/eventora?autoReconnect=true&useSSL=false";
     private static final String USER = "root";
     private static final String PASSWORD = "";
     private Connection conn;
@@ -15,9 +15,9 @@ public class Mydatasource {
     private Mydatasource() {
         try {
             conn = DriverManager.getConnection(URL, USER, PASSWORD);
-            System.out.println("Connexion réussie !");
+            System.out.println("✅ Connexion réussie !");
         } catch (SQLException e) {
-            System.out.println("Erreur de connexion : " + e.getMessage());
+            System.out.println("❌ Erreur de connexion : " + e.getMessage());
         }
     }
 
@@ -29,6 +29,14 @@ public class Mydatasource {
     }
 
     public Connection getConnection() {
+        try {
+            if (conn == null || conn.isClosed()) {
+                System.out.println("🔄 Réouverture de la connexion...");
+                conn = DriverManager.getConnection(URL, USER, PASSWORD);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return conn;
     }
 }

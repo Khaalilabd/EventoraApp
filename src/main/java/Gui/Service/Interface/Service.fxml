@@ -46,14 +46,15 @@
 
         <!-- Texte -->
         <Label wrapText="true" prefWidth="500" styleClass="main-text"
-               text="Vous avez un problème ? Vous voulez poser une réclamation ? Ne vous inquiétez pas, Eventora est là pour vous aider. Avec notre système de réclamation, vous pouvez facilement soumettre vos préoccupations et obtenir une réponse rapide." />
+               text="Vous avez besoin d'un service ? Ne vous inquiétez pas, Eventora est là pour vous aider. Avec nos services, vous pouvez facilement trouver un service qui répond à vos besoins ." />
 
         <!-- Image d'illustration -->
-        <ImageView fitWidth="200" fitHeight="200" preserveRatio="true">
+        <ImageView fitWidth="500" fitHeight="500" preserveRatio="true">
             <image>
-                <Image url="/Images/rec..jpg"/>
+                <Image url="/Images/service.gif"/> <!-- Remplacez par le chemin vers votre GIF -->
             </image>
         </ImageView>
+
 
         <!-- Boutons -->
         <HBox spacing="20" alignment="CENTER">

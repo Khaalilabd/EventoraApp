@@ -131,23 +131,13 @@ public class ModifierService {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        // Charger la nouvelle scène (Service.fxml)
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
         AnchorPane reclamationLayout = loader.load();
-        Scene serviceScene = new Scene(reclamationLayout);
-
-        // Obtenir la fenêtre (Stage) actuelle
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-        // Fermer la fenêtre actuelle
-        currentStage.close();
-
-        // Créer une nouvelle fenêtre et lui attribuer la nouvelle scène
-        Stage newStage = new Stage();
-        newStage.setScene(serviceScene);
-        newStage.show();
+        Scene scene = new Scene(reclamationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
-
     private void goToAfficherService(ActionEvent event) {
         try {
             // Charger la scène d'affichage des services (AfficherService.fxml)

@@ -53,9 +53,10 @@
         <HBox spacing="10">
             <Button text="Ajouter" onAction="#addService" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
             <Button text="Actualiser" onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
-            <Button text="📊 Statistiques" styleClass="menu-button" onAction="#showStatistics"/>
-
+            <Button text="Partenaire" onAction="#goToPartenaire" style="-fx-background-color: #2100F3; -fx-text-fill: white;"/>
+            <Button text="Statistiques" onAction="#goToStatistiques" style="-fx-background-color: #FF5722; -fx-text-fill: white;"/>
         </HBox>
+
         <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="300.0" />
 
 
@@ -63,9 +64,10 @@
         <TableView fx:id="tableView" prefHeight="577.0" prefWidth="762.0">
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="100" text="ID" />
+                <TableColumn fx:id="id_partenaireColumn" prefWidth="150" text="id partenaire" />
                 <TableColumn fx:id="titleColumn" prefWidth="150" text="Titre" />
                 <TableColumn fx:id="locationColumn" prefWidth="120" text="Location" />
-                <TableColumn fx:id="sponsorColumn" prefWidth="120" text="Sponsor" />
+                <TableColumn fx:id="sponsorColumn" prefWidth="120" text="Type de Service" />
                 <TableColumn fx:id="descriptionColumn" prefWidth="200" text="Description" />
                 <TableColumn fx:id="prixColumn" prefWidth="80" text="Prix" />
                 <TableColumn fx:id="colActions" prefWidth="120" text="Actions" /> <!-- Add this line -->

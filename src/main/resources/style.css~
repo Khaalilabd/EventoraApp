@@ -212,9 +212,6 @@ Label {
     -fx-pref-height: 60; /* Ajuste la hauteur des lignes */
 }
 
-.table-cell {
-    -fx-padding: 10 10; /* Contrôle les marges */
-}
 
 /* Style spécifique pour le titre principal */
 .main-title {

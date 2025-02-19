@@ -17,16 +17,16 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
 
     @Override
     public void AjouterPartenaire(Partenaire partenaire) {
-        String req= "INSERT INTO `sponsors`( `nom_sponsors`, `email_sponsors`, `telephone_sponsors`, `adresse_sponsors`, `site_web`, `montant_sponsors`, `type_sponsors`) VALUES (?,?,?,?,?,?,?)";
+        String req= "INSERT INTO `sponsors`( `nom_partenaire`, `email_partenaire`, `telephone_partenaire`, `adresse_partenaire`, `site_web`, `montant_partenaire`, `type_partenaire`) VALUES (?,?,?,?,?,?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
-            ps.setString(1, partenaire.getNom_sponsors());
-            ps.setString(2, partenaire.getEmail_sponsors());
-            ps.setString(3,partenaire.getTelephone_sponsors());
-            ps.setString(4, partenaire.getAdresse_sponsors());
+            ps.setString(1, partenaire.getNom_partenaire());
+            ps.setString(2, partenaire.getEmail_partenaire());
+            ps.setString(3,partenaire.getTelephone_partenaire());
+            ps.setString(4, partenaire.getAdresse_partenaire());
             ps.setString(5, partenaire.getSite_web());
-            ps.setString(6, partenaire.getMontant_sponsors());
-            ps.setString(7, partenaire.getType_sponsors().getLabel());
+            ps.setString(6, partenaire.getMontant_partenaire());
+            ps.setString(7, partenaire.getType_partenaire().getLabel());
             ps.executeUpdate();
             System.out.println("Partenaire ajouter");
         }
@@ -39,17 +39,17 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
 
     @Override
     public void ModifierPartenaire(Partenaire partenaire) {
-        String req = "UPDATE `sponsors` SET ,`nom_sponsors`=?,`email_sponsors`=?,`telephone_sponsors`=?,`adresse_sponsors`=?,`site_web`=?,`montant_sponsors`=?,`type_sponsors`=? WHERE `id_sponsors`=?";
+        String req = "UPDATE `sponsors` SET `nom_partenaire`=?,`email_partenaire`=?,`telephone_partenaire`=?,`adresse_partenaire`=?,`site_web`=?,`montant_partenaire`=?,`type_partenaire`=? WHERE `id_partenaire`=?";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
-            ps.setString(1, partenaire.getNom_sponsors());
-            ps.setString(2, partenaire.getEmail_sponsors());
-            ps.setString(3,partenaire.getTelephone_sponsors());
-            ps.setString(4, partenaire.getAdresse_sponsors());
+            ps.setString(1, partenaire.getNom_partenaire());
+            ps.setString(2, partenaire.getEmail_partenaire());
+            ps.setString(3,partenaire.getTelephone_partenaire());
+            ps.setString(4, partenaire.getAdresse_partenaire());
             ps.setString(5, partenaire.getSite_web());
-            ps.setString(6, partenaire.getMontant_sponsors());
-            ps.setString(7, partenaire.getType_sponsors().getLabel());
-            ps.setInt(8, partenaire.getId_sponsors());
+            ps.setString(6, partenaire.getMontant_partenaire());
+            ps.setString(7, partenaire.getType_partenaire().getLabel());
+            ps.setInt(8, partenaire.getId_partenaire());
             ps.executeUpdate();
             System.out.println("Partenaire modifier");
         }
@@ -61,10 +61,10 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
 
     @Override
     public void SupprimerPartenaire(Partenaire partenaire) {
-        String req = "DELETE FROM `sponsors` WHERE `id_sponsors` = ?;";
+        String req = "DELETE FROM `sponsors` WHERE `id_partenaire` = ?;";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
-            ps.setInt(1, partenaire.getId_sponsors());
+            ps.setInt(1, partenaire.getId_partenaire());
             ps.executeUpdate();
             System.out.println("Partenaire supprimer");
         }
@@ -82,14 +82,14 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
             ResultSet rs = ps.executeQuery(req);
             while (rs.next()) {
                 Partenaire partenaire = new Partenaire();
-                partenaire.setId_sponsors(rs.getInt("id_sponsors"));
-                partenaire.setNom_sponsors(rs.getString("nom_sponsors"));
-                partenaire.setEmail_sponsors(rs.getString("email_sponsors"));
-                partenaire.setTelephone_sponsors(rs.getString("telephone_sponsors"));
-                partenaire.setAdresse_sponsors(rs.getString("adresse_sponsors"));
+                partenaire.setId_partenaire(rs.getInt("id_partenaire"));
+                partenaire.setNom_partenaire(rs.getString("nom_partenaire"));
+                partenaire.setEmail_partenaire(rs.getString("email_partenaire"));
+                partenaire.setTelephone_partenaire(rs.getString("telephone_partenaire"));
+                partenaire.setAdresse_partenaire(rs.getString("adresse_partenaire"));
                 partenaire.setSite_web(rs.getString("site_web"));
-                partenaire.setMontant_sponsors(rs.getString("montant_sponsors"));
-                partenaire.setType_sponsors(TypePartenaire.fromLabel(rs.getString("type_sponsors")));
+                partenaire.setMontant_partenaire(rs.getString("montant_partenaire"));
+                partenaire.setType_partenaire(TypePartenaire.fromLabel(rs.getString("type_partenaire")));
                 partenaires.add(partenaire);
             }
         } catch (SQLException e) {

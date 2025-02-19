@@ -1,6 +1,6 @@
 package Models.Service;
 
-public enum Sponsors {
+public enum TypeService {
     DECORATION("decoration"),
     LUMIERE("lumiere"),
     SONO("sono"),
@@ -10,7 +10,7 @@ public enum Sponsors {
 
     private final String label;
 
-    Sponsors(String label) {
+    TypeService(String label) {
         this.label = label;
     }
 
@@ -18,8 +18,8 @@ public enum Sponsors {
         return label;
     }
 
-    public static Sponsors fromLabel(String label) {
-        for (Sponsors type : Sponsors.values()) {
+    public static TypeService fromLabel(String label) {
+        for (TypeService type : TypeService.values()) {
             if (type.label.equalsIgnoreCase(label)) {
                 return type;
             }

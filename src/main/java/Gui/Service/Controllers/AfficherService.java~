@@ -1,20 +1,29 @@
 package Gui.Service.Controllers;
 
 import Services.Service.Crud.ServiceService;
+import Services.Service.Crud.PartenaireService;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import Models.Service.Service;
+import Models.Service.Partenaire;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -25,6 +34,9 @@ public class AfficherService {
 
     @FXML
     private TableColumn<Service, Integer> idColumn;
+
+    @FXML
+    private TableColumn<Service, String> id_partenaireColumn;
 
     @FXML
     private TableColumn<Service, String> titleColumn;
@@ -44,27 +56,58 @@ public class AfficherService {
     @FXML
     private TableColumn<Service, String> colActions;
 
+    @FXML
+    private TextField searchField;
+
     private final ServiceService serviceService;
+    private final PartenaireService partenaireService;
+
+    private ObservableList<Service> servicesList = FXCollections.observableArrayList();
 
     public AfficherService() {
         this.serviceService = new ServiceService();
+        this.partenaireService = new PartenaireService();
     }
 
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
-        titleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitre()));
-        locationColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getLocation().getLabel()));
-        sponsorColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSponsors().getLabel()));
-        descriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
-        prixColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPrix()));
+        id_partenaireColumn.setCellValueFactory(cellData -> {
+            int idPartenaire = cellData.getValue().getId_partenaire();
+            Partenaire partenaire = getPartenaireById(idPartenaire);
+            return new SimpleStringProperty(partenaire != null ? partenaire.getNom_partenaire() : "Inconnu");
+        });
+
+        // Mise à jour des colonnes avec surlignement
+        setHighlightedColumn(titleColumn, Service::getTitre);
+        setHighlightedColumn(locationColumn, service -> service.getLocation().getLabel());
+        setHighlightedColumn(sponsorColumn, service -> service.getTypeService().getLabel());
+        setHighlightedColumn(descriptionColumn, Service::getDescription);
+        setHighlightedColumn(prixColumn, Service::getPrix);
+
         addActionsColumn();
         loadServices();
+
+        FilteredList<Service> filteredData = new FilteredList<>(servicesList, p -> true);
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(service -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                return service.getTitre().toLowerCase().contains(lowerCaseFilter)
+                        || service.getLocation().getLabel().toLowerCase().contains(lowerCaseFilter)
+                        || service.getTypeService().getLabel().toLowerCase().contains(lowerCaseFilter)
+                        || service.getDescription().toLowerCase().contains(lowerCaseFilter);
+            });
+            tableView.refresh();
+        });
+        tableView.setItems(filteredData);
     }
 
     private void loadServices() {
         List<Service> services = serviceService.RechercherService();
-        tableView.getItems().setAll(services);
+        servicesList.setAll(services);
     }
 
     private void addActionsColumn() {
@@ -74,27 +117,18 @@ public class AfficherService {
             final HBox hBox = new HBox(10);
 
             {
-                // Chargement des icônes dans les boutons
                 Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
                 Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
-
-                // Icônes pour les boutons
                 ImageView editImageView = new ImageView(editIcon);
                 ImageView deleteImageView = new ImageView(deleteIcon);
-
                 editImageView.setFitHeight(20);
                 editImageView.setFitWidth(20);
                 deleteImageView.setFitHeight(20);
                 deleteImageView.setFitWidth(20);
-
-                // Ajout des icônes dans les boutons
                 editButton.setGraphic(editImageView);
                 deleteButton.setGraphic(deleteImageView);
-
-                // Style des boutons
                 editButton.getStyleClass().add("table-button");
                 deleteButton.getStyleClass().addAll("table-button", "delete");
-
                 hBox.getChildren().addAll(editButton, deleteButton);
             }
 
@@ -130,41 +164,104 @@ public class AfficherService {
     private void handleDelete(Service service) {
         System.out.println("Supprimer le service avec ID : " + service.getId());
         serviceService.SupprimerService(service);
-        loadServices();  // Recharger la liste des services après suppression
+        loadServices();
     }
 
-    @FXML
-    private void addService() throws IOException {
-        // Charger l'interface AjouterService.fxml
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterService.fxml"));
-        Scene scene = new Scene(loader.load());
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.setTitle("Ajouter un service");
-        stage.show();
+    private Partenaire getPartenaireById(int idPartenaire) {
+        for (Partenaire partenaire : partenaireService.RechercherPartenaire()) {
+            if (partenaire.getId_partenaire() == idPartenaire) {
+                return partenaire;
+            }
+        }
+        return null;
     }
+
+    private void setHighlightedColumn(TableColumn<Service, String> column, javafx.util.Callback<Service, String> mapper) {
+        column.setCellFactory(col -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    String filter = searchField.getText();
+                    TextFlow textFlow = createHighlightedText(item, filter);
+                    setGraphic(textFlow);
+                }
+            }
+        });
+        column.setCellValueFactory(cellData -> new SimpleStringProperty(mapper.call(cellData.getValue())));
+    }
+
+    private TextFlow createHighlightedText(String text, String filter) {
+        if (filter == null || filter.isEmpty()) {
+            return new TextFlow(new Text(text));
+        }
+
+        String lowerText = text.toLowerCase();
+        String lowerFilter = filter.toLowerCase();
+
+        int index = lowerText.indexOf(lowerFilter);
+        if (index == -1) {
+            return new TextFlow(new Text(text));
+        }
+
+        Text before = new Text(text.substring(0, index));
+        Text highlight = new Text(text.substring(index, index + filter.length()));
+        Text after = new Text(text.substring(index + filter.length()));
+
+        highlight.setStyle("-fx-fill: green;");
+        return new TextFlow(before, highlight, after);
+    }
+
+
+    @FXML
+    private void goToStatistiques(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Statistique.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Statistiques des Services");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void addService(ActionEvent event) throws IOException {
+        try {
+            // Charger le fichier FXML pour la fenêtre "AjouterService"
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterService.fxml"));
+            Scene scene = new Scene(loader.load());
+
+            // Récupérer la fenêtre (Stage) actuelle à partir de l'événement
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            // Fermer la fenêtre actuelle
+            currentStage.close();
+
+            // Créer une nouvelle fenêtre pour "AjouterService"
+            Stage newStage = new Stage();
+            newStage.setScene(scene);
+            newStage.setTitle("Ajouter un service");
+            newStage.show();
+        } catch (IOException e) {
+            System.out.println("Erreur lors du chargement de la fenêtre d'ajout de service : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
     @FXML
     private void refreshList() {
-        loadServices(); // Recharger les services
+        loadServices(); // Recharge la liste des services
     }
-
     @FXML
-    private void tableRowFactory(TableView<Service> tableView) {
-        tableView.setRowFactory(tv -> {
-            TableRow<Service> row = new TableRow<>();
-            row.setOnMouseEntered(event -> row.setStyle("-fx-background-color: #BDC3C7;"));
-            row.setOnMouseExited(event -> row.setStyle("-fx-background-color: transparent;"));
-            return row;
-        });
-    }
-
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        // Charger l'interface Reclamation.fxml
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
+    private void goToPartenaire(javafx.event.ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Partenaire.fxml"));
+        AnchorPane partenaireLayout = loader.load();
+        Scene scene = new Scene(partenaireLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();

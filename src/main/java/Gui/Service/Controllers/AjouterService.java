@@ -1,107 +1,123 @@
 package Gui.Service.Controllers;
-
 import Models.Service.Location;
 import Models.Service.Service;
-import Models.Service.Sponsors;
+import Models.Service.TypeService;
+import Models.Service.Partenaire;
 import Services.Service.Crud.ServiceService;
+import Services.Service.Crud.PartenaireService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert;
-import java.io.IOException;
 import javafx.event.ActionEvent;
-
-
+import java.io.IOException;
+import java.util.List;
 public class AjouterService {
-
     @FXML
     private TextField titleField;
-
     @FXML
-    private ComboBox<Location> locationfield;
-
+    private ComboBox<Location> locationField;
     @FXML
-    private ComboBox<Sponsors> sponsorfield;
-
+    private ComboBox<TypeService> type_serviceField;
+    @FXML
+    private ComboBox<Partenaire> idPartenaireField;
     @FXML
     private TextArea descriptionField;
-
     @FXML
     private TextField prixField;
-
     @FXML
     private Button submitButton;
-
     @FXML
     private Button cancelButton;
-
-    private ServiceService serviceService = new ServiceService();
-
-
+    private final ServiceService serviceService = new ServiceService();
+    private final PartenaireService partenaireService = new PartenaireService();
     @FXML
     public void initialize() {
-        locationfield.getItems().setAll(Location.values());
-        sponsorfield.getItems().setAll(Sponsors.values());
-
+        locationField.getItems().setAll(Location.values());
+        type_serviceField.getItems().setAll(TypeService.values());
+        loadPartenaires();
         submitButton.setOnAction(this::ajouterService);
         cancelButton.setOnAction(event -> annuler());
-
     }
-
+    private void loadPartenaires() {
+        List<Partenaire> partenaires = partenaireService.RechercherPartenaire();
+        idPartenaireField.getItems().setAll(partenaires);
+        idPartenaireField.setCellFactory(param -> new ListCell<Partenaire>() {
+            @Override
+            protected void updateItem(Partenaire item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getNom_partenaire());
+                }
+            }
+        });
+        idPartenaireField.setButtonCell(new ListCell<Partenaire>() {
+            @Override
+            protected void updateItem(Partenaire item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else
+                {
+                    setText(item.getNom_partenaire());  // Affiche le nom du partenaire
+                }
+            }
+        });
+    }
     private void ajouterService(ActionEvent event) {
+        Partenaire partenaire = idPartenaireField.getValue(); // Récupération du partenaire sélectionné
+        Integer idPartenaire = partenaire != null ? partenaire.getId_partenaire() : null;
         String titre = titleField.getText();
-        Location location = locationfield.getValue();
-        Sponsors sponsors = sponsorfield.getValue();
+        Location location = locationField.getValue();
+        TypeService typeService = type_serviceField.getValue();
         String description = descriptionField.getText();
         String prix = prixField.getText();
-
-        if (titre.isEmpty() || location == null || sponsors == null || description.isEmpty() || prix.isEmpty()) {
+        if (idPartenaire == null || titre.isEmpty() || location == null || typeService == null || description.isEmpty() || prix.isEmpty()) {
             showAlert("Warning", "Veuillez remplir tous les champs.");
             return;
         }
-
-        Service service = new Service(titre, location, sponsors, description, prix);
+        Service service = new Service(idPartenaire, titre, location, typeService, description, prix);
         serviceService.AjouterService(service);
-
         showAlert("Succès", "Service ajouté avec succès !");
-
         clearFields();
-
-        gotoAfiicherService(event);
+        gotoAfficherService(event);
     }
-
-    private void gotoAfiicherService(ActionEvent event) {
+    private void gotoAfficherService(ActionEvent event) {
         try {
+            // Charger la nouvelle scène (AfficherService.fxml)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherService.fxml"));
+            Parent root = loader.load();
+            Scene newScene = new Scene(root);
 
-            Parent root = loader.load(); // ✅ Correction : on charge bien le fichier FXML
+            // Obtenir la fenêtre (Stage) actuelle
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            // Fermer la fenêtre actuelle
+            currentStage.close();
+
+            // Créer une nouvelle fenêtre et lui attribuer la nouvelle scène
+            Stage newStage = new Stage();
+            newStage.setScene(newScene);
+            newStage.show();
         } catch (IOException e) {
             System.out.println("Erreur lors du chargement de la page d'affichage des services : " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void annuler() {
-        clearFields();
-    }
-
     private void clearFields() {
         titleField.clear();
-        locationfield.setValue(null);
-        sponsorfield.setValue(null);
+        locationField.setValue(null);
+        type_serviceField.setValue(null);
+        idPartenaireField.setValue(null);
         descriptionField.clear();
         prixField.clear();
     }
-
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -111,14 +127,25 @@ public class AjouterService {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
+        // Charger la nouvelle scène (Service.fxml)
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        Parent root = loader.load();
+        Scene newScene = new Scene(root);
+
+        // Obtenir la fenêtre (Stage) actuelle
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // Fermer la fenêtre actuelle
+        currentStage.close();
+
+        // Créer une nouvelle fenêtre et lui attribuer la nouvelle scène
+        Stage newStage = new Stage();
+        newStage.setScene(newScene);
+        newStage.show();
+    }
+
+    private void annuler() {
+        clearFields();  // Réinitialise les champs
     }
 
 }
-
-

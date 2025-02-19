@@ -7,31 +7,35 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 public class Service {
     @FXML
     private Button ajouterButton;
-
     @FXML
     private Button viewButton;
-
-    // Action pour ajouter une réclamation
     @FXML
     private void handleAddAction(ActionEvent event) {
         try {
+            // Charger la nouvelle fenêtre (AjouterPartenaire.fxml)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterService.fxml"));
             AnchorPane addRecLayout = loader.load();
             Scene addRecScene = new Scene(addRecLayout);
+
+            // Obtenir la fenêtre (Stage) actuelle
             Stage currentStage = (Stage) ajouterButton.getScene().getWindow();
-            currentStage.setScene(addRecScene);
-            currentStage.show();
+
+            // Fermer la fenêtre actuelle (la fenêtre d'affichage des services)
+            currentStage.close();
+
+            // Ouvrir la nouvelle fenêtre
+            Stage newStage = new Stage();
+            newStage.setScene(addRecScene);
+            newStage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // Action pour afficher les réclamations
     @FXML
     private void handleViewAction(ActionEvent event) {
         try {
@@ -54,4 +58,6 @@ public class Service {
         stage.setScene(scene);
         stage.show();
     }
+
+
 }

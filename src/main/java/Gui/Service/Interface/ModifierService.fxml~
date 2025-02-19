@@ -39,14 +39,14 @@
 
         <!-- Champ Titre de la Réclamation -->
         <TextField fx:id="titleField" promptText="Titre de la Réclamation" styleClass="input-field"/>
-        <ComboBox fx:id="locationfield" promptText="Sélectionner un type" styleClass="input-field"/>
+        <ComboBox fx:id="locationfield" promptText="Sélectionner une location" styleClass="input-field"/>
 
         <!-- Sélection du Type de Réclamation -->
-        <ComboBox fx:id="sponsorfield" promptText="Sélectionner un type" styleClass="input-field"/>
+        <ComboBox fx:id="sponsorfield" promptText="Sélectionner un Sponsor" styleClass="input-field"/>
 
         <!-- Description -->
-        <TextArea fx:id="descriptionField" promptText="Expliquez votre problème..." styleClass="input-field"/>
-        <TextField fx:id="prixField" promptText="Titre de la Réclamation" styleClass="input-field"/>
+        <TextArea fx:id="descriptionField" promptText="Dire a nous quelque chose..." styleClass="input-field"/>
+        <TextField fx:id="prixField" promptText="Prix de service" styleClass="input-field"/>
 
         <!-- Boutons -->
         <HBox spacing="20" alignment="CENTER">
