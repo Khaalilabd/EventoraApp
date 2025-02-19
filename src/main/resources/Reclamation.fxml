@@ -30,31 +30,30 @@
     </VBox>
 
     <!-- Contenu principal modernisé -->
-    <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500" styleClass="main-container">
+    <VBox layoutX="240" layoutY="30" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="540" styleClass="main-container">
 
-        <!-- Texte amélioré -->
-        <Label wrapText="true" prefWidth="500" styleClass="main-text"
-               text="Vous avez un problème ? Vous voulez poser une réclamation ? Ne vous inquiétez pas, Eventora est là pour vous aider. Soumettez vos préoccupations et obtenez une réponse rapide." />
+        <!-- En-tête attrayante -->
+        <Label text="Besoin d'aide ? Faites-nous part de votre problème" styleClass="title-text"/>
+        <Label wrapText="true" prefWidth="500" styleClass="description-text"
+               text="Notre équipe est à votre écoute ! Soumettez votre réclamation et nous ferons notre maximum pour vous répondre rapidement."/>
 
         <!-- Image animée -->
-        <ImageView fx:id="imageReclamation" fitWidth="200" fitHeight="200" preserveRatio="true">
+        <ImageView fx:id="imageReclamation" fitWidth="400" fitHeight="400" preserveRatio="true">
             <image>
-                <Image url="/Images/rec..jpg"/>
+                <Image url="/Images/animated_support.gif"/>
             </image>
         </ImageView>
 
         <!-- Boutons avec animations -->
         <HBox spacing="20" alignment="CENTER">
-            <Button fx:id="ajouterButton"
-                    text="➕ Ajouter une Réclamation"
-                    styleClass="add-button"
-                    onAction="#handleAddAction"/>
-            <Button fx:id="viewButton"
-                    text="📄 Voir les Réclamations"
-                    styleClass="view-button"
-                    onAction="#handleViewAction"/>
+            <Button fx:id="ajouterButton" text="➕ Déposer une Réclamation" styleClass="add-button" onAction="#handleAddAction"/>
+            <Button fx:id="viewButton" text="📄 Consulter les Réclamations" styleClass="view-button" onAction="#handleViewAction"/>
         </HBox>
 
+        <!-- Panneau d'informations -->
+        <VBox spacing="10" alignment="CENTER" styleClass="info-box">
+            <Label text="📌 Conseil : Décrivez précisément votre problème pour une meilleure assistance !" styleClass="info-text"/>
+            <Label text="💡 Questions fréquentes" styleClass="faq-text"/>
+        </VBox>
     </VBox>
-
 </AnchorPane>
