@@ -3,30 +3,30 @@ package Models.Reclamation;
 public class Reclamation {
 
     private int id;
-    private int idUser; // Clé étrangère vers la table Membres
+    private int idUser;
     private String titre;
     private String description;
+    private TypeReclamation type;
 
-    // Constructeur par défaut
+    // Constructeurs
     public Reclamation() {
     }
 
-    // Constructeur sans ID (pour l'ajout)
-    public Reclamation(int idUser, String titre, String description) {
+    public Reclamation(int idUser, String titre, String description, TypeReclamation type) {
         this.idUser = idUser;
         this.titre = titre;
         this.description = description;
+        this.type = type;
     }
 
-    // Constructeur avec ID (pour la mise à jour ou la récupération)
-    public Reclamation(int id, int idUser, String titre, String description) {
+    public Reclamation(int id, int idUser, String titre, String description, TypeReclamation type) {
         this.id = id;
         this.idUser = idUser;
         this.titre = titre;
         this.description = description;
+        this.type = type;
     }
 
-    // Constructeur avec uniquement l'ID (pour la suppression ou la recherche)
     public Reclamation(int id) {
         this.id = id;
     }
@@ -64,6 +64,14 @@ public class Reclamation {
         this.description = description;
     }
 
+    public TypeReclamation getType() {
+        return type;
+    }
+
+    public void setType(TypeReclamation type) {
+        this.type = type;
+    }
+
     // Méthode toString pour afficher les détails de la réclamation
     @Override
     public String toString() {
@@ -72,6 +80,7 @@ public class Reclamation {
                 ", idUser=" + idUser +
                 ", titre='" + titre + '\'' +
                 ", description='" + description + '\'' +
+                ", type='" + type.getLabel() + '\'' +
                 '}';
     }
 }

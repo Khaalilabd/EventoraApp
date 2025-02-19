@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="687.0" prefWidth="1022.0" style="-fx-background-color: #F2F2F2;" stylesheets="style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Reservation.Controllers.AfficheReservation">
+    <HBox prefHeight="687.0" prefWidth="1022.0" spacing="0">
+        <!-- Barre de navigation latérale -->
+        <VBox prefHeight="682.0" prefWidth="180.0" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
+            <ImageView fitHeight="100" fitWidth="100" preserveRatio="true">
+                <image>
+                    <Image url="@/Images/EVENTORA.png" />
+                </image>
+            </ImageView>
+
+            <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
+
+            <VBox spacing="10">
+                <Button styleClass="menu-button" text="🏠 Accueil" />
+                <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
+                <Button onAction="#goToReservation" styleClass="menu-button" text="📲 Réservation" />
+                <Button styleClass="menu-button" text="🎁 Services" />
+                <Button styleClass="menu-button" text="⭐ FeedBack" />
+                <Button styleClass="menu-button" text="🚨 Réclamations" />
+                <Button styleClass="menu-button" text="🔧 Paramètres" />
+                <Button styleClass="logout-button" text="🛑 Déconnexion" />
+            </VBox>
+        </VBox>
+
+        <!-- Contenu principal -->
+        <VBox alignment="CENTER" layoutX="240" layoutY="50" prefHeight="687.0" prefWidth="802.0" spacing="20" style="-fx-padding: 20px;">
+            <Label prefHeight="55.0" prefWidth="422.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 10px;" text="⛔ Liste des Reservations ⛔" textAlignment="CENTER">
+                <font>
+                    <Font size="49.0" />
+                </font>
+            </Label>
+
+            <!-- Ajouter et Actualiser Buttons -->
+            <HBox spacing="10">
+                <Button onAction="#addReservation" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Ajouter" />
+                <Button onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Actualiser" />
+            </HBox>
+
+            <!-- Tableau des réclamations -->
+            <TableView fx:id="tableView" prefHeight="527.0" prefWidth="816.0">
+                <columns>
+                    <TableColumn fx:id="colId" prefWidth="70" text="ID" />
+                    <TableColumn fx:id="colIdoffre" prefWidth="70" text="IDoffre" />
+                    <TableColumn fx:id="colNom" prefWidth="100" text="Nom" />
+                    <TableColumn fx:id="colPrenom" prefWidth="100" text="prenom" />
+                    <TableColumn fx:id="colEmail" prefWidth="100" text="email" />
+                    <TableColumn fx:id="colnumTel" prefWidth="90" text="numTel" />
+                    <TableColumn fx:id="colDescription" prefWidth="120" text="Description" />
+                    <TableColumn fx:id="colDate" prefWidth="90" text="Date" />
+                    <TableColumn fx:id="colActions" prefWidth="75.0" text="Actions" />
+                </columns>
+            <columnResizePolicy>
+               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
+            </TableView>
+        </VBox>
+
+    </HBox>
+</AnchorPane>
