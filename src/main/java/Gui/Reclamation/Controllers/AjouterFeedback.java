@@ -60,7 +60,7 @@ public class AjouterFeedback {
         String description = descField.getText();
 
         // Vérifier la case recommend
-        Recommend recommend = recommendCheck.isSelected() ? Recommend.YES : Recommend.NO;
+        Recommend recommend = recommendCheck.isSelected() ? Recommend.Oui : Recommend.Non;
 
         if (description.trim().isEmpty()) {
             showAlert("Error", "Please provide feedback.");

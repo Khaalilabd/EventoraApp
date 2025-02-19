@@ -2,15 +2,17 @@ package Gui.Reclamation.Controllers;
 
 import Services.Reclamation.Crud.FeedBackService;
 import Models.Reclamation.Feedback;
-import Models.Reclamation.Recommend;
-
-
+import Models.Reclamation.Recommend;  // Importer l'énumération Recommend
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -18,6 +20,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.application.Platform;
 import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.util.List;
@@ -36,7 +39,7 @@ public class AfficheFeedback {
     @FXML
     private TableColumn<Feedback, String> colDescription;
     @FXML
-    private TableColumn<Feedback, String> colRecommend;
+    private TableColumn<Feedback, Recommend> colRecommend;  // Utiliser Recommend au lieu de String
     @FXML
     private TableColumn<Feedback, String> colActions;
 
@@ -48,16 +51,29 @@ public class AfficheFeedback {
 
     @FXML
     public void initialize() {
-        // Initialiser les colonnes
         colId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         colUser.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getIdUser()).asObject());
         colVote.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getVote()).asObject());
         colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
-        colRecommend.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRecommend().name()));
+
+        // Lier colRecommend à l'énumération Recommend et formater l'affichage avec un StringConverter
+        colRecommend.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().getRecommend()));
+        colRecommend.setCellFactory(param -> new TableCell<Feedback, Recommend>() {
+            @Override
+            protected void updateItem(Recommend item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getLabel());  // Afficher le libellé de l'énumération
+                }
+            }
+        });
 
         addActionsColumn();
         loadFeedbacks();
     }
+
 
     private void loadFeedbacks() {
         try {
@@ -76,12 +92,31 @@ public class AfficheFeedback {
             @Override
             public TableCell<Feedback, String> call(TableColumn<Feedback, String> param) {
                 return new TableCell<Feedback, String>() {
-                    final Button editButton = new Button("Modifier");
-                    final Button deleteButton = new Button("Supprimer");
+                    final ImageView editImageView = new ImageView(new Image(getClass().getResourceAsStream("/Images/modif.png")));
+                    final ImageView deleteImageView = new ImageView(new Image(getClass().getResourceAsStream("/Images/supp.png")));
                     final HBox hBox = new HBox(10);
 
                     {
-                        hBox.getChildren().addAll(editButton, deleteButton);
+                        // Redimensionner les icônes pour qu'elles occupent toute la taille de la cellule
+                        editImageView.setPreserveRatio(true);
+                        deleteImageView.setPreserveRatio(true);
+
+                        // Ajouter les icônes dans le HBox
+                        hBox.getChildren().addAll(editImageView, deleteImageView);
+
+                        // Centrer les icônes dans la cellule
+                        hBox.setAlignment(Pos.CENTER);
+                        hBox.setSpacing(15);
+
+                        // Appliquer un style (si nécessaire)
+                        editImageView.getStyleClass().add("table-icon");
+                        deleteImageView.getStyleClass().addAll("table-icon", "delete");
+
+                        // Appliquer un redimensionnement automatique des images pour remplir la cellule
+                        editImageView.fitWidthProperty().bind(widthProperty().multiply(0.4)); // Ajuste la largeur de l'image
+                        deleteImageView.fitWidthProperty().bind(widthProperty().multiply(0.4)); // Ajuste la largeur de l'image
+                        editImageView.fitHeightProperty().bind(heightProperty()); // Redimensionner en fonction de la hauteur
+                        deleteImageView.fitHeightProperty().bind(heightProperty()); // Redimensionner en fonction de la hauteur
                     }
 
                     @Override
@@ -91,8 +126,12 @@ public class AfficheFeedback {
                             setGraphic(null);
                         } else {
                             Feedback feedback = getTableRow().getItem();
-                            editButton.setOnAction(event -> handleEdit(feedback));
-                            deleteButton.setOnAction(event -> handleDelete(feedback));
+
+                            // Ajouter les événements sur les icônes
+                            editImageView.setOnMouseClicked(event -> handleEdit(feedback));
+                            deleteImageView.setOnMouseClicked(event -> handleDelete(feedback));
+
+                            // Définir le graphique de la cellule
                             setGraphic(hBox);
                         }
                     }
@@ -101,10 +140,31 @@ public class AfficheFeedback {
         });
     }
 
+
     private void handleEdit(Feedback feedback) {
         // Gérer la modification du feedback
         System.out.println("Modifier le feedback avec ID : " + feedback.getId());
+
+        try {
+            // Charger le fichier FXML pour l'interface de modification
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierFeedback.fxml"));
+            AnchorPane modifierFeedbackLayout = loader.load();
+
+            // Passer l'objet Feedback à l'interface ModifierFeedback
+            ModifierFeedback controller = loader.getController();
+            controller.setFeedback(feedback);  // Passer le feedback à l'interface de modification
+
+            // Créer une nouvelle scène pour l'interface de modification
+            Scene scene = new Scene(modifierFeedbackLayout);
+            Stage stage = (Stage) feedbackTable.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Gérer l'erreur de chargement de l'interface
+        }
     }
+
 
     private void handleDelete(Feedback feedback) {
         // Gérer la suppression du feedback

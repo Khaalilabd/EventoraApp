@@ -8,7 +8,7 @@
             xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
             stylesheets="style.css"
-            fx:controller="Gui.Reclamation.Controllers.AjouterFeedback">
+            fx:controller="Gui.Reclamation.Controllers.ModifierFeedback">
 
     <!-- Barre de navigation latérale -->
     <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
@@ -50,6 +50,9 @@
         <JFXCheckBox fx:id="recommendCheck" text="Recommend Us to Others?" styleClass="checkbox"/>
 
         <!-- Bouton Soumettre -->
-        <JFXButton fx:id="submitButton" text="Submit" onAction="#handleSubmit" styleClass="submit-button"/>
+        <JFXButton fx:id="submitButton" text="Update" onAction="#handleSubmit" styleClass="submit-button"/>
+        <!-- Bouton Annuler -->
+        <JFXButton fx:id="cancelButton" text="Cancel" onAction="#handleCancel" styleClass="cancel-button"/>
+
     </VBox>
 </AnchorPane>

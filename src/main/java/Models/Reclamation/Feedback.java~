@@ -10,10 +10,6 @@ public class Feedback {
     public Feedback(String description, int vote, Recommend recommend) {
     }
 
-    public Feedback() {
-
-    }
-
     // Getters et setters
     public int getId() {
         return id;

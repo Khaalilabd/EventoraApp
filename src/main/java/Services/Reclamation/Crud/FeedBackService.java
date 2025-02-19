@@ -42,8 +42,12 @@ public class FeedBackService implements IfeedBack<Feedback> {
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, feedback.getVote());
             ps.setString(2, feedback.getDescription());
-            ps.setString(3, feedback.getRecommend().name()); // Mise à jour de l'énum
-            ps.setInt(4, feedback.getId()); // L'ID pour identifier le feedback à modifier
+
+            // Vérifier si la recommandation est nulle et définir une valeur par défaut si nécessaire
+            String recommendValue = (feedback.getRecommend() != null) ? feedback.getRecommend().name() : Recommend.Non.name();
+            ps.setString(3, recommendValue);
+
+            ps.setInt(4, feedback.getId());
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
@@ -56,6 +60,7 @@ public class FeedBackService implements IfeedBack<Feedback> {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void SupprimerFeedBack(Feedback feedback) {
@@ -90,7 +95,13 @@ public class FeedBackService implements IfeedBack<Feedback> {
                 feedback.setIdUser(rs.getInt("idUser"));
                 feedback.setVote(rs.getInt("Vote"));
                 feedback.setDescription(rs.getString("Description"));
-                feedback.setRecommend(Recommend.valueOf(rs.getString("Recommend")));
+                String recommendLabel = rs.getString("Recommend");
+                try {
+                    feedback.setRecommend(Recommend.fromLabel(recommendLabel));
+                } catch (IllegalArgumentException e) {
+                    System.out.println("Valeur invalide pour Recommend : " + recommendLabel + ". Valeur par défaut utilisée.");
+                    feedback.setRecommend(Recommend.Non); // Valeur par défaut
+                }
 
                 feedbacks.add(feedback);
             }
