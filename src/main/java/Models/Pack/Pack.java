@@ -8,11 +8,12 @@ public class Pack {
     private Location location;
     private TypePack type;
     private int nbrGuests;
+    private String nomService;
 
     public Pack() {
     }
 
-    public Pack(int id, String nomPack, String description, double prix, Location location, TypePack type, int nbrGuests) {
+    public Pack(int id, String nomPack, String description, double prix, Location location, TypePack type, int nbrGuests, String nomService) {
         this.id = id;
         this.nomPack = nomPack;
         this.description = description;
@@ -20,19 +21,22 @@ public class Pack {
         this.location = location;
         this.type = type;
         this.nbrGuests = nbrGuests;
+        this.nomService = nomService;
     }
 
-    public Pack( String nomPack, String description, double prix, Location location, TypePack type, int nbrGuests) {
+    public Pack( String nomPack, String description, double prix, Location location, TypePack type, int nbrGuests, String nomService) {
         this.nomPack = nomPack;
         this.description = description;
         this.prix = prix;
         this.location = location;
         this.type = type;
         this.nbrGuests = nbrGuests;
+        this.nomService = nomService;
+
 
     }
 
-    public Pack(String nomPack,String nomPack2) {
+    public Pack(String nomPack) {
         this.nomPack = nomPack;
     }
 
@@ -92,6 +96,14 @@ public class Pack {
         this.nbrGuests = nbrGuests;
     }
 
+    public String getNomService() {
+        return nomService;
+    }
+
+    public void setNomService(String nomService) {
+        this.nomService = nomService;
+    }
+
     @Override
     public String toString() {
         return "Pack{" +
@@ -102,6 +114,7 @@ public class Pack {
                 ", location=" + location +
                 ", type=" + type +
                 ", nbrGuests=" + nbrGuests +
+                ", nomService='" + nomService + '\'' +
                 '}';
     }
 }

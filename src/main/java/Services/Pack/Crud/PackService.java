@@ -23,7 +23,7 @@ public class PackService implements IPack <Pack> {
             return;
         }
 
-        String req ="INSERT INTO `pack`(`nomPack`, `description`, `prix`, `location`, `type`, `nbrGuests`) VALUES (?,?,?,?,?,?)";
+        String req ="INSERT INTO `pack`(`nomPack`, `description`, `prix`, `location`, `type`, `nbrGuests`,`nomService`) VALUES (?,?,?,?,?,?,?)";
         try{
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, pack.getNomPack());
@@ -32,6 +32,7 @@ public class PackService implements IPack <Pack> {
             ps.setString(4, pack.getLocation().getLabel());
             ps.setString(5,existingType.getType());
             ps.setInt(6, pack.getNbrGuests());
+            ps.setString(7,pack.getNomService());
 
 
             ps.executeUpdate();
@@ -61,8 +62,20 @@ public class PackService implements IPack <Pack> {
 
     @Override
     public void modifier(Pack pack) {
-        String req ="UPDATE `pack` SET `nomPack`= ?,`description`= ?,`prix`= ?,`location`= ?,`type`= ?,`nbrGuests`= ? WHERE nomPack = ?)";
+        String req ="UPDATE `pack` SET `nomPack`= ?,`description`= ?,`prix`= ?,`location`= ?,`type`= ?,`nbrGuests`= ?, `nomService` = ? WHERE `id` = ?";
         try{
+
+            // Print values for debugging
+            System.out.println("Modifying pack with ID: " + pack.getId());
+            System.out.println("New values: ");
+            System.out.println("Name: " + pack.getNomPack());
+            System.out.println("Description: " + pack.getDescription());
+            System.out.println("Price: " + pack.getPrix());
+            System.out.println("Location: " + pack.getLocation());
+            System.out.println("Type: " + pack.getType().getType());
+            System.out.println("Guests: " + pack.getNbrGuests());
+            System.out.println("Service: " + pack.getNomService());
+
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, pack.getNomPack());
             ps.setString(2, pack.getDescription());
@@ -70,10 +83,12 @@ public class PackService implements IPack <Pack> {
             ps.setString(4, pack.getLocation().getLabel());
             ps.setString(5,pack.getType().getType());
             ps.setInt(6,pack.getNbrGuests());
+            ps.setString(7,pack.getNomService());
+            ps.setInt(8,pack.getId());
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
-                System.out.println("Pack" + pack.getNomPack() + " est mis à jour avec succès !");
+                System.out.println("Pack " + pack.getNomPack() + " est mis à jour avec succès !");
             } else {
                 System.out.println("Aucun Pack trouvé avec ce nom !");
             }
@@ -84,13 +99,13 @@ public class PackService implements IPack <Pack> {
 
     @Override
     public List<Pack> rechercher() {
-        String req ="SELECT * FROM `pack` WHERE 1";
+        String req ="SELECT * FROM `pack`";
         List<Pack> packs = new ArrayList<>();
         try {
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(req);
             while(rs.next()){
-                    packs.add(new Pack(rs.getString("nomPack"),rs.getString("description"),rs.getDouble("prix"), Location.valueOf(rs.getString("location")),new TypePack(rs.getString("type")),rs.getInt("nbrGuests")));
+                    packs.add(new Pack( rs.getInt("id"), rs.getString("nomPack"),rs.getString("description"),rs.getDouble("prix"), Location.valueOf(rs.getString("location")),new TypePack(rs.getString("type")),rs.getInt("nbrGuests"),rs.getString("nomService")));
             }                System.out.println(packs);
 
         } catch (SQLException e) {

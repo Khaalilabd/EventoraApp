@@ -51,11 +51,11 @@ public class TypePackService implements IPack <TypePack> {
 
     @Override
     public void modifier(TypePack typePack) {
-        String req ="UPDATE `typepack` SET `type`= ? WHERE `id` = ?";
+        String req ="UPDATE `typepack` SET `type`= ? WHERE `type` = ?";
         try{
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, typePack.getType());
-            ps.setInt(2, typePack.getId()); //condition where
+            ps.setString(2, typePack.getType()); //condition where
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Type Pack" + typePack.getType() + " est mis à jour avec succès !");
