@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -58,7 +59,7 @@ public class ModifierReservation {
         emailfield.setText(reservation.getEmail());
         numtelfield.setText(reservation.getNumTel());
         descriptionfield.setText(reservation.getDescription());
-        datefield.setValue(null);
+        datefield.setValue(LocalDate.ofInstant(Instant.ofEpochMilli(reservation.getDate().getTime()), ZoneId.systemDefault()));
 
     }
     private void modifierReservation(ActionEvent event) {
