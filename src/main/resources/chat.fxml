@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Pos?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Service.Controllers.Chat">
+    <children>
+        <!-- Zone où la réponse du chatbot s'affiche -->
+        <TextArea fx:id="responseArea" layoutX="14.0" layoutY="52.0" prefHeight="200.0" prefWidth="380.0" wrapText="true" editable="false"/>
+
+        <!-- Champ pour que l'utilisateur puisse saisir une question -->
+        <TextField fx:id="userInputField" layoutX="14.0" layoutY="270.0" prefWidth="300.0"/>
+
+        <!-- Bouton pour envoyer la question -->
+        <Button fx:id="sendButton" text="Envoyer" layoutX="320.0" layoutY="270.0" onAction="#initialize"/>
+    </children>
+</AnchorPane>

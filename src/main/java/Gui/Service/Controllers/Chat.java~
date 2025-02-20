@@ -1,0 +1,47 @@
+package Gui.Service.Controllers;
+
+import Models.Chat.OpenAIChat;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+
+public class Chat {
+
+    @FXML
+    private TextField userInputField; // Champ pour entrer la question
+
+    @FXML
+    private TextArea chatArea; // Zone de texte pour afficher l'historique des messages
+
+    @FXML
+    private Button sendButton; // Bouton pour envoyer la question
+
+    // Méthode appelée lorsque le bouton "Envoyer" est cliqué
+    @FXML
+    private void handleSendMessage() {
+        // Récupérer la question de l'utilisateur
+        String userInput = userInputField.getText();
+
+        if (userInput.trim().isEmpty()) {
+            return; // Si la question est vide, ne rien faire
+        }
+
+        // Ajouter la question de l'utilisateur à l'historique
+        chatArea.appendText("Vous: " + userInput + "\n");
+
+        // Appeler la méthode pour obtenir la réponse du chatbot
+        String response = OpenAIChat.getChatbotResponse(userInput);
+
+        // Ajouter la réponse du chatbot à l'historique
+        chatArea.appendText("Chatbot: " + response + "\n");
+
+        // Vider le champ de texte après l'envoi
+        userInputField.clear();
+
+        // Faire défiler vers le bas pour voir les nouveaux messages
+        chatArea.setScrollTop(Double.MAX_VALUE);
+    }
+
+}
