@@ -62,6 +62,7 @@ public class FeedBackService implements IfeedBack<Feedback> {
     }
 
 
+
     @Override
     public void SupprimerFeedBack(Feedback feedback) {
         String req = "DELETE FROM feedback WHERE id = ?";

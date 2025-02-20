@@ -5,13 +5,23 @@ public class Feedback {
     private int idUser;
     private int vote;
     private String description;
-    private Recommend recommend; // Assurez-vous que c'est bien de type Recommend
+    private Recommend recommend;
 
     public Feedback(String description, int vote, Recommend recommend) {
+        this.description = description;
+        this.vote = vote;
+        this.recommend = recommend;
     }
 
+    // Constructeur par défaut
     public Feedback() {
+    }
 
+    public Feedback(int id, String description, int vote, Recommend recommend) {
+        this.id = id;
+        this.description = description;
+        this.vote = vote;
+        this.recommend = recommend;
     }
 
     // Getters et setters

@@ -101,7 +101,6 @@ public class ModifierFeedback {
         }
     }
 
-
     @FXML
     private void handleCancel(ActionEvent event) {
         try {

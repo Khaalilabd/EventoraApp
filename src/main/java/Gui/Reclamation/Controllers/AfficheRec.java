@@ -139,10 +139,8 @@ public class AfficheRec {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierRec.fxml"));
             AnchorPane modifRecLayout = loader.load();
-
             ModifierRec controller = loader.getController();
             controller.setReclamationToEdit(reclamation);
-
             Scene currentScene = tableView.getScene();
             currentScene.setRoot(modifRecLayout);
         } catch (IOException e) {

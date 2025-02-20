@@ -130,7 +130,7 @@ public class AfficheFeedback {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierFeedback.fxml"));
             AnchorPane modifierFeedbackLayout = loader.load();
             ModifierFeedback controller = loader.getController();
-            controller.setFeedback(feedback);
+            controller.setFeedback(feedback); // Passer l'objet Feedback au contrôleur de modification
             Scene scene = new Scene(modifierFeedbackLayout);
             Stage stage = (Stage) feedbackTable.getScene().getWindow();
             stage.setScene(scene);
