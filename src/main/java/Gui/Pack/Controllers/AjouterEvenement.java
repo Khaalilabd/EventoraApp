@@ -1,6 +1,6 @@
 package Gui.Pack.Controllers;
-import Models.Pack.TypePack;
-import Services.Pack.Crud.TypePackService;
+import Models.Pack.Evenement;
+import Services.Pack.Crud.EvenementService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class AjouterTypePack {
+public class AjouterEvenement {
 
     @FXML
     private TextField NomTypeField;
@@ -26,20 +26,20 @@ public class AjouterTypePack {
     private Button ReturnToListButton;
 
 
-    private final TypePackService typePackService = new TypePackService();
+    private final EvenementService evenementService = new EvenementService();
 
     @FXML
     public void initialize() {
 
 
-        submitButton.setOnAction(this::ajouterTypePack);
+        submitButton.setOnAction(this::ajouterEvenement);
         cancelButton.setOnAction(this::annuler);
-        ReturnToListButton.setOnAction(this::goToAfficheTypePack);
+        ReturnToListButton.setOnAction(this::goToAfficheEvenement);
 
     }
 
     @FXML
-    private void ajouterTypePack(ActionEvent event) {
+    private void ajouterEvenement(ActionEvent event) {
         try {
             String type = NomTypeField.getText();
 
@@ -55,10 +55,10 @@ public class AjouterTypePack {
             }
 
 
-                TypePack newTypePack = new TypePack(type);
-            typePackService.ajouter(newTypePack);
+                Evenement newEvenement = new Evenement(type);
+            evenementService.ajouter(newEvenement);
             showAlert("Succès", "Type ajouté avec succès !");
-            goToAfficheTypePack(event);
+            goToAfficheEvenement(event);
 
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur est survenue lors de l'ajout du Type.");
@@ -83,22 +83,22 @@ public class AjouterTypePack {
         alert.showAndWait();
     }
 
-    private void goToAfficheTypePack(ActionEvent event) {
+    private void goToAfficheEvenement(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AfficheTypePack.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AfficheEvenement.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
-            showAlert("Erreur", "Impossible de charger la page AfficheTypePack.");
+            showAlert("Erreur", "Impossible de charger la page AfficheEvenement.");
             e.printStackTrace();
         }
     }
     @FXML
     private void goToPack(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -112,18 +112,9 @@ public class AjouterTypePack {
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-    @FXML
-    private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
+        Scene reclamationScene = new Scene(reclamationLayout);
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
+        currentStage.setScene(reclamationScene);
         currentStage.show();
     }
     @FXML
@@ -153,4 +144,5 @@ public class AjouterTypePack {
         newStage.setScene(newScene);
         newStage.show();
     }
+
 }

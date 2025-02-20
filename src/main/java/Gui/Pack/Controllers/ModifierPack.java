@@ -2,7 +2,7 @@ package Gui.Pack.Controllers;
 
 import Models.Pack.Location;
 import Models.Pack.Pack;
-import Models.Pack.TypePack;
+import Models.Pack.Evenement;
 import Services.Pack.Crud.PackService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,7 +30,7 @@ public class ModifierPack {
     @FXML
     private ComboBox<Location> LocationField;
     @FXML
-    private ComboBox<TypePack> TypeField;
+    private ComboBox<Evenement> TypeField;
     @FXML
     private TextField NbrGuestsField;
     @FXML
@@ -49,9 +49,9 @@ public class ModifierPack {
         LocationField.getItems().setAll(Location.values());
 
         // Chargement des types de packs depuis la base de données
-        List<TypePack> typePacks = PackService.getAllTypePacks();
-        ObservableList<TypePack> observableTypePacks = FXCollections.observableArrayList(typePacks);
-        TypeField.setItems(observableTypePacks);
+        List<Evenement> evenements = PackService.getAllEvenements();
+        ObservableList<Evenement> observableEvenements = FXCollections.observableArrayList(evenements);
+        TypeField.setItems(observableEvenements);
 
         // Désactivation du bouton tant qu'un pack n'est pas défini
         submitButton.setDisable(true);
@@ -81,7 +81,7 @@ public class ModifierPack {
             String description = DescriptionField.getText().trim();
             String prixText = PrixField.getText().trim();
             Location location = LocationField.getValue();
-            TypePack type = TypeField.getValue();
+            Evenement type = TypeField.getValue();
             String nbrGuestsText = NbrGuestsField.getText().trim();
             String nomService = ServiceField.getText().trim();
 

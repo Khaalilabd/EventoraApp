@@ -12,9 +12,9 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Pack.Controllers.ModifierTypePack"
+            fx:controller="Gui.Pack.Controllers.ModifierEvenement"
             prefHeight="600.0" prefWidth="900.0"
-            stylesheets="style.css"
+            stylesheets="/style.css"
             style="-fx-background-color: #F4F1F1;">
 
     <!-- Barre de navigation latérale -->
@@ -40,15 +40,15 @@
     <!-- Contenu principal -->
     <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
         <!-- Titre -->
-        <Label text="Modifier un Type Pack" styleClass="main-title"/>
+        <Label text="Modifier un Evenement" styleClass="main-title"/>
 
-        <!-- Champ Nom du Pack -->
-        <TextField fx:id="NomTypeField" promptText="Titre du pack" styleClass="input-field"/>
+        <!-- Champ Nom du evenement -->
+        <TextField fx:id="NomTypeField" promptText="Nom de l'evenement" styleClass="input-field"/>
 
 
         <!-- Boutons -->
         <HBox spacing="20" alignment="CENTER">
-            <Button text="Sauvegarder" fx:id="submitButton" styleClass="submit-button" onAction="#modifierTypePack"/>
+            <Button text="Sauvegarder" fx:id="submitButton" styleClass="submit-button" onAction="#modifierEvenement"/>
             <Button text="Annuler" fx:id="cancelButton" styleClass="cancel-button" onAction="#annuler"/>
         </HBox>
     </VBox>

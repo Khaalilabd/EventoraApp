@@ -15,82 +15,39 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Callback;
+import Services.Pack.Crud.EvenementService;
+import Models.Pack.Evenement;
 
 import java.io.IOException;
 import java.util.List;
-import Services.Pack.Crud.PackService;
-import Models.Pack.Pack;
 
-public class AffichePack {
+public class AfficheEvenement {
 
     @FXML
-    private TableView<Pack> tableView;
-    //@FXML
-    //private TableColumn<Pack, Integer> colId;
+    private TableView<Evenement> tableView;
+
     @FXML
-    private TableColumn<Pack, String> colNom;
+    private TableColumn<Evenement, String> colType;
+
     @FXML
-    private TableColumn<Pack, String> colDescription;
-    @FXML
-    private TableColumn<Pack, Double> colPrix;
-    @FXML
-    private TableColumn<Pack, String> colLocation;
-    @FXML
-    private TableColumn<Pack, String> colType;
-    @FXML
-    private TableColumn<Pack, Integer> colNbrGuests;
-    @FXML
-    private TableColumn<Pack, String> colServices;
-    @FXML
-    private TableColumn<Pack, String> colActions;
+    private TableColumn<Evenement, Void> colActions; // Use Void for non-editable columns
+
     @FXML
     private TextField searchField;
 
-    private PackService packService = new PackService();
-    private ObservableList<Pack> packList = FXCollections.observableArrayList();
+    private EvenementService evenementService = new EvenementService();
+    private ObservableList<Evenement> evenementList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        // Set cell value factories
-        //colId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        colNom.setCellValueFactory(new PropertyValueFactory<>("nomPack"));
-        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
-        colLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
-        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
-        colNbrGuests.setCellValueFactory(new PropertyValueFactory<>("nbrGuests"));
-        colServices.setCellValueFactory(new PropertyValueFactory<>("nomService"));
-
-        // Actions column (Edit & Delete buttons with icons)
-        colActions.setCellFactory(createActionButtons());
-
-        // Load packs into the table
-        loadPacks();
-
-        // Dynamic search functionality
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            searchPack(newValue);
-        });
-
-        // Row hover effect
-        tableRowFactory(tableView);
-    }
-
-    private void loadPacks() {
-        packList.clear();
-        packList.addAll(packService.rechercher());
-        tableView.setItems(packList);
-    }
-
-    private Callback<TableColumn<Pack, String>, TableCell<Pack, String>> createActionButtons() {
-        return param -> new TableCell<>() {
+        colType.setCellValueFactory(new PropertyValueFactory<>("typeEvenement"));
+        colActions.setCellFactory(param -> new TableCell<>() {
             final Button editButton = new Button();
             final Button deleteButton = new Button();
-            final HBox buttons = new HBox(10, editButton, deleteButton);
+            final HBox hBox = new HBox(10);
 
             {
-                // Add icons to buttons
+                // Add icons and buttons for each action
                 Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
                 Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
                 ImageView editImageView = new ImageView(editIcon);
@@ -101,42 +58,46 @@ public class AffichePack {
                 deleteImageView.setFitWidth(20);
                 editButton.setGraphic(editImageView);
                 deleteButton.setGraphic(deleteImageView);
-
-                // Styling for the buttons
                 editButton.getStyleClass().add("table-button");
                 deleteButton.getStyleClass().addAll("table-button", "delete");
 
-                // Set actions for buttons
-                editButton.setOnAction(event -> {
-                    Pack pack = getTableView().getItems().get(getIndex());
-                    handleEdit(pack);
-                });
-
-                deleteButton.setOnAction(event -> {
-                    Pack pack = getTableView().getItems().get(getIndex());
-                    handleDelete(pack);
-                });
+                // Add buttons to HBox
+                hBox.getChildren().addAll(editButton, deleteButton);
             }
 
             @Override
-            protected void updateItem(String item, boolean empty) {
+            public void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    setGraphic(buttons);
+                    // Add button actions for each row
+                    editButton.setOnAction(event -> handleEdit(getTableRow().getItem()));
+                    deleteButton.setOnAction(event -> handleDelete(getTableRow().getItem()));
+                    setGraphic(hBox);
                 }
             }
-        };
+        });
+
+        loadPacks();
+
+        // Dynamic search
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> searchEvenement(newValue));
     }
 
-    private void handleEdit(Pack pack) {
+    private void loadPacks() {
+        evenementList.clear();
+        evenementList.addAll(evenementService.rechercher());
+        tableView.setItems(evenementList);
+    }
+
+    private void handleEdit(Evenement evenement) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/ModifierPack.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/ModifierEvenement.fxml"));
             AnchorPane modifRecLayout = loader.load();
 
-            ModifierPack controller = loader.getController();
-            controller.setPackToEdit(pack);
+            ModifierEvenement controller = loader.getController();
+            controller.setEvenementToEdit(evenement);
 
             Scene currentScene = tableView.getScene();
             currentScene.setRoot(modifRecLayout);
@@ -145,11 +106,11 @@ public class AffichePack {
         }
     }
 
-    private void handleDelete(Pack pack) {
+    private void handleDelete(Evenement evenement) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText("Suppression d'un pack");
-        alert.setContentText("Voulez-vous vraiment supprimer le pack : " + pack.getNomPack() + " ?");
+        alert.setHeaderText("Suppression d'un événement");
+        alert.setContentText("Voulez-vous vraiment supprimer le type d'événement : " + evenement.getTypeEvenement() + " ?");
 
         ButtonType buttonTypeYes = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
         ButtonType buttonTypeNo = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -158,15 +119,17 @@ public class AffichePack {
 
         alert.showAndWait().ifPresent(response -> {
             if (response == buttonTypeYes) {
-                packService.supprimer(pack);
-                loadPacks(); // Refresh the list after deletion
+                evenementService.supprimer(evenement);
+                loadPacks(); // Refresh list after deletion
             }
         });
     }
 
-    private void searchPack(String motCle) {
-        List<Pack> resultatRecherche = packService.RechercherPackParMotCle(motCle.toLowerCase());
-        ObservableList<Pack> data = FXCollections.observableArrayList(resultatRecherche);
+    // Dynamic search as user types
+    private void searchEvenement(String motCle) {
+        List<Evenement> resultatRecherche = evenementService.RechercherEvenementParMotCle(motCle.toLowerCase());
+
+        ObservableList<Evenement> data = FXCollections.observableArrayList(resultatRecherche);
         tableView.setItems(data);
     }
 
@@ -176,9 +139,9 @@ public class AffichePack {
     }
 
     @FXML
-    private void tableRowFactory(TableView<Pack> tableView) {
+    private void tableRowFactory(TableView<Evenement> tableView) {
         tableView.setRowFactory(tv -> {
-            TableRow<Pack> row = new TableRow<>();
+            TableRow<Evenement> row = new TableRow<>();
             row.setOnMouseEntered(event -> row.setStyle("-fx-background-color: #BDC3C7;"));
             row.setOnMouseExited(event -> row.setStyle("-fx-background-color: transparent;"));
             return row;
@@ -196,8 +159,8 @@ public class AffichePack {
     }
 
     @FXML
-    private void addPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AjouterPack.fxml"));
+    private void addEvenement(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AjouterEvenement.fxml"));
         AnchorPane packLayout = loader.load();
         Scene scene = new Scene(packLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -205,19 +168,6 @@ public class AffichePack {
         stage.show();
     }
 
-    @FXML
-    private void goToEvenement(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AfficheEvenement.fxml"));
-            AnchorPane packLayout = loader.load();
-            Scene scene = new Scene(packLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
@@ -227,10 +177,10 @@ public class AffichePack {
         currentStage.setScene(reclamationScene);
         currentStage.show();
     }
+
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         try {
-            // Vérifier le chemin correct du fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
@@ -242,6 +192,7 @@ public class AffichePack {
             System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
     }
+
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
@@ -254,6 +205,7 @@ public class AffichePack {
         newStage.setScene(newScene);
         newStage.show();
     }
+
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));

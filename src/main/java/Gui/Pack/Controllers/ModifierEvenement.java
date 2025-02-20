@@ -1,8 +1,8 @@
 package Gui.Pack.Controllers;
 
 
-import Models.Pack.TypePack;
-import Services.Pack.Crud.TypePackService;
+import Models.Pack.Evenement;
+import Services.Pack.Crud.EvenementService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,7 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class ModifierTypePack {
+public class ModifierEvenement {
 
     @FXML
     private TextField NomTypeField;
@@ -25,8 +25,8 @@ public class ModifierTypePack {
     @FXML
     private Button cancelButton;
 
-    private TypePack TypePackToEdit;
-    private final TypePackService TypePackService = new TypePackService();
+    private Evenement evenementToEdit;
+    private final EvenementService EvenementService = new EvenementService();
 
     @FXML
     public void initialize() {
@@ -37,11 +37,11 @@ public class ModifierTypePack {
 
     }
 
-    public void setTypePackToEdit(TypePack typePack) {
-        this.TypePackToEdit = typePack;
+    public void setEvenementToEdit(Evenement evenement) {
+        this.evenementToEdit = evenement;
 
         // Remplissage des champs avec les données existantes
-        NomTypeField.setText(typePack.getType());
+        NomTypeField.setText(evenement.getTypeEvenement());
 
 
         // Activation du bouton une fois que les données sont chargées
@@ -49,11 +49,9 @@ public class ModifierTypePack {
     }
 
     @FXML
-    private void modifierTypePack(ActionEvent event) {
+    private void modifierEvenement(ActionEvent event) {
         try {
             String type = NomTypeField.getText();
-
-
             if (type.isEmpty()  ) {
                 showAlert("Erreur", "les champs doivent être remplis.");
                 return;
@@ -62,15 +60,11 @@ public class ModifierTypePack {
                 showAlert("Erreur", "Le type ne doit contenir que des lettres et des espaces.");
                 return;
             }
-            TypePackToEdit.setType(type);
-
-
-            TypePack typePackToEdit = TypePackToEdit;
-
-
-            TypePackService.modifier(typePackToEdit);
+            this.evenementToEdit.setTypeEvenement(type);
+            Evenement evenementToEdit = this.evenementToEdit;
+            EvenementService.modifier(evenementToEdit);
             showAlert("Succès", "Type modifié avec succès !");
-            goToAfficheTypePack(event);
+            goToAfficheEvenement(event);
 
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur est survenue lors de la modification du type.");
@@ -80,7 +74,7 @@ public class ModifierTypePack {
 
     @FXML
     private void annuler(ActionEvent event) {
-        goToAfficheTypePack(event);
+        goToAfficheEvenement(event);
     }
 
     private void showAlert(String title, String content) {
@@ -91,9 +85,9 @@ public class ModifierTypePack {
         alert.showAndWait();
     }
 
-    private void goToAfficheTypePack(ActionEvent event) {
+    private void goToAfficheEvenement(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AfficheTypePack.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AfficheEvenement.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -107,7 +101,7 @@ public class ModifierTypePack {
     @FXML
     private void goToPack(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -121,24 +115,14 @@ public class ModifierTypePack {
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-    @FXML
-    private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
+        Scene reclamationScene = new Scene(reclamationLayout);
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
+        currentStage.setScene(reclamationScene);
         currentStage.show();
     }
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         try {
-            // Vérifier le chemin correct du fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
@@ -162,4 +146,5 @@ public class ModifierTypePack {
         newStage.setScene(newScene);
         newStage.show();
     }
+
 }

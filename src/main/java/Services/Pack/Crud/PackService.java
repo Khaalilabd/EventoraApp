@@ -2,7 +2,7 @@ package Services.Pack.Crud;
 
 import Models.Pack.Location;
 import Models.Pack.Pack;
-import Models.Pack.TypePack;
+import Models.Pack.Evenement;
 import Services.Pack.Interface.IPack;
 import Utils.Mydatasource;
 
@@ -15,11 +15,11 @@ public class PackService implements IPack <Pack> {
     @Override
     public void ajouter(Pack pack) {
         // Vérifier si le type existe déjà
-        TypePackService typeService = new TypePackService();
-        TypePack existingType = typeService.getTypePackByName(pack.getType().getType());
+        EvenementService typeService = new EvenementService();
+        Evenement existingType = typeService.getEvenementByName(pack.getType().getTypeEvenement());
 
         if (existingType == null) {
-            System.out.println("Le type " + pack.getType().getType() + " n'existe pas !");
+            System.out.println("Le type " + pack.getType().getTypeEvenement() + " n'existe pas !");
             return;
         }
 
@@ -30,7 +30,7 @@ public class PackService implements IPack <Pack> {
             ps.setString(2, pack.getDescription());
             ps.setDouble(3,pack.getPrix());
             ps.setString(4, pack.getLocation().getLabel());
-            ps.setString(5,existingType.getType());
+            ps.setString(5,existingType.getTypeEvenement());
             ps.setInt(6, pack.getNbrGuests());
             ps.setString(7,pack.getNomService());
 
@@ -72,7 +72,7 @@ public class PackService implements IPack <Pack> {
             System.out.println("Description: " + pack.getDescription());
             System.out.println("Price: " + pack.getPrix());
             System.out.println("Location: " + pack.getLocation());
-            System.out.println("Type: " + pack.getType().getType());
+            System.out.println("Type: " + pack.getType().getTypeEvenement());
             System.out.println("Guests: " + pack.getNbrGuests());
             System.out.println("Service: " + pack.getNomService());
 
@@ -81,7 +81,7 @@ public class PackService implements IPack <Pack> {
             ps.setString(2, pack.getDescription());
             ps.setDouble(3, pack.getPrix());
             ps.setString(4, pack.getLocation().getLabel());
-            ps.setString(5,pack.getType().getType());
+            ps.setString(5,pack.getType().getTypeEvenement());
             ps.setInt(6,pack.getNbrGuests());
             ps.setString(7,pack.getNomService());
             ps.setInt(8,pack.getId());
@@ -105,7 +105,7 @@ public class PackService implements IPack <Pack> {
             Statement st = connection.createStatement();
             ResultSet rs = st.executeQuery(req);
             while(rs.next()){
-                    packs.add(new Pack( rs.getInt("id"), rs.getString("nomPack"),rs.getString("description"),rs.getDouble("prix"), Location.valueOf(rs.getString("location")),new TypePack(rs.getString("type")),rs.getInt("nbrGuests"),rs.getString("nomService")));
+                    packs.add(new Pack( rs.getInt("id"), rs.getString("nomPack"),rs.getString("description"),rs.getDouble("prix"), Location.valueOf(rs.getString("location")),new Evenement(rs.getString("type")),rs.getInt("nbrGuests"),rs.getString("nomService")));
             }                System.out.println(packs);
 
         } catch (SQLException e) {
@@ -115,22 +115,22 @@ public class PackService implements IPack <Pack> {
         return packs;
     }
 
-    public List<TypePack> getAllTypePacks() {
-        List<TypePack> typePacks = new ArrayList<>();
+    public List<Evenement> getAllEvenements() {
+        List<Evenement> evenements = new ArrayList<>();
         String query = "SELECT * FROM typepack";
 
         try (PreparedStatement ps = connection.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                TypePack typePack = new TypePack(rs.getInt("id"), rs.getString("type"));
-                typePacks.add(typePack);
+                Evenement evenement = new Evenement(rs.getInt("id"), rs.getString("type"));
+                evenements.add(evenement);
             }
         } catch (Exception e) {
             System.out.println("Erreur lors du chargement des types de packs : " + e.getMessage());
         }
 
-        return typePacks;
+        return evenements;
     }
 
 
@@ -155,7 +155,7 @@ public class PackService implements IPack <Pack> {
                     pack.setDescription(rs.getString("description"));
                     pack.setPrix(rs.getDouble("prix"));
                     pack.setLocation(Location.valueOf(rs.getString("location")));
-                    pack.setType(new TypePack(rs.getString("type")));
+                    pack.setType(new Evenement(rs.getString("type")));
                     pack.setNbrGuests(rs.getInt("nbrGuests"));
                     pack.setNomService(rs.getString("nomService"));
 
