@@ -6,14 +6,14 @@ public class Pack {
     private String description;
     private double prix;
     private Location location;
-    private TypePack type;
+    private Evenement type;
     private int nbrGuests;
     private String nomService;
 
     public Pack() {
     }
 
-    public Pack(int id, String nomPack, String description, double prix, Location location, TypePack type, int nbrGuests, String nomService) {
+    public Pack(int id, String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, String nomService) {
         this.id = id;
         this.nomPack = nomPack;
         this.description = description;
@@ -24,7 +24,7 @@ public class Pack {
         this.nomService = nomService;
     }
 
-    public Pack( String nomPack, String description, double prix, Location location, TypePack type, int nbrGuests, String nomService) {
+    public Pack(String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, String nomService) {
         this.nomPack = nomPack;
         this.description = description;
         this.prix = prix;
@@ -80,11 +80,11 @@ public class Pack {
         this.location = location;
     }
 
-    public TypePack getType() {
+    public Evenement getType() {
         return type;
     }
 
-    public void setType(TypePack type) {
+    public void setType(Evenement type) {
         this.type = type;
     }
 

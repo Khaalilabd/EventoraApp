@@ -1,12 +1,12 @@
 package Tests;
 
-import Models.Pack.TypePack;
-import Services.Pack.Crud.TypePackService;
+import Models.Pack.Evenement;
+import Services.Pack.Crud.EvenementService;
 
 public class Main {
     public static void main(String[] args) {
-        TypePackService ps = new TypePackService();
-          ps.ajouter(new TypePack("Thour"));
+        EvenementService ps = new EvenementService();
+          ps.ajouter(new Evenement("Thour"));
 //        ps.ajouter(new TypePack("mariage"));
 //        ps.ajouter(new TypePack("BabyShower"));
 //        ps.ajouter(new TypePack("Graduation"));

@@ -12,10 +12,10 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Pack.Controllers.AjouterTypePack"
+            fx:controller="Gui.Pack.Controllers.ModifierEvenement"
             prefHeight="600.0" prefWidth="900.0"
             stylesheets="style.css"
-            style="-fx-background-color: #ECF0F1;">
+            style="-fx-background-color: #F4F1F1;">
 
     <!-- Barre de navigation latérale -->
     <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
@@ -40,21 +40,16 @@
     <!-- Contenu principal -->
     <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
         <!-- Titre -->
-        <Label text="Ajouter un pack" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+        <Label text="Modifier un Evenement" styleClass="main-title"/>
 
-        <!-- Card pour le formulaire -->
-        <VBox spacing="15" alignment="CENTER" style="-fx-background-color: white; -fx-padding: 20px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);">
-            <!-- Champ Nom du Pack -->
-            <TextField fx:id="NomTypeField" promptText="Titre du pack" styleClass="input-field"/>
+        <!-- Champ Nom du evenement -->
+        <TextField fx:id="NomTypeField" promptText="Nom de l'evenement" styleClass="input-field"/>
 
 
-            <!-- Boutons -->
-            <HBox spacing="20" alignment="CENTER">
-                <Button text="Soumettre" fx:id="submitButton" styleClass="submit-button"/>
-                <Button text="Clear" fx:id="cancelButton" styleClass="cancel-button"/>
-                <Button text="Annuler" fx:id="ReturnToListButton" styleClass="submit-button"/>
-
-            </HBox>
-        </VBox>
+        <!-- Boutons -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button text="Sauvegarder" fx:id="submitButton" styleClass="submit-button" onAction="#modifierEvenement"/>
+            <Button text="Annuler" fx:id="cancelButton" styleClass="cancel-button" onAction="#annuler"/>
+        </HBox>
     </VBox>
 </AnchorPane>

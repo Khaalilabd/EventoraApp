@@ -2,7 +2,7 @@ package Gui.Pack.Controllers;
 
 import Models.Pack.Location;
 import Models.Pack.Pack;
-import Models.Pack.TypePack;
+import Models.Pack.Evenement;
 import Services.Pack.Crud.PackService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,7 +29,7 @@ public class AjouterPack {
     @FXML
     private ComboBox<Location> LocationField;
     @FXML
-    private ComboBox<TypePack> TypeField;
+    private ComboBox<Evenement> TypeField;
     @FXML
     private TextField NbrGuestsField;
     @FXML
@@ -50,9 +50,9 @@ public class AjouterPack {
         LocationField.getItems().setAll(Location.values());
 
         // Chargement des types de packs depuis la base de données
-        List<TypePack> typePacks = packService.getAllTypePacks(); // Appel via l'instance
-        ObservableList<TypePack> observableTypePacks = FXCollections.observableArrayList(typePacks);
-        TypeField.setItems(observableTypePacks);
+        List<Evenement> evenements = packService.getAllEvenements(); // Appel via l'instance
+        ObservableList<Evenement> observableEvenements = FXCollections.observableArrayList(evenements);
+        TypeField.setItems(observableEvenements);
 
         submitButton.setOnAction(this::ajouterPack);
         cancelButton.setOnAction(this::annuler);
@@ -67,7 +67,7 @@ public class AjouterPack {
             String description = DescriptionField.getText();
             String prixText = PrixField.getText();
             Location location = LocationField.getValue();
-            TypePack type = TypeField.getValue();
+            Evenement type = TypeField.getValue();
             String nbrGuestsText = NbrGuestsField.getText();
             String nomService = ServiceField.getText();
 
