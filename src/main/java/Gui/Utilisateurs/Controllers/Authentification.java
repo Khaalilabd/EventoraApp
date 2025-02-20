@@ -1,7 +1,7 @@
 package Gui.Utilisateurs.Controllers;
 
 import Models.Utilisateur.Utilisateurs;
-import Services.Utilisateur.MembresService;
+import Services.Utilisateur.Crud.MembresService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

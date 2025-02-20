@@ -1,4 +1,4 @@
-package Services.Utilisateur;
+package Services.Utilisateur.Interface;
 
 import java.util.List;
 
