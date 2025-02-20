@@ -12,7 +12,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Reservation.Controllers.ModifierReservation"
+            fx:controller="Gui.Reservation.Controllers.ModifierReservationPack"
             prefHeight="600.0" prefWidth="900.0"
             stylesheets="style.css"
             style="-fx-background-color: #F4F1F1;">
@@ -42,7 +42,7 @@
         <Label text="Modifier une Reservation" styleClass="main-title"/>
 
         <!-- Champ Titre de la Reservation -->
-        <ComboBox fx:id="idoffrefield" promptText="Sélectionnez une offre" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <ComboBox fx:id="idPackfield" promptText="Sélectionnez un pack" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
         <TextField fx:id="nomfield" promptText="Entrez votre nom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 

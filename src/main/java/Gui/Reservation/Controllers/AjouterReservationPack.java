@@ -1,5 +1,7 @@
 package Gui.Reservation.Controllers;
 
+import Models.Reservation.ReservationPack;
+import Services.Reservation.Crud.ReservationPackService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +18,7 @@ import java.util.Date;
 
 public class AjouterReservationPack {
     @FXML
-    private ComboBox idoffrefield;
+    private ComboBox idPackfield;
     @FXML
     private TextField nomfield;
     @FXML
@@ -34,26 +36,26 @@ public class AjouterReservationPack {
     @FXML
     private Button cancelButton;
 
-    private ReservationService reservationservice=new ReservationService();
+    private ReservationPackService reservationservice=new ReservationPackService();
 
     @FXML
     public void initialize() {
         // Initialisation des actions des boutons
-        submitButton.setOnAction(this::ajouterReservation);
+        submitButton.setOnAction(this::ajouterReservationPack);
         cancelButton.setOnAction(event -> annuler());
     }
 
-    public void ajouterReservation(ActionEvent event) {
+    public void ajouterReservationPack(ActionEvent event) {
         String nom = nomfield.getText();
         String prenom = prenomfield.getText();
         String email = emailfield.getText();
         String numTel = numtelfield.getText();
         String description = descriptionfield.getText();
         LocalDate date = datefield.getValue();
-        int idoffre = 1;//salahaaaaaaaaaaa yaaaaaaaaa rayunnnnnnnoo
-        Reservation reservation = new Reservation(idoffre,nom, prenom, email, numTel, description, Date.from(datefield.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        reservationservice.ajouter(reservation);
-        showAlert("Succès", "Reservation ajouté avec succès !");
+        int idPack = 1;//salahaaaaaaaaaaa yaaaaaaaaa rayunnnnnnnoo
+        ReservationPack reservation = new ReservationPack(idPack,nom, prenom, email, numTel, description, Date.from(datefield.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        reservationservice.ajouterReservationPack(reservation);
+        showAlert("Succès", "ReservationPack ajouté avec succès !");
         clearFields();
 
     }
@@ -80,8 +82,8 @@ public class AjouterReservationPack {
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
+        AnchorPane ReservationLayout = loader.load();
+        Scene scene = new Scene(ReservationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();

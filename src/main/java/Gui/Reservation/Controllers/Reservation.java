@@ -20,9 +20,9 @@ public class Reservation {
 
     // Action pour ajouter une reservation
     @FXML
-    private void handleAddAction(ActionEvent event) {
+    private void handleAddActionPack(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservationPack.fxml"));
             AnchorPane addRecLayout = loader.load();
             Scene addRecScene = new Scene(addRecLayout);
             Stage currentStage = (Stage) ajouterButton.getScene().getWindow();
@@ -37,11 +37,37 @@ public class Reservation {
     @FXML
     private void handleViewAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheReservation.fxml"));
-            AnchorPane viewRecLayout = loader.load();
-            Scene viewRecScene = new Scene(viewRecLayout);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheReservationPack.fxml"));
+            AnchorPane viewResLayout = loader.load();
+            Scene viewResScene = new Scene(viewResLayout);
             Stage currentStage = (Stage) viewButton.getScene().getWindow();
-            currentStage.setScene(viewRecScene);
+            currentStage.setScene(viewResScene);
+            currentStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleViewActionService(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherReservationPersonalise.fxml"));
+            AnchorPane viewResLayout = loader.load();
+            Scene viewResScene = new Scene(viewResLayout);
+            Stage currentStage = (Stage) viewButton.getScene().getWindow();
+            currentStage.setScene(viewResScene);
+            currentStage.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void handleAddActionService(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservationPersonalise.fxml"));
+            AnchorPane viewResLayout = loader.load();
+            Scene viewResScene = new Scene(viewResLayout);
+            Stage currentStage = (Stage) viewButton.getScene().getWindow();
+            currentStage.setScene(viewResScene);
             currentStage.show();
         } catch (Exception e) {
             e.printStackTrace();

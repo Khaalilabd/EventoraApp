@@ -42,7 +42,7 @@
         <Label text="Modifier une Reservation" styleClass="main-title"/>
 
         <!-- Champ Titre de la Reservation -->
-        <ComboBox fx:id="idoffrefield" promptText="Sélectionnez une offre" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <ComboBox fx:id="idPackfield" promptText="Sélectionnez un pack" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
         <TextField fx:id="nomfield" promptText="Entrez votre nom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 

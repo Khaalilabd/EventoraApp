@@ -59,9 +59,9 @@
             <Button fx:id="ajouterButton"
                     text="➕ Réserver un Pack"
                     styleClass="add-button"
-                    onAction="#handleAddAction"/>
+                    onAction="#handleAddActionPack"/>
             <Button fx:id="viewButton"
-                    text="📋 Voir les Réservations"
+                    text="📋 Voir les Réservations Packs"
                     styleClass="add-button"
                     onAction="#handleViewAction"/>
         </HBox>
@@ -69,7 +69,11 @@
         <Button fx:id="ajouterButtonPersonaliser"
                 text="➕ Ajouter une Réservation Personaliser"
                 styleClass="add-button"
-                onAction="#handleAddAction"/>
+                onAction="#handleAddActionService"/>
+            <Button fx:id="viewButtonService"
+                    text="📋 Voir les Réservations Personaliser"
+                    styleClass="add-button"
+                    onAction="#handleViewActionService"/>
         </HBox>
     </VBox>
 </AnchorPane>

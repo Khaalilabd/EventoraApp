@@ -1,5 +1,7 @@
 package Gui.Reservation.Controllers;
 
+import Models.Reservation.ReservationPersonalise;
+import Services.Reservation.Crud.ReservationPersonaliseService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,53 +19,49 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Date;
 
-public class AfficheReservation {
+public class AfficheReservationPersonalise {
 
     @FXML
-    private TableView<Reservation> tableView;
+    private TableView<ReservationPersonalise> tableView;
 
     @FXML
-    private TableColumn<Reservation, Integer> colId;
+    private TableColumn<ReservationPersonalise, Integer> colId;
 
     @FXML
-    private TableColumn<Reservation, Integer> colIdoffre;
+    private TableColumn<ReservationPersonalise, String> colNom;
 
     @FXML
-    private TableColumn<Reservation, String> colNom;
+    private TableColumn<ReservationPersonalise, String> colPrenom;
 
     @FXML
-    private TableColumn<Reservation, String> colPrenom;
+    private TableColumn<ReservationPersonalise, String> colEmail;
 
     @FXML
-    private TableColumn<Reservation, String> colEmail;
+    private TableColumn<ReservationPersonalise, String> colnumTel;
 
     @FXML
-    private TableColumn<Reservation, String> colnumTel;
+    private TableColumn<ReservationPersonalise, String> colDescription;
 
     @FXML
-    private TableColumn<Reservation, String> colDescription;
+    private TableColumn<ReservationPersonalise, Date> colDate;
 
     @FXML
-    private TableColumn<Reservation, Date> colDate;
+    private TableColumn<ReservationPersonalise, String> colActions;
 
-    @FXML
-    private TableColumn<Reservation, String> colActions;
+    private final ReservationPersonaliseService reservationservice;
 
-    private ReservationService reservationservice;
-
-    public AfficheReservation() {
-        this.reservationservice = new ReservationService();
+    public AfficheReservationPersonalise() {
+        this.reservationservice = new ReservationPersonaliseService();
     }
 
     @FXML
     public void initialize() {
         // Liaison des colonnes avec les propriétés de la classe Reservation
-        colId.setCellValueFactory(new PropertyValueFactory<>("idReservation"));
-        colIdoffre.setCellValueFactory(new PropertyValueFactory<>("idoffre"));
+        colId.setCellValueFactory(new PropertyValueFactory<>("idReservationPersonalise"));
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         colPrenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
-        colnumTel.setCellValueFactory(new PropertyValueFactory<>("numTel"));
+        colnumTel.setCellValueFactory(new PropertyValueFactory<>("numtel"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         addActionsColumn();
@@ -74,7 +72,7 @@ public class AfficheReservation {
     private void addActionsColumn() {
         colActions.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
 
-        colActions.setCellFactory(param -> new TableCell<Reservation, String>() {
+        colActions.setCellFactory(param -> new TableCell<ReservationPersonalise, String>() {
             final Button editButton = new Button();
             final Button deleteButton = new Button();
             final HBox hBox = new HBox(10);
@@ -118,14 +116,14 @@ public class AfficheReservation {
         });
     }
 
-    private void handleEdit(Reservation reservation) {
+    private void handleEdit(ReservationPersonalise reservation) {
         try {
             // Charger le fichier FXML de la vue ModifierReservation
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierReservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierReservationPersonalise.fxml"));
             AnchorPane modifReservationLayout = loader.load();
 
             // Obtenez le contrôleur du fichier FXML
-            ModifierReservationPack controller = loader.getController();
+            ModifierReservationPersonalise controller = loader.getController();
             controller.setReservationToEdit(reservation);  // Utilisation correcte du contrôleur
 
             // Charger la nouvelle scène
@@ -137,30 +135,30 @@ public class AfficheReservation {
     }
 
 
-    private void handleDelete(Reservation reservation) {
-        System.out.println("Supprimer la réclamation avec ID : " + reservation.getIdReservation());
-        reservationservice.supprimer(reservation);
+    private void handleDelete(ReservationPersonalise reservation) {
+        System.out.println("Supprimer la Reservation avec ID : " + reservation.getIdReservationPersonalise());
+        reservationservice.supprimerReservationPersonalise(reservation);
         loadReservations();
     }
 
     private void loadReservations() {
         // Récupérer les réservations depuis le service et les ajouter au TableView
-        tableView.getItems().setAll(reservationservice.rechercher());
+        tableView.getItems().setAll(reservationservice.rechercherReservationPersonalise());
     }
 
     @FXML
-    private void addReservation() {
+    private void addReservationPersonalise() {
         try {
             // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservationPersonalise.fxml"));
             Scene scene = new Scene(loader.load());
             Stage stage = new Stage();
             stage.setScene(scene);
-            stage.setTitle("Ajouter une reservation");
+            stage.setTitle("Ajouter une reservation Personaliser");
             stage.show();
         } catch (IOException e) {
             e.printStackTrace(); // Afficher l'erreur dans la console
-            System.out.println("Erreur lors du chargement de AjouterReservation.fxml : " + e.getMessage());
+            System.out.println("Erreur lors du chargement de ReservationPersonalise.fxml : " + e.getMessage());
         }
     }
 
@@ -171,9 +169,9 @@ public class AfficheReservation {
     }
 
     @FXML
-    private void tableRowFactory(TableView<Reservation> tableView) {
+    private void tableRowFactory(TableView<ReservationPersonalise> tableView) {
         tableView.setRowFactory(tv -> {
-            TableRow<Reservation> row = new TableRow<>();
+            TableRow<ReservationPersonalise> row = new TableRow<>();
             row.setOnMouseEntered(event -> row.setStyle("-fx-background-color: #BDC3C7;"));
             row.setOnMouseExited(event -> row.setStyle("-fx-background-color: transparent;"));
             return row;

@@ -41,7 +41,7 @@
 
         <!-- Formulaire avec GridPane pour une meilleure organisation -->
         <GridPane hgap="10" vgap="10">
-            <ComboBox fx:id="idoffrefield" promptText="Sélectionnez une offre" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <ComboBox fx:id="idPackfield" promptText="Sélectionnez un Pack" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
             <TextField fx:id="nomfield" promptText="Entrez votre nom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 

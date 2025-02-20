@@ -1,8 +1,10 @@
 package Tests;
 
+import Models.Reservation.ReservationJointureServices;
 import Models.Reservation.ReservationPack;
 import Models.Reservation.ReservationPersonalise;
 import Models.Utilisateur.Utilisateurs;
+import Services.Reservation.Crud.ReservationJointuresServicesService;
 import Services.Reservation.Crud.ReservationPackService;
 import Services.Reservation.Crud.ReservationPersonaliseService;
 import Services.Utilisateur.MembresService;
@@ -37,7 +39,7 @@ public class Main {
       // ReservationPersonalise reservationPersonalise = new ReservationPersonalise("birthday", "hmida", "nadhem", "nadhem@esprit.com", "123456789", "Séance de relaxation", new Date());
 
         // Service ReservationPersonalise
-       // ReservationPersonaliseService servicePersonalise = new ReservationPersonaliseService();
+      //  ReservationPersonaliseService servicePersonalise = new ReservationPersonaliseService();
 
         // Test d'ajout
        // servicePersonalise.ajouterReservationPersonalise(reservationPersonalise);
@@ -49,6 +51,7 @@ public class Main {
        // System.out.println(servicePersonalise.rechercherReservationPersonalise());
 
         // Test de suppression
-     //  servicePersonalise.supprimerReservationPersonalise(new ReservationPersonalise(2));
-    }
+       //servicePersonalise.supprimerReservationPersonalise(new ReservationPersonalise(2));
+
+        }
 }

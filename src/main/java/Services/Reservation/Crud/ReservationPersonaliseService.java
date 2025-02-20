@@ -14,17 +14,16 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void ajouterReservationPersonalise(ReservationPersonalise reservationPersonalise) {
-        String req = "INSERT INTO reservationpersonalise (services, nom, prenom, email, numtel, description, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO reservationpersonnalise ( nom, prenom, email, numtel, description, date) VALUES ( ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(req);
-            ps.setString(1, reservationPersonalise.getServices());
-            ps.setString(2, reservationPersonalise.getNom());
-            ps.setString(3, reservationPersonalise.getPrenom());
-            ps.setString(4, reservationPersonalise.getEmail());
-            ps.setString(5, reservationPersonalise.getNumtel());
-            ps.setString(6, reservationPersonalise.getDescription());
-            ps.setDate(7, new java.sql.Date(reservationPersonalise.getDate().getTime()));
+            ps.setString(1, reservationPersonalise.getNom());
+            ps.setString(2, reservationPersonalise.getPrenom());
+            ps.setString(3, reservationPersonalise.getEmail());
+            ps.setString(4, reservationPersonalise.getNumtel());
+            ps.setString(5, reservationPersonalise.getDescription());
+            ps.setDate(6, new java.sql.Date(reservationPersonalise.getDate().getTime()));
 
             ps.executeUpdate();
             System.out.println("Réservation personnalisée ajoutée avec succès !");
@@ -43,18 +42,17 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void modifierReservationPersonalise(ReservationPersonalise reservationPersonalise) {
-        String req = "UPDATE reservationpersonalise SET services=?, nom=?, prenom=?, email=?, numtel=?, description=?, date=? WHERE idReservationPersonalise=?";
+        String req = "UPDATE reservationpersonnalise SET nom=?, prenom=?, email=?, numtel=?, description=?, date=? WHERE idReservationPersonalise=?";
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(req);
-            ps.setString(1, reservationPersonalise.getServices());
-            ps.setString(2, reservationPersonalise.getNom());
-            ps.setString(3, reservationPersonalise.getPrenom());
-            ps.setString(4, reservationPersonalise.getEmail());
-            ps.setString(5, reservationPersonalise.getNumtel());
-            ps.setString(6, reservationPersonalise.getDescription());
-            ps.setDate(7, new java.sql.Date(reservationPersonalise.getDate().getTime()));
-            ps.setInt(8, reservationPersonalise.getIdReservationPersonalise());
+            ps.setString(1, reservationPersonalise.getNom());
+            ps.setString(2, reservationPersonalise.getPrenom());
+            ps.setString(3, reservationPersonalise.getEmail());
+            ps.setString(4, reservationPersonalise.getNumtel());
+            ps.setString(5, reservationPersonalise.getDescription());
+            ps.setDate(6, new java.sql.Date(reservationPersonalise.getDate().getTime()));
+            ps.setInt(7, reservationPersonalise.getIdReservationPersonalise());
 
             ps.executeUpdate();
             System.out.println("Réservation personnalisée modifiée avec succès !");
@@ -73,7 +71,7 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void supprimerReservationPersonalise(ReservationPersonalise reservationPersonalise) {
-        String req = "DELETE FROM reservationpersonalise WHERE idReservationPersonalise=?";
+        String req = "DELETE FROM reservationpersonnalise WHERE idReservationPersonalise=?";
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(req);
@@ -95,7 +93,7 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public List<ReservationPersonalise> rechercherReservationPersonalise() {
-        String req = "SELECT * FROM reservationpersonalise";
+        String req = "SELECT * FROM reservationpersonnalise";
         List<ReservationPersonalise> reservationPersonalises = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -105,7 +103,6 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
             while (rs.next()) {
                 ReservationPersonalise reservationPersonalise = new ReservationPersonalise();
                 reservationPersonalise.setIdReservationPersonalise(rs.getInt("idReservationPersonalise"));
-                reservationPersonalise.setServices(rs.getString("services"));
                 reservationPersonalise.setNom(rs.getString("nom"));
                 reservationPersonalise.setPrenom(rs.getString("prenom"));
                 reservationPersonalise.setEmail(rs.getString("email"));

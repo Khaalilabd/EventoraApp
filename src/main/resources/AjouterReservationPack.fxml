@@ -18,7 +18,7 @@
 <AnchorPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #F4F1F1;"
             stylesheets="style.css" xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Reservation.Controllers.AjouterReservation">
+            fx:controller="Gui.Reservation.Controllers.AjouterReservationPack">
 
     <!-- Barre de navigation latérale -->
     <VBox prefHeight="600" prefWidth="220" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
@@ -41,7 +41,7 @@
 
         <!-- Formulaire avec GridPane pour une meilleure organisation -->
         <GridPane hgap="10" vgap="10">
-            <ComboBox fx:id="idoffrefield" promptText="Sélectionnez une offre" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <ComboBox fx:id="idPackfield" promptText="Sélectionnez un Pack" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
             <TextField fx:id="nomfield" promptText="Entrez votre nom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 

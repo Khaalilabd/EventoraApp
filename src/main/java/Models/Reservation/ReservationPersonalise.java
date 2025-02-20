@@ -1,10 +1,9 @@
 package Models.Reservation;
-
 import java.util.Date;
+import java.util.List;
 
 public class ReservationPersonalise {
     private int idReservationPersonalise;
-    private String services;
     private String nom;
     private String prenom;
     private String email;
@@ -12,9 +11,8 @@ public class ReservationPersonalise {
     private String description;
     private Date date;
 
-    public ReservationPersonalise(int idReservationPersonalise, String services, String nom, String prenom, String email, String numtel, String description, Date date) {
+    public ReservationPersonalise(int idReservationPersonalise, String nom, String prenom, String email, String numtel, String description, Date date) {
         this.idReservationPersonalise = idReservationPersonalise;
-        this.services = services;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
@@ -23,8 +21,7 @@ public class ReservationPersonalise {
         this.date = date;
     }
 
-    public ReservationPersonalise(String services, String nom, String prenom, String email, String numtel, String description, Date date) {
-        this.services = services;
+    public ReservationPersonalise( String nom, String prenom, String email, String numtel, String description, Date date) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
@@ -48,13 +45,6 @@ public class ReservationPersonalise {
         this.idReservationPersonalise = idReservationPersonalise;
     }
 
-    public String getServices() {
-        return services;
-    }
-
-    public void setServices(String services) {
-        this.services = services;
-    }
 
     public String getNom() {
         return nom;
@@ -107,8 +97,7 @@ public class ReservationPersonalise {
     @Override
     public String toString() {
         return "ReservationPersonalise{" +
-                "idReservationPersonalise=" + idReservationPersonalise +
-                ", services='" + services + '\'' +
+                "idReservationPersonalise=" + idReservationPersonalise + '\'' +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
                 ", email='" + email + '\'' +

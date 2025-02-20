@@ -1,6 +1,7 @@
 package Gui.Reservation.Controllers;
 
-import Services.Reservation.Crud.ReservationService;
+import Models.Reservation.ReservationPack;
+import Services.Reservation.Crud.ReservationPackService;
 import javafx.scene.Node;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +20,7 @@ import java.util.Date;
 
 public class ModifierReservationPack {
     @FXML
-    private ComboBox idoffrefield;
+    private ComboBox idPackfield;
     @FXML
     private TextField nomfield;
     @FXML
@@ -37,30 +38,30 @@ public class ModifierReservationPack {
     @FXML
     private Button cancelButton;
 
-    private Reservation reservationToEdit;
-    private ReservationService reservationservice=new ReservationService();
+    private ReservationPack reservationToEdit;
+    private ReservationPackService reservationservice=new ReservationPackService();
 
     @FXML
     public void initialize() {
-         // Ajoute tous les types de réclamation à la liste du ComboBox
+        // Ajoute tous les types de réclamation à la liste du ComboBox
 
-        submitButton.setOnAction(this::modifierReservation);
+        submitButton.setOnAction(this::modifierReservationPack);
         cancelButton.setOnAction(event -> annuler());
     }
     // Méthode pour pré-remplir les champs avec les données de la réclamation à modifier
-    public void setReservationToEdit(Reservation reservation) {
+    public void setReservationToEdit(ReservationPack reservation) {
         this.reservationToEdit = reservation;
 
         // Pré-remplir les champs avec les données de la réclamation existante
         nomfield.setText(reservation.getNom());
         prenomfield.setText(reservation.getPrenom());
         emailfield.setText(reservation.getEmail());
-        numtelfield.setText(reservation.getNumTel());
+        numtelfield.setText(reservation.getNumtel());
         descriptionfield.setText(reservation.getDescription());
         datefield.setValue(LocalDate.ofInstant(Instant.ofEpochMilli(reservation.getDate().getTime()), ZoneId.systemDefault()));
 
     }
-    private void modifierReservation(ActionEvent event) {
+    private void modifierReservationPack(ActionEvent event) {
         String nom = nomfield.getText();
         String prenom = prenomfield.getText();
         String email = emailfield.getText();
@@ -73,20 +74,20 @@ public class ModifierReservationPack {
             return;
         }
 
-        // Mise à jour de la réclamation avec les nouvelles valeurs
+        // Mise à jour de la reservation avec les nouvelles valeurs
         reservationToEdit.setNom(nom);
         reservationToEdit.setPrenom(prenom);
         reservationToEdit.setEmail(email);
-        reservationToEdit.setNumTel(numTel);
+        reservationToEdit.setNumtel(numTel);
         reservationToEdit.setDescription(description);
         reservationToEdit.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
         // Appel à la méthode ModifierRec du service
-        reservationservice.modifier(reservationToEdit);
+        reservationservice.modifierReservationPack(reservationToEdit);
 
         showAlert("Succès", "reservation modifiée avec succès !");
         clearFields();
-        goToAfficherReservation(event);
+        goToAfficherReservationPack(event);
     }
     private void annuler() {
         clearFields();
@@ -120,9 +121,9 @@ public class ModifierReservationPack {
         stage.setScene(scene);
         stage.show();
     }
-    private void goToAfficherReservation(ActionEvent event) {
+    private void goToAfficherReservationPack(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheReservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheReservationPack.fxml"));
             Parent root = loader.load();
 
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
