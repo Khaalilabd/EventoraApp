@@ -47,14 +47,14 @@
         <!-- Tableau des réclamations -->
         <TableView fx:id="tableView" prefHeight="323.0" prefWidth="743.0">
             <columns>
-                <TableColumn fx:id="idColumn" maxWidth="91.0" prefWidth="62.99998474121094" text="ID" />
-                <TableColumn fx:id="id_partenaireColumn" prefWidth="138.0" text="nom partenaire" />
-                <TableColumn fx:id="titleColumn" prefWidth="125.80001831054688" text="Titre" />
-                <TableColumn fx:id="locationColumn" prefWidth="133.20001220703125" text="Location" />
-                <TableColumn fx:id="sponsorColumn" minWidth="0.0" prefWidth="0.0" text="Type de Service" />
-                <TableColumn fx:id="descriptionColumn" maxWidth="91.99993896484375" prefWidth="90.39996337890625" text="Description" />
-                <TableColumn fx:id="prixColumn" maxWidth="91.0" prefWidth="77.60003662109375" text="Prix" />
-                <TableColumn fx:id="colActions" maxWidth="200.0" prefWidth="138.40008544921875" text="Actions" /> <!-- Add this line -->
+                <TableColumn fx:id="idColumn" maxWidth="91.0" prefWidth="43.20001220703125" text="ID" />
+                <TableColumn fx:id="id_partenaireColumn" prefWidth="116.4000244140625" text="nom partenaire" />
+                <TableColumn fx:id="titleColumn" prefWidth="92.19998168945312" text="Titre" />
+                <TableColumn fx:id="locationColumn" prefWidth="84.39996337890625" text="Location" />
+                <TableColumn fx:id="sponsorColumn" minWidth="0.0" prefWidth="101.5999755859375" text="Type de Service" />
+                <TableColumn fx:id="descriptionColumn" maxWidth="146.4000244140625" prefWidth="136.20001220703125" text="Description" />
+                <TableColumn fx:id="prixColumn" maxWidth="113.39996337890625" prefWidth="81.39996337890625" text="Prix" />
+                <TableColumn fx:id="colActions" maxWidth="95.19998779296873" prefWidth="95.19998779296873" text="Actions" /> <!-- Add this line -->
             </columns>
         </TableView>
 
