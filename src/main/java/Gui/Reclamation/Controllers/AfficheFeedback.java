@@ -142,15 +142,28 @@ public class AfficheFeedback {
 
 
     private void handleDelete(Feedback feedback) {
-        System.out.println("Supprimer le feedback avec ID : " + feedback.getId());
-        feedbackService.SupprimerFeedBack(feedback);
-        loadFeedbacks();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Suppression réussie");
-        alert.setHeaderText(null);
-        alert.setContentText("Le feedback a été supprimé avec succès.");
-        alert.showAndWait();
+        if (feedback != null) {
+            // Créer une fenêtre de confirmation
+            Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Confirmation de suppression");
+            confirmationAlert.setHeaderText(null);
+            confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer ce feedback ?");
+
+            confirmationAlert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    System.out.println("Supprimer le feedback avec ID : " + feedback.getId());
+                    feedbackService.SupprimerFeedBack(feedback);
+                    loadFeedbacks();
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("Suppression réussie");
+                    successAlert.setHeaderText(null);
+                    successAlert.setContentText("Le feedback a été supprimé avec succès.");
+                    successAlert.showAndWait();
+                }
+            });
+        }
     }
+
 
     @FXML
     private void goToAjouterFeedback(ActionEvent event) throws IOException {

@@ -11,12 +11,12 @@ import java.io.IOException;
 public class FXMain extends Application {
     @Override
     public void start(Stage stage)  {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheFeedback.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setTitle("EventoraAPP");
+            stage.setTitle("EventoraAP");
             stage.show();}
         catch (RuntimeException | IOException r){
             System.out.println(r.getMessage());
