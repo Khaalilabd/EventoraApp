@@ -101,7 +101,6 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                 r.setDescription(rs.getString("Description"));
                 r.setType(TypeReclamation.fromLabel(rs.getString("Type")));
                 r.setStatut(Statut.fromLabel(rs.getString("statut")));
-
                 reclamations.add(r);
             }
         } catch (SQLException e) {

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="700.0" prefWidth="800.0" style="-fx-background-color: #F2F2F2;"
+            stylesheets="/style.css" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Utilisateurs.Controllers.ModifierUtilisateur">
+
+    <!-- Conteneur principal centré -->
+    <VBox alignment="CENTER" prefHeight="700.0" prefWidth="800.0" spacing="20" style="-fx-padding: 30px;">
+
+        <!-- Titre -->
+        <Label text="Modifier un Utilisateur"
+               style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;">
+            <font>
+                <Font size="28.0" />
+            </font>
+        </Label>
+
+        <!-- Champ ID et bouton Rechercher -->
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <TextField fx:id="idField" promptText="Entrez l'ID du membre" prefWidth="300.0"
+                       style="-fx-font-size: 14px; -fx-padding: 10px; -fx-border-color: #B39188; -fx-border-radius: 5px; -fx-background-radius: 5px;"/>
+            <Button fx:id="rechercherButton" text="Rechercher" onAction="#rechercherMembre"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px; -fx-border-radius: 5px;"/>
+        </HBox>
+
+        <!-- Champs de saisie -->
+        <TextField fx:id="nomField" promptText="Entrez le nom" prefWidth="400.0"
+                   style="-fx-font-size: 14px; -fx-padding: 10px; -fx-border-color: #B39188; -fx-border-radius: 5px; -fx-background-radius: 5px;"/>
+
+        <TextField fx:id="prenomField" promptText="Entrez le prénom" prefWidth="400.0"
+                   style="-fx-font-size: 14px; -fx-padding: 10px; -fx-border-color: #B39188; -fx-border-radius: 5px; -fx-background-radius: 5px;"/>
+
+        <TextField fx:id="emailField" promptText="Entrez l'email" prefWidth="400.0"
+                   style="-fx-font-size: 14px; -fx-padding: 10px; -fx-border-color: #B39188; -fx-border-radius: 5px; -fx-background-radius: 5px;"/>
+
+        <TextField fx:id="cinField" promptText="Entrez le CIN" prefWidth="400.0"
+                   style="-fx-font-size: 14px; -fx-padding: 10px; -fx-border-color: #B39188; -fx-border-radius: 5px; -fx-background-radius: 5px;"/>
+
+        <TextField fx:id="adresseField" promptText="Entrez l'adresse" prefWidth="400.0"
+                   style="-fx-font-size: 14px; -fx-padding: 10px; -fx-border-color: #B39188; -fx-border-radius: 5px; -fx-background-radius: 5px;"/>
+
+        <TextField fx:id="numTelField" promptText="Entrez le numéro de téléphone" prefWidth="400.0"
+                   style="-fx-font-size: 14px; -fx-padding: 10px; -fx-border-color: #B39188; -fx-border-radius: 5px; -fx-background-radius: 5px;"/>
+
+        <ComboBox fx:id="roleComboBox" promptText="Sélectionnez un rôle" prefWidth="400.0"
+                  style="-fx-font-size: 14px; -fx-padding: 10px; -fx-border-color: #B39188; -fx-border-radius: 5px; -fx-background-radius: 5px;"/>
+
+        <!-- Boutons -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button fx:id="modifierButton" text="Enregistrer" onAction="#modifierMembre"
+                    style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 30px; -fx-border-radius: 5px;"/>
+            <Button fx:id="annulerButton" text="Annuler" onAction="#cancel"
+                    style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 30px; -fx-border-radius: 5px;"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

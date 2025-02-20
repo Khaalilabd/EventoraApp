@@ -10,13 +10,8 @@
             stylesheets="/style.css"
             fx:controller="Gui.Reclamation.Controllers.AjouterFeedback">
 
-    <!-- Barre de navigation latérale -->
     <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
-
-        <!-- Titre -->
         <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
-
-        <!-- Menu Buttons -->
         <VBox spacing="10">
             <Button text="🏠 Accueil" styleClass="menu-button"/>
             <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
@@ -29,12 +24,13 @@
             <Button text="🛑 Déconnexion" styleClass="logout-button"/>
         </VBox>
     </VBox>
-    <!-- Contenu principal -->
+
     <VBox alignment="CENTER" layoutX="250" layoutY="50" prefHeight="500" prefWidth="600" spacing="20">
         <Label text="Feedback Us ❤️" styleClass="title-label"/>
         <Label text="Share your experience with us" styleClass="subtitle-label"/>
 
-        <!-- Notation par étoiles -->
+        <ComboBox fx:id="userField" promptText="Sélectionner un utilisateur" styleClass="input-field"/>
+
         <HBox alignment="CENTER" spacing="10">
             <JFXButton fx:id="star1" text="★" styleClass="star-button" />
             <JFXButton fx:id="star2" text="★" styleClass="star-button" />
@@ -43,13 +39,10 @@
             <JFXButton fx:id="star5" text="★" styleClass="star-button" />
         </HBox>
 
-        <!-- Champ texte -->
         <JFXTextArea fx:id="descField" promptText="Write your experience..." styleClass="text-area"/>
 
-        <!-- Recommandation -->
         <JFXCheckBox fx:id="recommendCheck" text="Recommend Us to Others?" styleClass="checkbox"/>
 
-        <!-- Bouton Soumettre -->
         <JFXButton fx:id="submitButton" text="Submit" onAction="#handleSubmit" styleClass="submit-button"/>
     </VBox>
 </AnchorPane>

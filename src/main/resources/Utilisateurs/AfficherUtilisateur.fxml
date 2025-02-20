@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Utilisateurs.Controllers.AfficherUtilisateur">
+    <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
+        <Label text="Liste des Utilisateurs" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+
+        <!-- TableView pour afficher les utilisateurs -->
+        <TableView fx:id="tableView" prefHeight="400.0" prefWidth="700.0">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50.0"/>
+                <TableColumn fx:id="colNom" text="Nom" prefWidth="100.0"/>
+                <TableColumn fx:id="colPrenom" text="Prénom" prefWidth="100.0"/>
+                <TableColumn fx:id="colEmail" text="Email" prefWidth="150.0"/>
+                <TableColumn fx:id="colCin" text="CIN" prefWidth="80.0"/>
+                <TableColumn fx:id="colAdresse" text="Adresse" prefWidth="120.0"/>
+                <TableColumn fx:id="colNumTel" text="Num Téléphone" prefWidth="100.0"/>
+                <TableColumn fx:id="colRole" text="Rôle" prefWidth="80.0"/>
+            </columns>
+        </TableView>
+
+        <!-- Boutons -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button fx:id="supprimerButton" text="Supprimer" onAction="#supprimerUtilisateur"
+                    style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;"/>
+            <Button fx:id="modifierButton" text="Modifier" onAction="#modifierUtilisateur"
+                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

@@ -57,11 +57,8 @@ public class AfficheRec {
         colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
         colType.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().getLabel()));
         colStatut.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatut().getLabel()));
-
         addActionsColumn();
         loadReclamations();
-
-        // Recherche dynamique
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             searchReclamation(newValue);
         });
