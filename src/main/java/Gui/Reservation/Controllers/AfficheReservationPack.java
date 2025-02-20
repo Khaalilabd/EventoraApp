@@ -142,7 +142,7 @@ public class AfficheReservationPack {
     private void handleEdit(ReservationPack reservation) {
         try {
             // Charger le fichier FXML de la vue ModifierReservation
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierReservationPack.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/ModifierReservationPack.fxml"));
             AnchorPane modifReservationLayout = loader.load();
 
             // Obtenez le contrôleur du fichier FXML
@@ -173,7 +173,7 @@ public class AfficheReservationPack {
     private void addReservationPack() {
         try {
             // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservationPack.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AjouterReservationPack.fxml"));
             Scene scene = new Scene(loader.load());
             Stage stage = new Stage();
             stage.setScene(scene);
@@ -205,7 +205,7 @@ public class AfficheReservationPack {
     private void goToReservation(ActionEvent event) throws IOException {
         try {
             // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -218,7 +218,7 @@ public class AfficheReservationPack {
     }
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -227,7 +227,7 @@ public class AfficheReservationPack {
     }
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Feedback.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
         AnchorPane feedbackLayout = loader.load();
         Scene feedbackScene = new Scene(feedbackLayout);
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -236,7 +236,7 @@ public class AfficheReservationPack {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 
@@ -248,7 +248,7 @@ public class AfficheReservationPack {
     }
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
         AnchorPane packLayout = loader.load();
         Scene scene = new Scene(packLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

@@ -51,13 +51,13 @@ public class Feedback {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
 
-        loadScene(event, "/Feedback.fxml");
+        loadScene(event, "/Reclamation/Feedback.fxml");
     }
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         try {
             // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -70,7 +70,7 @@ public class Feedback {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 
@@ -82,7 +82,7 @@ public class Feedback {
     }
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
         AnchorPane packLayout = loader.load();
         Scene scene = new Scene(packLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -93,19 +93,19 @@ public class Feedback {
 
     @FXML
     private void handleAddAction(ActionEvent event) {
-        loadScene(event, "/AjouterFeedback.fxml");
+        loadScene(event, "/Reclamation/AjouterFeedback.fxml");
     }
 
     @FXML
     private void handleViewAction(ActionEvent event) {
-        loadScene(event, "/AfficheFeedback.fxml");
+        loadScene(event, "/Reclamation/AfficheFeedback.fxml");
     }
     @FXML
     private void goToReclamation(ActionEvent event) {
-        loadScene(event, "/Reclamation.fxml");
+        loadScene(event, "/Reclamation/Reclamation.fxml");
     }
     @FXML
     private void goToFeedback(ActionEvent event) {
-        loadScene(event, "/Feedback.fxml");
+        loadScene(event, "/Reclamation/Feedback.fxml");
     }
 }

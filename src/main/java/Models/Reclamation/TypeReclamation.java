@@ -1,7 +1,7 @@
 package Models.Reclamation;
 
 public enum TypeReclamation {
-    PACKS("Packs"),
+    PACKS("Pack"),
     SERVICE("Service"),
     PROBLEME_TECHNIQUE("Problème Technique"),
     PLAINTE_AGENT_CONTROLE("Plainte entre un Agent de contrôle"),

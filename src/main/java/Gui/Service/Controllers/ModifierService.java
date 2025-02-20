@@ -164,7 +164,7 @@ public class ModifierService {
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         // Charger la nouvelle scène (Service.fxml)
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene serviceScene = new Scene(reclamationLayout);
 
@@ -183,7 +183,7 @@ public class ModifierService {
     private void goToAfficherService(ActionEvent event) {
         try {
             // Charger la scène d'affichage des services (AfficherService.fxml)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherService.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AfficherService.fxml"));
             Parent root = loader.load();
             Scene afficherServiceScene = new Scene(root);
 
@@ -204,7 +204,7 @@ public class ModifierService {
     }
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -213,7 +213,7 @@ public class ModifierService {
     }
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Feedback.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
         AnchorPane feedbackLayout = loader.load();
         Scene feedbackScene = new Scene(feedbackLayout);
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -224,7 +224,7 @@ public class ModifierService {
     private void goToReservation(ActionEvent event) throws IOException {
         try {
             // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -237,7 +237,7 @@ public class ModifierService {
     }
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
         AnchorPane packLayout = loader.load();
         Scene scene = new Scene(packLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

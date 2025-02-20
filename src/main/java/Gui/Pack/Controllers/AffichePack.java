@@ -1,6 +1,5 @@
 package Gui.Pack.Controllers;
 
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -160,7 +159,7 @@ public class AffichePack {
 
     private void handleEdit(Pack pack) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierPack.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/ModifierPack.fxml"));
             AnchorPane modifRecLayout = loader.load();
 
             ModifierPack controller = loader.getController();
@@ -206,7 +205,7 @@ public class AffichePack {
 
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
         AnchorPane packLayout = loader.load();
         Scene scene = new Scene(packLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -216,7 +215,7 @@ public class AffichePack {
 
     @FXML
     private void addPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterPack.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AjouterPack.fxml"));
         AnchorPane packLayout = loader.load();
         Scene scene = new Scene(packLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -226,7 +225,7 @@ public class AffichePack {
     @FXML
     private void goToPackType(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheTypePack.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AfficheTypePack.fxml"));
 
             if (loader.getLocation() == null) {
                 System.out.println("FXML file not found! Ensure the path is correct.");
@@ -246,7 +245,7 @@ public class AffichePack {
     }
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -255,7 +254,7 @@ public class AffichePack {
     }
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Feedback.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
         AnchorPane feedbackLayout = loader.load();
         Scene feedbackScene = new Scene(feedbackLayout);
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -267,7 +266,7 @@ public class AffichePack {
     private void goToReservation(ActionEvent event) throws IOException {
         try {
             // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -280,7 +279,7 @@ public class AffichePack {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 

@@ -23,7 +23,7 @@ public class Reservation {
     @FXML
     private void handleAddActionPack(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservationPack.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AjouterReservationPack.fxml"));
             AnchorPane addRecLayout = loader.load();
             Scene addRecScene = new Scene(addRecLayout);
             Stage currentStage = (Stage) ajouterButton.getScene().getWindow();
@@ -38,7 +38,7 @@ public class Reservation {
     @FXML
     private void handleViewAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheReservationPack.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AfficheReservationPack.fxml"));
             AnchorPane viewResLayout = loader.load();
             Scene viewResScene = new Scene(viewResLayout);
             Stage currentStage = (Stage) viewButton.getScene().getWindow();
@@ -51,7 +51,7 @@ public class Reservation {
     @FXML
     private void handleViewActionService(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherReservationPersonalise.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AfficherReservationPersonalise.fxml"));
             AnchorPane viewResLayout = loader.load();
             Scene viewResScene = new Scene(viewResLayout);
             Stage currentStage = (Stage) viewButton.getScene().getWindow();
@@ -64,7 +64,7 @@ public class Reservation {
     @FXML
     private void handleAddActionService(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservationPersonalise.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AjouterReservationPersonalise.fxml"));
             AnchorPane viewResLayout = loader.load();
             Scene viewResScene = new Scene(viewResLayout);
             Stage currentStage = (Stage) viewButton.getScene().getWindow();
@@ -77,7 +77,7 @@ public class Reservation {
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         // Charger l'interface Reservation.fxml
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -86,7 +86,7 @@ public class Reservation {
     }
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -95,7 +95,7 @@ public class Reservation {
     }
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Feedback.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
         AnchorPane feedbackLayout = loader.load();
         Scene feedbackScene = new Scene(feedbackLayout);
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -104,7 +104,7 @@ public class Reservation {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 
@@ -116,7 +116,7 @@ public class Reservation {
     }
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
         AnchorPane packLayout = loader.load();
         Scene scene = new Scene(packLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
