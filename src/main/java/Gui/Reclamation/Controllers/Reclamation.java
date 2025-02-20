@@ -77,4 +77,13 @@ public class Reclamation {
         alert.setContentText(content);
         alert.showAndWait();
     }
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
+        AnchorPane reclamationLayout = loader.load();
+        Scene scene = new Scene(reclamationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
 }

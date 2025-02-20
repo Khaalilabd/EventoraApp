@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/20.0.2"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="Gui.Service.Controllers.StatisticsController" spacing="20" style="-fx-padding: 20px;">
+    <!-- Graphique pour les Locations -->
+    <LineChart fx:id="locationChart">
+        <xAxis>
+            <CategoryAxis fx:id="locationXAxis" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="locationYAxis" />
+        </yAxis>
+        <data>
+            <!-- Les séries de données seront ajoutées dynamiquement -->
+        </data>
+    </LineChart>
+
+    <!-- Graphique pour les Sponsors -->
+    <LineChart fx:id="sponsorChart">
+        <xAxis>
+            <CategoryAxis fx:id="sponsorXAxis" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="sponsorYAxis" />
+        </yAxis>
+        <data>
+            <!-- Les séries de données seront ajoutées dynamiquement -->
+        </data>
+    </LineChart>
+</VBox>

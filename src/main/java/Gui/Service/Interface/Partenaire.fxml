@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Gui.Service.Controllers.Partenaire"
+            prefHeight="600.0" prefWidth="900.0"
+            stylesheets="style.css">
+    <!-- Barre de navigation latérale -->
+    <VBox prefWidth="220" prefHeight="600"
+          style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
+        <!-- Logo -->
+        <ImageView fitWidth="100" fitHeight="100" preserveRatio="true">
+            <image>
+                <Image url="@/Images/EVENTORA.png"/>
+            </image>
+        </ImageView>
+
+        <!-- Titre -->
+        <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
+
+        <VBox spacing="10">
+            <Button text="🏠 Accueil" styleClass="menu-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
+            <Button text="📲 Réservation" styleClass="menu-button"/>
+            <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService" />
+            <Button text="⭐ FeedBack" styleClass="menu-button"/>
+            <Button styleClass="menu-button" text="🚨 Réclamations"  />
+            <Button text="🔧 Paramètres" styleClass="menu-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </VBox>
+    </VBox>
+
+
+    <!-- Contenu principal -->
+    <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
+
+        <!-- Texte -->
+        <Label wrapText="true" prefWidth="500" styleClass="main-text"
+               text="Vous avez un problème ? Vous voulez poser une réclamation ? Ne vous inquiétez pas, Eventora est là pour vous aider. Avec notre système de réclamation, vous pouvez facilement soumettre vos préoccupations et obtenir une réponse rapide." />
+
+        <!-- Image d'illustration -->
+        <ImageView fitWidth="200" fitHeight="200" preserveRatio="true">
+            <image>
+                <Image url="/Images/rec..jpg"/>
+            </image>
+        </ImageView>
+
+        <!-- Boutons -->
+        <HBox spacing="20" alignment="CENTER">
+            <Button fx:id="ajouterButton"
+                    text="Ajouter un partenaire"
+                    styleClass="add-button"
+                    onAction="#handleAddAction"/>
+            <Button fx:id="viewButton"
+                    text="Voir les partenaires"
+                    styleClass="view-button"
+                    onAction="#handleViewAction"/>
+        </HBox>
+
+    </VBox>
+</AnchorPane>

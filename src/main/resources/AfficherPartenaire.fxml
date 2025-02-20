@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<?import javafx.scene.control.TextField?>
+<AnchorPane stylesheets="style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Service.Controllers.AfficherPartenaire">
+
+    <!-- Barre de navigation latérale -->
+    <VBox prefHeight="687.0" prefWidth="220.0" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
+        <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
+        <VBox spacing="10">
+            <Button styleClass="menu-button" text="🏠 Accueil" />
+            <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
+            <Button styleClass="menu-button" text="📲 Réservation" />
+            <Button styleClass="menu-button" text="🎁 Services" />
+            <Button onAction="#goToPartenaire" styleClass="menu-button" text="🎁 Partenaire" />
+            <Button styleClass="menu-button" text="⭐ FeedBack" />
+            <Button styleClass="menu-button" text="🚨 Réclamations" />
+            <Button styleClass="menu-button" text="🔧 Paramètres" />
+            <Button styleClass="logout-button" text="🛑 Déconnexion" />
+        </VBox>
+    </VBox>
+
+    <!-- Contenu principal -->
+    <VBox alignment="CENTER" layoutX="220.0" prefHeight="687.0" prefWidth="822.0" spacing="20" style="-fx-padding: 20px;">
+        <Label prefHeight="55.0" prefWidth="422.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 10px;" text="⛔ Liste des Partenaires ⛔" textAlignment="CENTER">
+            <font>
+                <Font size="49.0" />
+            </font>
+        </Label>
+
+        <!-- Champ de recherche -->
+        <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="300.0" />
+
+        <!-- Boutons Ajouter et Actualiser -->
+        <HBox spacing="10">
+            <Button onAction="#addPartenaire" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Ajouter" />
+            <Button onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Actualiser" />
+        </HBox>
+
+        <!-- Tableau des partenaires -->
+        <TableView fx:id="tableView" prefHeight="356.0" prefWidth="699.0">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="46.0" text="ID" />
+                <TableColumn fx:id="nomColumn" prefWidth="108.0" text="Nom" />
+                <TableColumn fx:id="emailColumn" prefWidth="131.0" text="Email" />
+                <TableColumn fx:id="adresseColumn" prefWidth="129.2" text="Adresse" />
+                <TableColumn fx:id="site_webColumn" prefWidth="117.0" text="Site Web" />
+                <TableColumn fx:id="montantColumn" prefWidth="117.2" text="Montant" />
+                <TableColumn fx:id="typeColumn" prefWidth="207.0" text="Type de partenariat" />
+                <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions" />
+            </columns>
+        </TableView>
+    </VBox>
+
+</AnchorPane>
