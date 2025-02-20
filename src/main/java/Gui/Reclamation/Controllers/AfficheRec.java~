@@ -97,6 +97,8 @@ public class AfficheRec {
                         deleteButton.setGraphic(deleteImageView);
                         editButton.getStyleClass().add("table-button");
                         deleteButton.getStyleClass().addAll("table-button", "delete");
+
+                        // Actions pour changer le statut
                         btnResolved.setOnAction(event -> handleStatutChange(getTableRow().getItem(), Statut.RESOLUE));
                         btnInProgress.setOnAction(event -> handleStatutChange(getTableRow().getItem(), Statut.EN_COURS));
                         btnRejected.setOnAction(event -> handleStatutChange(getTableRow().getItem(), Statut.REJETEE));
