@@ -8,7 +8,6 @@ public class Partenaire {
     private String telephone_partenaire;
     private String adresse_partenaire;
     private String site_web;
-    private String montant_partenaire;
     private TypePartenaire type_partenaire;
 
     public Partenaire() {
@@ -18,24 +17,22 @@ public class Partenaire {
         this.id_partenaire = id_partenaire;
     }
 
-    public Partenaire(int id_partenaire, String nom_partenaire, String email_partenaire, String telephone_partenaire, String adresse_partenaire, String site_web, String montant_partenaire, TypePartenaire type_partenaire) {
+    public Partenaire(int id_partenaire, String nom_partenaire, String email_partenaire, String telephone_partenaire, String adresse_partenaire, String site_web, TypePartenaire type_partenaire) {
         this.id_partenaire = id_partenaire;
         this.nom_partenaire = nom_partenaire;
         this.email_partenaire = email_partenaire;
         this.telephone_partenaire = telephone_partenaire;
         this.adresse_partenaire = adresse_partenaire;
         this.site_web = site_web;
-        this.montant_partenaire = montant_partenaire;
         this.type_partenaire = type_partenaire;
     }
 
-    public Partenaire(String nom_partenaire, String email_partenaire, String telephone_partenaire, String adresse_partenaire, String site_web, String montant_partenaire, TypePartenaire type_partenaire) {
+    public Partenaire(String nom_partenaire, String email_partenaire, String telephone_partenaire, String adresse_partenaire, String site_web, TypePartenaire type_partenaire) {
         this.nom_partenaire = nom_partenaire;
         this.email_partenaire = email_partenaire;
         this.telephone_partenaire = telephone_partenaire;
         this.adresse_partenaire = adresse_partenaire;
         this.site_web = site_web;
-        this.montant_partenaire = montant_partenaire;
         this.type_partenaire = type_partenaire;
     }
 
@@ -87,13 +84,7 @@ public class Partenaire {
         this.site_web = site_web;
     }
 
-    public String getMontant_partenaire() {
-        return montant_partenaire;
-    }
 
-    public void setMontant_partenaire(String montant_partenaire) {
-        this.montant_partenaire = montant_partenaire;
-    }
 
     public TypePartenaire getType_partenaire() {
         return type_partenaire;

@@ -53,6 +53,8 @@
         <TextField fx:id="adresseField" promptText="adresse de partenaire" styleClass="input-field" />
         <!-- Champ site web de partenaire -->
         <TextField fx:id="site_webField" promptText="site web de partenaire" styleClass="input-field" />
+        <!-- Champ montant de partenariat -->
+        <TextField fx:id="montantPartField" promptText="montant de partenariat" styleClass="input-field" />
         <!-- Champ type partenariat -->
         <ComboBox fx:id="typefield" promptText="Type de partenariat" styleClass="input-field">
         </ComboBox>

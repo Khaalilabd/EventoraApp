@@ -78,16 +78,39 @@ public class AjouterService {
         TypeService typeService = type_serviceField.getValue();
         String description = descriptionField.getText();
         String prix = prixField.getText();
+
+        // Vérification que tous les champs sont remplis
         if (idPartenaire == null || titre.isEmpty() || location == null || typeService == null || description.isEmpty() || prix.isEmpty()) {
             showAlert("Warning", "Veuillez remplir tous les champs.");
             return;
         }
+
+        // Validation : Le titre doit contenir uniquement des caractères alphabétiques
+        if (!titre.matches("[a-zA-Z ]+")) {
+            showAlert("Erreur", "Le titre doit contenir uniquement des caractères alphabétiques.");
+            return;
+        }
+
+        // Validation : La description doit contenir uniquement des caractères alphabétiques (ou espaces)
+        if (!description.matches("[a-zA-Z ,.\\-']+")) { // Inclut des caractères spéciaux comme la virgule, le point et l'apostrophe
+            showAlert("Erreur", "La description doit contenir uniquement des caractères alphabétiques.");
+            return;
+        }
+
+        // Validation : Le prix doit être un nombre et se terminer par 'dt' ou 'DT'
+        if (!prix.matches("\\d+(dt|DT)$")) {
+            showAlert("Erreur", "Le prix doit être un nombre et se terminer par 'dt' ou 'DT'.");
+            return;
+        }
+
+        // Si toutes les validations passent, ajouter le service
         Service service = new Service(idPartenaire, titre, location, typeService, description, prix);
         serviceService.AjouterService(service);
         showAlert("Succès", "Service ajouté avec succès !");
         clearFields();
         gotoAfficherService(event);
     }
+
     private void gotoAfficherService(ActionEvent event) {
         try {
             // Charger la nouvelle scène (AfficherService.fxml)

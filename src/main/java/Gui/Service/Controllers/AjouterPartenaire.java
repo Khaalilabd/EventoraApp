@@ -26,8 +26,7 @@ public class AjouterPartenaire {
     private TextField adresseField;
     @FXML
     private TextField site_webField;
-    @FXML
-    private TextField montantPartField;
+
     @FXML
     private ComboBox<TypePartenaire> typefield;
     @FXML
@@ -40,24 +39,49 @@ public class AjouterPartenaire {
         submitButton.setOnAction(this::ajouterPartenaire);
         cancelButton.setOnAction(event -> annuler());
     }
-        private void ajouterPartenaire(ActionEvent event) {
+    private void ajouterPartenaire(ActionEvent event) {
         String nom = nomField.getText();
         String email = emailField.getText();
         String telephone = telephoneField.getText();
         String adresse = adresseField.getText();
         String site_web = site_webField.getText();
-        String montantPart = montantPartField.getText();
         TypePartenaire type = typefield.getValue();
-        if (nom.isEmpty() || email.isEmpty() || telephone.isEmpty() || adresse.isEmpty() || site_web.isEmpty() || montantPart.isEmpty() || type == null ) {
+
+        // Vérifier que tous les champs sont remplis
+        if (nom.isEmpty() || email.isEmpty() || telephone.isEmpty() || adresse.isEmpty() || site_web.isEmpty() || type == null) {
             showAlert("Warning", "Veuillez remplir tous les champs.");
             return;
         }
-        Partenaire partenaire = new Partenaire(nom, email, telephone, adresse, site_web, montantPart, type);
+
+        // Validation : le nom ne doit contenir que des caractères alphabétiques
+        if (!nom.matches("[a-zA-Z ]+")) {
+            showAlert("Erreur", "Le nom doit contenir uniquement des caractères alphabétiques.");
+            return;
+        }
+
+        // Validation : l'email doit se terminer par "@gmail.com" ou "@esprit.tn"
+        if (!email.matches("^[\\w.-]+@(gmail\\.com|esprit\\.tn)$")) {
+            showAlert("Erreur", "L'email doit se terminer par '@gmail.com' ou '@esprit.tn'.");
+            return;
+        }
+
+        // Validation : le téléphone doit contenir uniquement des chiffres
+        if (!telephone.matches("\\d+")) {
+            showAlert("Erreur", "Le numéro de téléphone doit contenir uniquement des chiffres.");
+            return;
+        }
+
+        // Validation : le montant doit contenir uniquement des chiffres et se terminer par "dt" ou "DT"
+
+
+        // Si toutes les validations passent, créer et ajouter le partenaire
+        Partenaire partenaire = new Partenaire(nom, email, telephone, adresse, site_web, type);
         partenaireService.AjouterPartenaire(partenaire);
         showAlert("Succès", "Partenaire ajouté avec succès !");
         clearFields();
         gotoAfficherPartenaire(event);
     }
+
     public void gotoAfficherPartenaire(ActionEvent event) {
         try {
             // Charger la nouvelle scène (AfficherPartenaire.fxml)
@@ -87,7 +111,6 @@ public class AjouterPartenaire {
         telephoneField.clear();
         adresseField.clear();
         site_webField.clear();
-        montantPartField.clear();
         typefield.setValue(null);
     }
     public void showAlert(String title, String content) {
@@ -103,7 +126,6 @@ public class AjouterPartenaire {
         telephoneField.clear();
         adresseField.clear();
         site_webField.clear();
-        montantPartField.clear();
         typefield.setValue(null);
     }
     @FXML

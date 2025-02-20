@@ -1,33 +1,29 @@
 package Gui.Service.Controllers;
-
 import Models.Service.Location;
+import Models.Service.Service;
 import Models.Service.TypeService;
-import Models.Service.Partenaire; // Si vous avez une classe Partenaire pour l'ID partenaire
-import Services.Service.Crud.PartenaireService;
+import Models.Service.Partenaire;
 import Services.Service.Crud.ServiceService;
+import Services.Service.Crud.PartenaireService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import Models.Service.Service;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.event.ActionEvent;
-
 import java.io.IOException;
 import java.util.List;
-
-public class ModifierService {
+public class AjouterService {
     @FXML
     private TextField titleField;
     @FXML
-    private ComboBox<Location> locationfield;
+    private ComboBox<Location> locationField;
     @FXML
-    private ComboBox<TypeService> sponsorfield;
+    private ComboBox<TypeService> type_serviceField;
     @FXML
-    private ComboBox<Partenaire> idPartenaireField; // ComboBox pour les partenaires
+    private ComboBox<Partenaire> idPartenaireField;
     @FXML
     private TextArea descriptionField;
     @FXML
@@ -36,18 +32,17 @@ public class ModifierService {
     private Button submitButton;
     @FXML
     private Button cancelButton;
-    private Service serviceToEdit;
     private final ServiceService serviceService = new ServiceService();
+    private final PartenaireService partenaireService = new PartenaireService();
     @FXML
     public void initialize() {
-        locationfield.getItems().setAll(Location.values()); // Charger les valeurs pour le Location
-        sponsorfield.getItems().setAll(TypeService.values()); // Charger les valeurs pour le TypeService
+        locationField.getItems().setAll(Location.values());
+        type_serviceField.getItems().setAll(TypeService.values());
         loadPartenaires();
-        submitButton.setOnAction(this::modifierService);
+        submitButton.setOnAction(this::ajouterService);
         cancelButton.setOnAction(event -> annuler());
     }
     private void loadPartenaires() {
-        PartenaireService partenaireService = new PartenaireService();
         List<Partenaire> partenaires = partenaireService.RechercherPartenaire();
         idPartenaireField.getItems().setAll(partenaires);
         idPartenaireField.setCellFactory(param -> new ListCell<Partenaire>() {
@@ -67,49 +62,32 @@ public class ModifierService {
                 super.updateItem(item, empty);
                 if (empty || item == null) {
                     setText(null);
-                } else {
-                    setText(item.getNom_partenaire());  // Afficher le nom_partenaire
+                } else
+                {
+                    setText(item.getNom_partenaire());  // Affiche le nom du partenaire
                 }
             }
         });
     }
-    public void setServiceToEdit(Service service) {
-        this.serviceToEdit = service;
-        Partenaire partenaire = findPartenaireById(service.getId_partenaire());
-        idPartenaireField.setValue(partenaire);
-        titleField.setText(service.getTitre());
-        locationfield.setValue(service.getLocation());
-        sponsorfield.setValue(service.getTypeService());
-        descriptionField.setText(service.getDescription());
-        prixField.setText(service.getPrix());
-    }
-    private Partenaire findPartenaireById(int id) {
-        for (Partenaire partenaire : idPartenaireField.getItems()) {
-            if (partenaire.getId_partenaire() == id) {
-                return partenaire;
-            }
-        }
-        return null;
-    }
-    private void modifierService(ActionEvent event) {
+    private void ajouterService(ActionEvent event) {
+        Partenaire partenaire = idPartenaireField.getValue(); // Récupération du partenaire sélectionné
+        Integer idPartenaire = partenaire != null ? partenaire.getId_partenaire() : null;
         String titre = titleField.getText();
-        Location location = locationfield.getValue();
-        TypeService typeService = sponsorfield.getValue();
+        Location location = locationField.getValue();
+        TypeService typeService = type_serviceField.getValue();
         String description = descriptionField.getText();
         String prix = prixField.getText();
-        Partenaire partenaire = idPartenaireField.getValue();
-        int idPartenaire = partenaire != null ? partenaire.getId_partenaire() : -1;
-        serviceToEdit.setId_partenaire(idPartenaire);
-        serviceToEdit.setTitre(titre);
-        serviceToEdit.setLocation(location);
-        serviceToEdit.setTypeService(typeService);
-        serviceToEdit.setDescription(description);
-        serviceToEdit.setPrix(prix);
-        serviceService.ModifierService(serviceToEdit);
-        showAlert("Succès", "Le service a été modifié avec succès !");
+        if (idPartenaire == null || titre.isEmpty() || location == null || typeService == null || description.isEmpty() || prix.isEmpty()) {
+            showAlert("Warning", "Veuillez remplir tous les champs.");
+            return;
+        }
+        Service service = new Service(idPartenaire, titre, location, typeService, description, prix);
+        serviceService.AjouterService(service);
+        showAlert("Succès", "Service ajouté avec succès !");
         clearFields();
-        goToAfficherService(event);
+        gotoAfficherService(event);
     }
+<<<<<<< HEAD:src/main/java/Gui/Service/Controllers/ModifierService.java~
     private void annuler() {
         clearFields(); // Réinitialiser les champs si l'utilisateur annule
     }
@@ -149,11 +127,14 @@ public class ModifierService {
     }
 
     private void goToAfficherService(ActionEvent event) {
+=======
+    private void gotoAfficherService(ActionEvent event) {
+>>>>>>> origin/Gestion_Service:src/main/java/Gui/Service/Controllers/AjouterService.java~
         try {
-            // Charger la scène d'affichage des services (AfficherService.fxml)
+            // Charger la nouvelle scène (AfficherService.fxml)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherService.fxml"));
             Parent root = loader.load();
-            Scene afficherServiceScene = new Scene(root);
+            Scene newScene = new Scene(root);
 
             // Obtenir la fenêtre (Stage) actuelle
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -161,9 +142,9 @@ public class ModifierService {
             // Fermer la fenêtre actuelle
             currentStage.close();
 
-            // Ouvrir la nouvelle fenêtre (AfficherService.fxml)
+            // Créer une nouvelle fenêtre et lui attribuer la nouvelle scène
             Stage newStage = new Stage();
-            newStage.setScene(afficherServiceScene);
+            newStage.setScene(newScene);
             newStage.show();
         } catch (IOException e) {
             System.out.println("Erreur lors du chargement de la page d'affichage des services : " + e.getMessage());
@@ -202,6 +183,44 @@ public class ModifierService {
             e.printStackTrace();
             System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
+    }
+
+    private void clearFields() {
+        titleField.clear();
+        locationField.setValue(null);
+        type_serviceField.setValue(null);
+        idPartenaireField.setValue(null);
+        descriptionField.clear();
+        prixField.clear();
+    }
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        // Charger la nouvelle scène (Service.fxml)
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
+        Parent root = loader.load();
+        Scene newScene = new Scene(root);
+
+        // Obtenir la fenêtre (Stage) actuelle
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // Fermer la fenêtre actuelle
+        currentStage.close();
+
+        // Créer une nouvelle fenêtre et lui attribuer la nouvelle scène
+        Stage newStage = new Stage();
+        newStage.setScene(newScene);
+        newStage.show();
+    }
+
+    private void annuler() {
+        clearFields();  // Réinitialise les champs
     }
 
 }

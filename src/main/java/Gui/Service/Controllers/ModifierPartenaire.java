@@ -49,14 +49,12 @@ public class ModifierPartenaire {
         System.out.println("Telephone: " + partenaire.getTelephone_partenaire());
         System.out.println("Adresse: " + partenaire.getAdresse_partenaire());
         System.out.println("Site web: " + partenaire.getSite_web());
-        System.out.println("Montant: " + partenaire.getMontant_partenaire());
         System.out.println("Type: " + partenaire.getType_partenaire().getLabel());
         nomField.setText(partenaire.getNom_partenaire());
         emailField.setText(partenaire.getEmail_partenaire());
         telephoneField.setText(partenaire.getTelephone_partenaire());
         adresseField.setText(partenaire.getAdresse_partenaire());
         site_webField.setText(partenaire.getSite_web());
-        montantPartField.setText(partenaire.getMontant_partenaire());
         typefield.setValue(partenaire.getType_partenaire());
     }
     private void modifierPartenaire(ActionEvent event) {
@@ -67,18 +65,51 @@ public class ModifierPartenaire {
         String site_web = site_webField.getText();
         String montantPart = montantPartField.getText();
         TypePartenaire type = typefield.getValue();
+
+        // Vérifier que tous les champs sont remplis
+        if (nom.isEmpty() || email.isEmpty() || telephone.isEmpty() || adresse.isEmpty() || site_web.isEmpty() || montantPart.isEmpty() || type == null) {
+            showAlert("Warning", "Veuillez remplir tous les champs.");
+            return;
+        }
+
+        // Validation : le nom ne doit contenir que des caractères alphabétiques
+        if (!nom.matches("[a-zA-Z ]+")) {
+            showAlert("Erreur", "Le nom doit contenir uniquement des caractères alphabétiques.");
+            return;
+        }
+
+        // Validation : l'email doit se terminer par "@gmail.com" ou "@esprit.tn"
+        if (!email.matches("^[\\w.-]+@(gmail\\.com|esprit\\.tn)$")) {
+            showAlert("Erreur", "L'email doit se terminer par '@gmail.com' ou '@esprit.tn'.");
+            return;
+        }
+
+        // Validation : le téléphone doit contenir uniquement des chiffres
+        if (!telephone.matches("\\d+")) {
+            showAlert("Erreur", "Le numéro de téléphone doit contenir uniquement des chiffres.");
+            return;
+        }
+
+        // Validation : le montant doit contenir uniquement des chiffres et se terminer par "dt" ou "DT"
+        if (!montantPart.matches("\\d+(dt|DT)$")) {
+            showAlert("Erreur", "Le montant doit être un nombre et se terminer par 'dt' ou 'DT'.");
+            return;
+        }
+
+        // Si toutes les validations passent, mettre à jour le partenaire
         partenaireToEdit.setNom_partenaire(nom);
         partenaireToEdit.setEmail_partenaire(email);
         partenaireToEdit.setTelephone_partenaire(telephone);
         partenaireToEdit.setAdresse_partenaire(adresse);
         partenaireToEdit.setSite_web(site_web);
-        partenaireToEdit.setMontant_partenaire(montantPart);
         partenaireToEdit.setType_partenaire(type);
+
         partenaireService.ModifierPartenaire(partenaireToEdit);
-        showAlert("Succès", "Le service a bis modifiée avec succès !");
+        showAlert("Succès", "Le partenaire a été modifié avec succès !");
         clearFields();
         goToAfficherPartenaire(event);
     }
+
     private void annuler() {
         clearFields();
     }

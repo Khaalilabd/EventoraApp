@@ -17,7 +17,7 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
 
     @Override
     public void AjouterPartenaire(Partenaire partenaire) {
-        String req= "INSERT INTO `sponsors`( `nom_partenaire`, `email_partenaire`, `telephone_partenaire`, `adresse_partenaire`, `site_web`, `montant_partenaire`, `type_partenaire`) VALUES (?,?,?,?,?,?,?)";
+        String req= "INSERT INTO `sponsors`( `nom_partenaire`, `email_partenaire`, `telephone_partenaire`, `adresse_partenaire`, `site_web`, `type_partenaire`) VALUES (?,?,?,?,?,?)";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, partenaire.getNom_partenaire());
@@ -25,8 +25,7 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
             ps.setString(3,partenaire.getTelephone_partenaire());
             ps.setString(4, partenaire.getAdresse_partenaire());
             ps.setString(5, partenaire.getSite_web());
-            ps.setString(6, partenaire.getMontant_partenaire());
-            ps.setString(7, partenaire.getType_partenaire().getLabel());
+            ps.setString(6, partenaire.getType_partenaire().getLabel());
             ps.executeUpdate();
             System.out.println("Partenaire ajouter");
         }
@@ -39,7 +38,7 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
 
     @Override
     public void ModifierPartenaire(Partenaire partenaire) {
-        String req = "UPDATE `sponsors` SET `nom_partenaire`=?,`email_partenaire`=?,`telephone_partenaire`=?,`adresse_partenaire`=?,`site_web`=?,`montant_partenaire`=?,`type_partenaire`=? WHERE `id_partenaire`=?";
+        String req = "UPDATE `sponsors` SET `nom_partenaire`=?,`email_partenaire`=?,`telephone_partenaire`=?,`adresse_partenaire`=?,`site_web`=?,`type_partenaire`=? WHERE `id_partenaire`=?";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, partenaire.getNom_partenaire());
@@ -47,9 +46,8 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
             ps.setString(3,partenaire.getTelephone_partenaire());
             ps.setString(4, partenaire.getAdresse_partenaire());
             ps.setString(5, partenaire.getSite_web());
-            ps.setString(6, partenaire.getMontant_partenaire());
-            ps.setString(7, partenaire.getType_partenaire().getLabel());
-            ps.setInt(8, partenaire.getId_partenaire());
+            ps.setString(6, partenaire.getType_partenaire().getLabel());
+            ps.setInt(7, partenaire.getId_partenaire());
             ps.executeUpdate();
             System.out.println("Partenaire modifier");
         }
@@ -88,7 +86,6 @@ public class PartenaireService implements Ipartenaire<Partenaire> {
                 partenaire.setTelephone_partenaire(rs.getString("telephone_partenaire"));
                 partenaire.setAdresse_partenaire(rs.getString("adresse_partenaire"));
                 partenaire.setSite_web(rs.getString("site_web"));
-                partenaire.setMontant_partenaire(rs.getString("montant_partenaire"));
                 partenaire.setType_partenaire(TypePartenaire.fromLabel(rs.getString("type_partenaire")));
                 partenaires.add(partenaire);
             }

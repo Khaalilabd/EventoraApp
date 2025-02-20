@@ -10,21 +10,23 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.control.TextField?>
-<AnchorPane stylesheets="style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Service.Controllers.AfficherPartenaire">
+<AnchorPane stylesheets="style.css"
+            xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Service.Controllers.AfficherPartenaire">
 
     <!-- Barre de navigation latérale -->
     <VBox prefHeight="687.0" prefWidth="220.0" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
         <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
         <VBox spacing="10">
-            <Button text="🏠 Accueil" styleClass="menu-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
-            <Button text="📲 Réservation" styleClass="menu-button" onAction="#goToReservation" />
-            <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
-            <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
-            <Button text="⭐ FeedBack" styleClass="menu-button" onAction="#goToFeedback"/>
-            <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
-            <Button text="🔧 Paramètres" styleClass="menu-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+            <Button styleClass="menu-button" text="🏠 Accueil" />
+            <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
+            <Button styleClass="menu-button" text="📲 Réservation" />
+            <Button styleClass="menu-button" text="🎁 Services" onAction="#goToService" />
+            <Button styleClass="menu-button" text="⭐ FeedBack" />
+            <Button styleClass="menu-button" text="🚨 Réclamations" />
+            <Button styleClass="menu-button" text="🔧 Paramètres" />
+            <Button styleClass="logout-button" text="🛑 Déconnexion" />
         </VBox>
     </VBox>
 
@@ -53,7 +55,6 @@
                 <TableColumn fx:id="emailColumn" prefWidth="131.0" text="Email" />
                 <TableColumn fx:id="adresseColumn" prefWidth="129.2" text="Adresse" />
                 <TableColumn fx:id="site_webColumn" prefWidth="117.0" text="Site Web" />
-                <TableColumn fx:id="montantColumn" prefWidth="117.2" text="Montant" />
                 <TableColumn fx:id="typeColumn" prefWidth="207.0" text="Type de partenariat" />
                 <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions" />
             </columns>

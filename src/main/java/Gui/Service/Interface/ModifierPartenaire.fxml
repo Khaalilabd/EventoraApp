@@ -1,53 +1,87 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Gui.Service.Controllers.ModifierPartenaire"
-            prefHeight="600.0" prefWidth="900.0"
-            stylesheets="style.css"
-            style="-fx-background-color: #F4F1F1;">
+<AnchorPane prefHeight="537.0" prefWidth="900.0" style="-fx-background-color: #F4F1F1;" stylesheets="style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Service.Controllers.ModifierPartenaire">
 
     <!-- Barre de navigation latérale -->
-    <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
+    <VBox prefHeight="558.0" prefWidth="220" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
 
         <!-- Titre -->
-        <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
+        <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
 
         <!-- Menu Buttons -->
         <VBox spacing="10">
-            <Button text="🏠 Accueil" styleClass="menu-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
-            <Button text="📲 Réservation" styleClass="menu-button"/>
-            <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
-            <Button text="⭐ FeedBack" styleClass="menu-button"/>
+            <Button styleClass="menu-button" text="🏠 Accueil" />
+            <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
+            <Button styleClass="menu-button" text="📲 Réservation" />
+            <Button onAction="#goToService" styleClass="menu-button" text="🎁 Services" />
+            <Button styleClass="menu-button" text="⭐ FeedBack" />
             <Button styleClass="menu-button" text="🚨 Réclamations" />
-            <Button text="🔧 Paramètres" styleClass="menu-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+            <Button styleClass="menu-button" text="🔧 Paramètres" />
+            <Button styleClass="logout-button" text="🛑 Déconnexion" />
         </VBox>
     </VBox>
 
     <!-- Contenu principal -->
-    <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
+    <VBox alignment="CENTER" layoutX="220.0" prefHeight="523.0" prefWidth="650" spacing="20">
         <!-- Titre -->
-        <Label text="Modifier une Partenaire" styleClass="main-title"/>
-        <TextField fx:id="nomField" promptText="Nom de la Partenaire" styleClass="input-field"/>
-        <TextField fx:id="emailField" promptText="Email de la Partenaire" styleClass="input-field"/>
-        <TextField fx:id="telephoneField" promptText="Telephone de la Partenaire" styleClass="input-field"/>
-        <TextField fx:id="adresseField" promptText="Adresse de la Partenaire" styleClass="input-field"/>
-        <TextField fx:id="site_webField" promptText="Site web de la Partenaire" styleClass="input-field"/>
-        <TextField fx:id="montantPartField" promptText="Montant de la Partenaire" styleClass="input-field"/>
-        <ComboBox fx:id="typefield" promptText="Sélectionner un type de Partenaire" styleClass="input-field"/>
+        <Label styleClass="main-title" text="Modifier une Partenaire" />
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="42.0" prefWidth="465.0" text="Entrer le nom" />
+            <VBox prefHeight="42.0" prefWidth="0.0" />
+              <TextField fx:id="nomField" prefHeight="42.0" prefWidth="186.0" styleClass="input-field" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="42.0" prefWidth="464.0" text="Entrer l'email" />
+            <VBox prefHeight="42.0" prefWidth="0.0" />
+              <TextField fx:id="emailField" prefHeight="42.0" prefWidth="186.0" styleClass="input-field" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="42.0" prefWidth="466.0" text="Entrer le telephone" />
+            <VBox prefHeight="42.0" prefWidth="0.0" />
+              <TextField fx:id="telephoneField" prefHeight="42.0" prefWidth="186.0" styleClass="input-field" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="42.0" prefWidth="475.0" text="Entrer l adresse" />
+            <VBox prefHeight="42.0" prefWidth="0.0" />
+              <TextField fx:id="adresseField" prefHeight="42.0" prefWidth="194.0" styleClass="input-field" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="66.0" prefWidth="466.0" text="Entrer le montant" />
+            <VBox prefHeight="42.0" prefWidth="0.0" />
+              <TextField fx:id="montantPartField" prefHeight="42.0" prefWidth="185.0" styleClass="input-field" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="69.0" prefWidth="467.0" text="Entrer le site web" />
+            <VBox prefHeight="42.0" prefWidth="0.0" />
+              <TextField fx:id="site_webField" prefHeight="42.0" prefWidth="183.0" styleClass="input-field" />
+         </children>
+      </HBox>
+      <HBox prefHeight="100.0" prefWidth="200.0">
+         <children>
+            <Label prefHeight="66.0" prefWidth="512.0" text="Choisir le type de partenaire" />
+            <VBox prefHeight="43.0" prefWidth="0.0" />
+              <ComboBox fx:id="typefield" prefHeight="44.0" prefWidth="225.0" styleClass="input-field" />
+         </children>
+      </HBox>
 
         <!-- Boutons -->
-        <HBox spacing="20" alignment="CENTER">
-            <Button text="Sauvegarder" fx:id="submitButton" styleClass="submit-button"/>
-            <Button text="Annuler" fx:id="cancelButton" styleClass="cancel-button"/>
+        <HBox alignment="CENTER" prefHeight="59.0" prefWidth="650.0" spacing="20">
+            <Button fx:id="submitButton" styleClass="submit-button" text="Sauvegarder" />
+            <Button fx:id="cancelButton" styleClass="cancel-button" text="Annuler" />
         </HBox>
     </VBox> <!-- Contenu principal -->
 

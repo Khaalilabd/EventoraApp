@@ -73,7 +73,7 @@ public class AfficherPartenaire {
     }
     private void loadPartenaires() {
         List<Partenaire> partenaires = partenaireService.RechercherPartenaire();
-        partenairesList.setAll(partenaires);
+        partenairesList.setAll(partenaires); // Mettre à jour la liste des partenaires
     }
     private void addActionsColumn() {
         colActions.setCellFactory(param -> new TableCell<>() {
