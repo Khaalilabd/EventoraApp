@@ -1,13 +1,10 @@
 package Models.Service;
 
 public enum TypePartenaire {
-    FINANCIER("Financier"),
-    TECHNIQUE("Technique"),
-    MEDIA("Média"), // Ajout de l'option "Média"
-
-    LOGISTIQUE("Logistique"),
-    PARTENARIAT("Partenariat"),
-
+    DECORATION("Decoration"),
+    PHOTOGRAPHIE("Photographie"),
+    TRAITEUR("Traiteur"), // Ajout de l'option "Média"
+    SONO("Sono"),
     AUTRE("Autre");
 
     private final String label;
