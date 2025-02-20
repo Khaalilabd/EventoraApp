@@ -57,13 +57,19 @@
         <!-- Boutons bien espacés -->
         <HBox spacing="30" alignment="CENTER">
             <Button fx:id="ajouterButton"
-                    text="➕ Ajouter une Réservation"
+                    text="➕ Réserver un Pack"
                     styleClass="add-button"
                     onAction="#handleAddAction"/>
             <Button fx:id="viewButton"
                     text="📋 Voir les Réservations"
-                    styleClass="view-button"
+                    styleClass="add-button"
                     onAction="#handleViewAction"/>
+        </HBox>
+        <HBox spacing="30" alignment="CENTER">
+        <Button fx:id="ajouterButtonPersonaliser"
+                text="➕ Ajouter une Réservation Personaliser"
+                styleClass="add-button"
+                onAction="#handleAddAction"/>
         </HBox>
     </VBox>
 </AnchorPane>

@@ -1,0 +1,138 @@
+package Models.Reservation;
+
+import java.util.Date;
+
+public class Reservation {
+    private int idReservation;
+    private Type typeReservation;
+    private String nom;
+    private String prenom;
+    private String email;
+    private String numTel;
+    private String description;
+    private String Choix;
+    private Date date;
+    private String Service; // Nouveau champ ajouté pour le service
+
+    public Reservation(int idReservation) {
+        this.idReservation = idReservation;
+    }
+    public Reservation() {
+
+    }
+
+    public Reservation(int idReservation, Type typeReservation, String nom, String prenom, String email, String numTel, String description, String choix, Date date) {
+        this.idReservation = idReservation;
+        this.typeReservation = typeReservation;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.numTel = numTel;
+        this.description = description;
+        Choix = choix;
+        this.date = date;
+    }
+
+    public Reservation(Type typeReservation, String nom, String prenom, String email, String numTel, String description, String choix, Date date) {
+        this.typeReservation = typeReservation;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.numTel = numTel;
+        this.description = description;
+        Choix = choix;
+        this.date = date;
+    }
+
+    public Reservation(int idReservation, Type typeReservation, String nom, String prenom, String email, String numTel, String description, Date date, String service) {
+        this.idReservation = idReservation;
+        this.typeReservation = typeReservation;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.numTel = numTel;
+        this.description = description;
+        this.date = date;
+        Service = service;
+    }
+
+    public int getIdReservation() {
+        return idReservation;
+    }
+
+    public void setIdReservation(int idReservation) {
+        this.idReservation = idReservation;
+    }
+
+    public Type getTypeReservation() {
+        return typeReservation;
+    }
+
+    public void setTypeReservation(Type typeReservation) {
+        this.typeReservation = typeReservation;
+    }
+
+    public String getNom() {
+        return nom;
+    }
+
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNumTel() {
+        return numTel;
+    }
+
+    public void setNumTel(String numTel) {
+        this.numTel = numTel;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getChoix() {
+        return Choix;
+    }
+
+    public void setChoix(String choix) {
+        Choix = choix;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getService() {
+        return Service;
+    }
+
+    public void setService(String service) {
+        Service = service;
+    }
+}

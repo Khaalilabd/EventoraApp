@@ -1,7 +1,5 @@
 package Gui.Reservation.Controllers;
 
-import Models.Reservation.Reservation;
-import Services.Reservation.Crud.ReservationService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -127,7 +125,7 @@ public class AfficheReservation {
             AnchorPane modifReservationLayout = loader.load();
 
             // Obtenez le contrôleur du fichier FXML
-            ModifierReservation controller = loader.getController();
+            ModifierReservationPack controller = loader.getController();
             controller.setReservationToEdit(reservation);  // Utilisation correcte du contrôleur
 
             // Charger la nouvelle scène

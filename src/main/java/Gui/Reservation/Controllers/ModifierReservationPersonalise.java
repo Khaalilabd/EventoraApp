@@ -1,12 +1,10 @@
 package Gui.Reservation.Controllers;
 
-import Models.Reservation.Type;
-import javafx.scene.Node;
-import Models.Reservation.Reservation;
 import Services.Reservation.Crud.ReservationService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -19,7 +17,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-public class ModifierReservation {
+public class ModifierReservationPersonalise {
     @FXML
     private ComboBox idoffrefield;
     @FXML

@@ -1,8 +1,8 @@
 package Models.Reservation;
 
 public enum Type {
-    PACKAGE("Package"),
-    SERVICE("Service");
+    ReservPack("ReservPack"),
+    ReservPersonalise("ReservPersonalise");
     private final String label;
 
     Type(String label) {
