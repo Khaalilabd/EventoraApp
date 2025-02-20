@@ -87,7 +87,8 @@ public class ModifierReservationPack {
 
         showAlert("Succès", "reservation modifiée avec succès !");
         clearFields();
-        goToAfficherReservationPack(event);
+        goToReservationPack();
+
     }
     private void annuler() {
         clearFields();
@@ -121,16 +122,16 @@ public class ModifierReservationPack {
         stage.setScene(scene);
         stage.show();
     }
-    private void goToAfficherReservationPack(ActionEvent event) {
+    @FXML
+    private void goToReservationPack() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheReservationPack.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            AnchorPane ReservationLayout = loader.load();
+            Scene scene = new Scene(ReservationLayout);
+            Stage stage = (Stage) submitButton.getScene().getWindow(); // Récupère la fenêtre actuelle
+            stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            System.out.println("Erreur lors du chargement de la page d'affichage des reservations : " + e.getMessage());
             e.printStackTrace();
         }
     }

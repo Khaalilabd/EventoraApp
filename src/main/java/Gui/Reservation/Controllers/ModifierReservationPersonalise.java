@@ -89,7 +89,7 @@ public class ModifierReservationPersonalise {
 
         showAlert("Succès", "reservation modifiée avec succès !");
         clearFields();
-        goToAfficherReservationPersonalise(event);
+        goToReservationListePersonalise();
     }
     private void annuler() {
         clearFields();
@@ -123,16 +123,16 @@ public class ModifierReservationPersonalise {
         stage.setScene(scene);
         stage.show();
     }
-    private void goToAfficherReservationPersonalise(ActionEvent event) {
+    @FXML
+    private void goToReservationListePersonalise() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheReservationPersonalise.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherReservationPersonalise.fxml"));
+            AnchorPane ReservationLayout = loader.load();
+            Scene scene = new Scene(ReservationLayout);
+            Stage stage = (Stage) submitButton.getScene().getWindow(); // Récupère la fenêtre actuelle
+            stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
-            System.out.println("Erreur lors du chargement de la page d'affichage des reservations : " + e.getMessage());
             e.printStackTrace();
         }
     }

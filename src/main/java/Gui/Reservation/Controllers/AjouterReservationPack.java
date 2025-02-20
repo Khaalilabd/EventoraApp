@@ -81,7 +81,7 @@ public class AjouterReservationPack {
         reservationservice.ajouterReservationPack(reservation);
         showAlert("Succès", "ReservationPack ajouté avec succès !");
         clearFields();
-
+        goToReservationListePack();
     }
     private void annuler() {
         clearFields();
@@ -111,6 +111,19 @@ public class AjouterReservationPack {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
+    }
+    @FXML
+    private void goToReservationListePack() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheReservationPack.fxml"));
+            AnchorPane ReservationLayout = loader.load();
+            Scene scene = new Scene(ReservationLayout);
+            Stage stage = (Stage) submitButton.getScene().getWindow(); // Récupère la fenêtre actuelle
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 

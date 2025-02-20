@@ -80,7 +80,7 @@ public class AjouterReservationPersonalise {
         reservationservice.ajouterReservationPersonalise(reservation);
         showAlert("Succès", "ReservationPersonalise ajouté avec succès !");
         clearFields();
-
+        goToReservationListePersonalise();
     }
     private void annuler() {
         clearFields();
@@ -110,6 +110,19 @@ public class AjouterReservationPersonalise {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
+    }
+    @FXML
+    private void goToReservationListePersonalise() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficherReservationPersonalise.fxml"));
+            AnchorPane ReservationLayout = loader.load();
+            Scene scene = new Scene(ReservationLayout);
+            Stage stage = (Stage) submitButton.getScene().getWindow(); // Récupère la fenêtre actuelle
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

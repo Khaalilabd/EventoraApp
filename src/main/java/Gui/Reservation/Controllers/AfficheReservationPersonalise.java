@@ -22,6 +22,9 @@ import java.util.Date;
 public class AfficheReservationPersonalise {
 
     @FXML
+    private TextField searchField;
+
+    @FXML
     private TableView<ReservationPersonalise> tableView;
 
     @FXML
@@ -67,7 +70,24 @@ public class AfficheReservationPersonalise {
         addActionsColumn();
         // Charger les données dans le TableView
         loadReservations();
+        // Ajout du filtre de recherche
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> filterReservations(newValue));
     }
+    private void filterReservations(String keyword) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            loadReservations(); // Recharge toutes les réservations si la recherche est vide
+            return;
+        }
+
+        String lowerCaseKeyword = keyword.toLowerCase();
+        tableView.getItems().setAll(
+                reservationservice.rechercherReservationPersonalise().stream()
+                        .filter(res -> res.getNom().toLowerCase().contains(lowerCaseKeyword) ||
+                                res.getPrenom().toLowerCase().contains(lowerCaseKeyword))
+                        .toList()
+        );
+    }
+
 
     private void addActionsColumn() {
         colActions.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
