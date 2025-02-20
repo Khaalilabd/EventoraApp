@@ -114,4 +114,61 @@ public class PackService implements IPack <Pack> {
 
         return packs;
     }
+
+    public List<TypePack> getAllTypePacks() {
+        List<TypePack> typePacks = new ArrayList<>();
+        String query = "SELECT * FROM typepack";
+
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                TypePack typePack = new TypePack(rs.getInt("id"), rs.getString("type"));
+                typePacks.add(typePack);
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement des types de packs : " + e.getMessage());
+        }
+
+        return typePacks;
+    }
+
+
+    public List<Pack> RechercherPackParMotCle(String motCle) {
+        String req = "SELECT id, nomPack, description, prix, location, type, nbrGuests, nomService FROM pack " +
+                "WHERE nomPack LIKE ? OR description LIKE ? OR prix LIKE ? OR location LIKE ? OR " +
+                "type LIKE ? OR nbrGuests LIKE ? OR nomService LIKE ?";
+
+        List<Pack> packs = new ArrayList<>();
+
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            // Appliquer le mot-clé à toutes les colonnes
+            for (int i = 1; i <= 7; i++) {
+                ps.setString(i, "%" + motCle + "%");
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Pack pack = new Pack();
+                    pack.setId(rs.getInt("id"));
+                    pack.setNomPack(rs.getString("nomPack"));
+                    pack.setDescription(rs.getString("description"));
+                    pack.setPrix(rs.getDouble("prix"));
+                    pack.setLocation(Location.valueOf(rs.getString("location")));
+                    pack.setType(new TypePack(rs.getString("type")));
+                    pack.setNbrGuests(rs.getInt("nbrGuests"));
+                    pack.setNomService(rs.getString("nomService"));
+
+                    packs.add(pack);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des packs par mot-clé : " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return packs;
+    }
+
+
 }

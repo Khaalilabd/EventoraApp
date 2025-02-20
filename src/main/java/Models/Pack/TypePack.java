@@ -16,7 +16,6 @@ public class TypePack {
         this.type = type;
     }
 
-
     public int getId() {
         return id;
     }
@@ -35,6 +34,9 @@ public class TypePack {
 
     @Override
     public String toString() {
-        return type ;
+        return "TypePack{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                '}';
     }
 }
