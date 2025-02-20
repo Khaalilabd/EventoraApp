@@ -20,15 +20,15 @@
             <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
 
             <VBox spacing="10">
-                <Button styleClass="menu-button" text="🏠 Accueil" />
-                <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
-                <Button styleClass="menu-button" text="📲 Réservation" onAction="#goToReservation"/>
-                <Button styleClass="menu-button" text="🎁 Services" />
-                <Button styleClass="menu-button" text="💎 Packs" />
-                <Button styleClass="menu-button" text="⭐ FeedBack" />
-                <Button styleClass="menu-button" text="🚨 Réclamations" />
-                <Button styleClass="menu-button" text="🔧 Paramètres" />
-                <Button styleClass="logout-button" text="🛑 Déconnexion" />
+                <Button text="🏠 Accueil" styleClass="menu-button"/>
+                <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
+                <Button text="📲 Réservation" styleClass="menu-button" onAction="#goToReservation" />
+                <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
+                <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
+                <Button text="⭐ FeedBack" styleClass="menu-button" onAction="#goToFeedback"/>
+                <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
+                <Button text="🔧 Paramètres" styleClass="menu-button"/>
+                <Button text="🛑 Déconnexion" styleClass="logout-button"/>
             </VBox>
         </VBox>
         <!-- Contenu principal -->

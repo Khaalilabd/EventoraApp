@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
@@ -51,6 +52,42 @@ public class Feedback {
         stage.close();
 
         loadScene(event, "/Feedback.fxml");
+    }
+    @FXML
+    private void goToReservation(ActionEvent event) throws IOException {
+        try {
+            // Vérifier le chemin correct du fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation.fxml"));
+            AnchorPane reservationLayout = loader.load();
+            Scene scene = new Scene(reservationLayout);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
+        }
+    }
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
+        Parent root = loader.load();
+        Scene newScene = new Scene(root);
+
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        Stage newStage = new Stage();
+        newStage.setScene(newScene);
+        newStage.show();
+    }
+    @FXML
+    private void goToPack(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
+        AnchorPane packLayout = loader.load();
+        Scene scene = new Scene(packLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 
 

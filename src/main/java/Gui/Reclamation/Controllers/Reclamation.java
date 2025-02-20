@@ -86,4 +86,29 @@ public class Reclamation {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    private void goToReservation(ActionEvent event) throws IOException {
+        try {
+            // Vérifier le chemin correct du fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation.fxml"));
+            AnchorPane reservationLayout = loader.load();
+            Scene scene = new Scene(reservationLayout);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
+        }
+    }
+    @FXML
+    private void goToPack(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
+        AnchorPane packLayout = loader.load();
+        Scene scene = new Scene(packLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
 }

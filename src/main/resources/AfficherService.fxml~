@@ -1,26 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.control.TextField?>
-<AnchorPane prefHeight="600.0" prefWidth="900.0"
-            xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Service.Controllers.AfficherService"
-            stylesheets="style.css">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" stylesheets="style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Service.Controllers.AfficherService">
 
-    <HBox prefHeight="687.0" prefWidth="1022.0" spacing="0"/>
+    <HBox prefHeight="687.0" prefWidth="1022.0" spacing="0" />
     <!-- Barre de navigation latérale -->
-    <VBox prefHeight="687.0" prefWidth="220" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
+    <VBox prefHeight="737.0" prefWidth="220" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
         <ImageView fitHeight="100" fitWidth="100" preserveRatio="true">
             <image>
                 <Image url="@/Images/EVENTORA.png" />
@@ -30,14 +19,15 @@
         <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
 
         <VBox spacing="10">
-            <Button text="🏠 Accueil" styleClass="menu-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
-            <Button text="📲 Réservation" styleClass="menu-button"/>
-            <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
-            <Button text="⭐ FeedBack" styleClass="menu-button"/>
-            <Button styleClass="menu-button" text="🚨 Réclamations"  />
-            <Button text="🔧 Paramètres" styleClass="menu-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+            <Button styleClass="menu-button" text="🏠 Accueil" />
+            <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
+            <Button styleClass="menu-button" text="📲 Réservation" />
+            <Button onAction="#goToService" styleClass="menu-button" text="🎁 Services" />
+            <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="menu-button" onAction="#goToFeedback"/>
+            <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
+            <Button styleClass="menu-button" text="🔧 Paramètres" />
+            <Button styleClass="logout-button" text="🛑 Déconnexion" />
         </VBox>
     </VBox>
 
@@ -51,13 +41,13 @@
 
         <!-- Ajouter et Actualiser Buttons -->
         <HBox spacing="10">
-            <Button text="Ajouter" onAction="#addService" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-            <Button text="Actualiser" onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
-            <Button text="Partenaire" onAction="#goToPartenaire" style="-fx-background-color: #2100F3; -fx-text-fill: white;"/>
-            <Button text="Statistiques" onAction="#goToStatistiques" style="-fx-background-color: #FF5722; -fx-text-fill: white;"/>
+            <Button onAction="#addService" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Ajouter" />
+            <Button onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Actualiser" />
+            <Button onAction="#goToPartenaire" style="-fx-background-color: #2100F3; -fx-text-fill: white;" text="Partenaire" />
+            <Button onAction="#goToStatistiques" style="-fx-background-color: #FF5722; -fx-text-fill: white;" text="Statistiques" />
         </HBox>
 
-        <TextField fx:id="searchField" promptText="Rechercher..." prefWidth="300.0" />
+        <TextField fx:id="searchField" prefWidth="300.0" promptText="Rechercher..." />
 
 
         <!-- Tableau des réclamations -->

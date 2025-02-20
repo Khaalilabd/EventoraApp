@@ -169,6 +169,37 @@ public class PackService implements IPack <Pack> {
 
         return packs;
     }
+    public String getNomPackById(int id) {
+        String nomPack = null;
+        String query = "SELECT nomPack FROM pack WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    nomPack = rs.getString("nomPack");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du nom du pack par ID : " + e.getMessage());
+        }
+        return nomPack;
+    }
+
+    public int getIdPackByNom(String nomPack) {
+        int idPack = -1; // Valeur par défaut si le pack n'est pas trouvé
+        String query = "SELECT id FROM pack WHERE nomPack = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, nomPack);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    idPack = rs.getInt("id");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération de l'ID du pack par nom : " + e.getMessage());
+        }
+        return idPack;
+    }
 
 
 }

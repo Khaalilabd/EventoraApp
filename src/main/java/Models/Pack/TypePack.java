@@ -34,9 +34,7 @@ public class TypePack {
 
     @Override
     public String toString() {
-        return "TypePack{" +
-                "id=" + id +
-                ", type='" + type + '\'' +
-                '}';
+        return  type;
     }
+
 }
