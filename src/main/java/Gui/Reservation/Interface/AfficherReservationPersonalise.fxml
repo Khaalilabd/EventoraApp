@@ -11,7 +11,7 @@
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="764.0" prefWidth="1163.0" style="-fx-background-color: #F2F2F2;"
-            stylesheets="style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            stylesheets="style.css" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Reservation.Controllers.AfficheReservationPersonalise">
     <HBox prefHeight="774.0" prefWidth="1213.0" spacing="0">
         <!-- Barre de navigation latérale -->

@@ -40,11 +40,33 @@ public class AjouterReservationPersonalise {
 
     private ReservationPersonaliseService reservationservice=new ReservationPersonaliseService();
 
+
+   /* private void loadServices() {
+        List<Service> services = serviceCrud.getAllServices();
+        idServicefield.getItems().addAll(services);
+    }
+    public List<Service> getAllService() {
+        List<Service> Service = new ArrayList<>();
+        String query = "SELECT id, nom FROM Service"; // Adaptez la requête à votre schéma
+        try {
+            PreparedStatement stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                packs.add(new Service(rs.getInt("id"), rs.getString("nom")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return packs;
+    }
+*/
     @FXML
     public void initialize() {
         // Initialisation des actions des boutons
         submitButton.setOnAction(this::ajouterReservationPersonalise);
         cancelButton.setOnAction(event -> annuler());
+        // Charger les services dans la ComboBox
+      //  loadServices();
     }
 
     public void ajouterReservationPersonalise(ActionEvent event) {

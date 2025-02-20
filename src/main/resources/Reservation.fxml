@@ -70,6 +70,7 @@
                 text="➕ Ajouter une Réservation Personaliser"
                 styleClass="add-button"
                 onAction="#handleAddActionService"/>
+
             <Button fx:id="viewButtonService"
                     text="📋 Voir les Réservations Personaliser"
                     styleClass="add-button"

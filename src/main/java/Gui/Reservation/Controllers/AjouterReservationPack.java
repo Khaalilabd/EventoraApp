@@ -38,11 +38,35 @@ public class AjouterReservationPack {
 
     private ReservationPackService reservationservice=new ReservationPackService();
 
+
+   /* public List<Pack> getAllPacks() {
+        List<Pack> packs = new ArrayList<>();
+        String query = "SELECT id, nom FROM pack"; // Adaptez la requête à votre schéma
+        try {
+            PreparedStatement stmt = con.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                packs.add(new Pack(rs.getInt("id"), rs.getString("nom")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return packs;
+    }
+    private void loadPacks() {
+    List<Pack> packs = reservationservice.getAllPacks();
+    idPackfield.getItems().addAll(packs);
+}
+    */
+
+
     @FXML
     public void initialize() {
         // Initialisation des actions des boutons
         submitButton.setOnAction(this::ajouterReservationPack);
         cancelButton.setOnAction(event -> annuler());
+        // Charger les packs dans la ComboBox
+      //  loadPacks();
     }
 
     public void ajouterReservationPack(ActionEvent event) {
