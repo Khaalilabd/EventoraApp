@@ -136,20 +136,15 @@ public class AfficheRec {
     }
 
     private void handleEdit(Reclamation reclamation) {
-        if (reclamation != null) {
-            // Créer une fenêtre de confirmation
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmation de suppression");
-            alert.setHeaderText(null);
-            alert.setContentText("Êtes-vous sûr de vouloir supprimer cette réclamation ?");
-
-            alert.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.OK) {
-                    System.out.println("Supprimer la réclamation avec ID : " + reclamation.getId());
-                    reclamationService.SupprimerRec(reclamation);
-                    loadReclamations();
-                }
-            });
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ModifierRec.fxml"));
+            AnchorPane modifRecLayout = loader.load();
+            ModifierRec controller = loader.getController();
+            controller.setReclamationToEdit(reclamation);
+            Scene currentScene = tableView.getScene();
+            currentScene.setRoot(modifRecLayout);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

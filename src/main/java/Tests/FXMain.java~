@@ -12,6 +12,7 @@ public class FXMain extends Application {
     @Override
     public void start(Stage stage)  {
 <<<<<<< HEAD
+<<<<<<< HEAD
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation.fxml"));
         try {
             Parent root = loader.load();
@@ -20,6 +21,9 @@ public class FXMain extends Application {
             stage.setTitle("EventoraAPP");
 =======
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Partenaire.fxml"));
+=======
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AffichePack.fxml"));
+>>>>>>> GestionPack
         try {
             Parent root = loader.load();
 
@@ -27,14 +31,20 @@ public class FXMain extends Application {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Ajouter");
+<<<<<<< HEAD
 >>>>>>> Gestion_Service
+=======
+>>>>>>> GestionPack
             stage.show();}
         catch (RuntimeException | IOException r){
             System.out.println(r.getMessage());
         }
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> Gestion_Service
+=======
+>>>>>>> GestionPack
 }
