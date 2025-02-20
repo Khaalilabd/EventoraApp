@@ -9,21 +9,22 @@ public class Utilisateurs {
     private String adresse;
     private String numTel;
     private Role role;
+    private String motDePasse;
 
-    public Utilisateurs(String nom, String prenom, String cin, String email, String adresse, String numTel, Role role) {
+    // Constructeur avec tous les paramètres
+    public Utilisateurs(String nom, String prenom, String cin, String email, String adresse, String numTel, Role role, String motDePasse) {
         this.nom = nom;
         this.prenom = prenom;
         this.cin = cin;
         this.email = email;
         this.adresse = adresse;
         this.numTel = numTel;
-        this.role = this.role;
+        this.role = role;
+        this.motDePasse = motDePasse;
     }
 
-    public Utilisateurs() {
-    }
-
-    public Utilisateurs(int id, String nom, String prenom, String cin, String email, String adresse, String numTel, Role role) {
+    // Constructeur avec id (9 paramètres)
+    public Utilisateurs(int id, String nom, String prenom, String cin, String email, String adresse, String numTel, Role role, String motDePasse) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -32,8 +33,13 @@ public class Utilisateurs {
         this.adresse = adresse;
         this.numTel = numTel;
         this.role = role;
+        this.motDePasse = motDePasse;
     }
 
+    // Constructeur sans paramètres (optionnel)
+    public Utilisateurs() {}
+
+    // Getters et setters
     public int getId() {
         return id;
     }
@@ -98,9 +104,17 @@ public class Utilisateurs {
         this.role = role;
     }
 
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
     @Override
     public String toString() {
-        return "Membre{" +
+        return "Utilisateur{" +
                 "id=" + id +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
@@ -109,6 +123,7 @@ public class Utilisateurs {
                 ", adresse='" + adresse + '\'' +
                 ", numTel='" + numTel + '\'' +
                 ", role=" + role +
+                ", motDePasse='" + motDePasse + '\'' +
                 '}';
     }
 }

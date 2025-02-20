@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    private static String motDePasse;
+
     public static void main(String[] args) {
         MembresService membresService = new MembresService();
         Ireclamation<Reclamation> reclamationService = new ReclamationService();
@@ -70,7 +72,7 @@ public class Main {
                     }
 
                     // Créer et ajouter l'utilisateur
-                    Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel, role);
+                    Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel, role, motDePasse);
                     membresService.AjouterMem(nouveauMembre);
                     break;
 

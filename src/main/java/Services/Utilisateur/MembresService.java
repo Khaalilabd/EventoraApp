@@ -3,10 +3,7 @@ package Services.Utilisateur;
 import Models.Utilisateur.Utilisateurs;
 import Utils.Mydatasource;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +13,7 @@ public class MembresService implements Imembres<Utilisateurs> {
 
     @Override
     public void AjouterMem(Utilisateurs membre) {
-        String req = "INSERT INTO Membres (Nom, Prénom, Email, CIN, Adresse, NumTel) VALUES (?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO Membres (Nom, Prénom, Email, CIN, Adresse, NumTel, MotDePasse) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement ps = connection.prepareStatement(req);
@@ -26,6 +23,7 @@ public class MembresService implements Imembres<Utilisateurs> {
             ps.setString(4, membre.getCin());
             ps.setString(5, membre.getAdresse());
             ps.setString(6, membre.getNumTel());
+            ps.setString(7, membre.getMotDePasse());
 
             ps.executeUpdate();
             System.out.println("Membre ajouté avec succès !");
@@ -37,7 +35,7 @@ public class MembresService implements Imembres<Utilisateurs> {
 
     @Override
     public void ModifierMem(Utilisateurs membre) {
-        String req = "UPDATE Membres SET Nom = ?, Prénom = ?, Email = ?, CIN = ?, Adresse = ?, NumTel = ? WHERE Id = ?";
+        String req = "UPDATE Membres SET Nom = ?, Prénom = ?, Email = ?, CIN = ?, Adresse = ?, NumTel = ?, MotDePasse = ? WHERE Id = ?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(req);
@@ -47,7 +45,8 @@ public class MembresService implements Imembres<Utilisateurs> {
             ps.setString(4, membre.getCin());
             ps.setString(5, membre.getAdresse());
             ps.setString(6, membre.getNumTel());
-            ps.setInt(7, membre.getId());
+            ps.setString(7, membre.getMotDePasse()); // Correction ici
+            ps.setInt(8, membre.getId()); // Correction ici
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
@@ -99,6 +98,7 @@ public class MembresService implements Imembres<Utilisateurs> {
                 m.setCin(rs.getString("CIN"));
                 m.setAdresse(rs.getString("Adresse"));
                 m.setNumTel(rs.getString("NumTel"));
+                m.setMotDePasse(rs.getString("MotDePasse"));
 
                 membres.add(m);
             }
@@ -110,7 +110,6 @@ public class MembresService implements Imembres<Utilisateurs> {
         return membres;
     }
 
-    // Méthode optionnelle pour rechercher un membre par ID
     public Utilisateurs rechercherMem(int id) {
         String req = "SELECT * FROM Membres WHERE Id = ?";
         Utilisateurs membre = null;
@@ -129,6 +128,7 @@ public class MembresService implements Imembres<Utilisateurs> {
                 membre.setCin(rs.getString("CIN"));
                 membre.setAdresse(rs.getString("Adresse"));
                 membre.setNumTel(rs.getString("NumTel"));
+                membre.setMotDePasse(rs.getString("MotDePasse"));
             }
         } catch (Exception e) {
             System.out.println("Erreur lors de la recherche du membre par ID : " + e.getMessage());
@@ -136,5 +136,29 @@ public class MembresService implements Imembres<Utilisateurs> {
         }
 
         return membre;
+    }
+
+    public Utilisateurs rechercherMemParNom(String username) {
+        String req = "SELECT * FROM Membres WHERE Nom = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Utilisateurs utilisateur = new Utilisateurs();
+                    utilisateur.setId(rs.getInt("Id"));
+                    utilisateur.setNom(rs.getString("Nom"));
+                    utilisateur.setPrenom(rs.getString("Prénom"));
+                    utilisateur.setEmail(rs.getString("Email"));
+                    utilisateur.setCin(rs.getString("CIN"));
+                    utilisateur.setAdresse(rs.getString("Adresse"));
+                    utilisateur.setNumTel(rs.getString("NumTel"));
+                    utilisateur.setMotDePasse(rs.getString("MotDePasse"));
+                    return utilisateur;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

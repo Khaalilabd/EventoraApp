@@ -25,6 +25,10 @@ public class AjouterUtilisateur {
     @FXML private ComboBox<Role> roleComboBox;
     @FXML private Button ajouterButton;
     @FXML private Button annulerButton;
+    @FXML private Button retourButton; // Ajouté pour lier le bouton "Retour"
+
+    // Ajout du champ PasswordField pour le mot de passe
+    @FXML private PasswordField motDePasseField;
 
     private final MembresService membresService = new MembresService();
 
@@ -41,21 +45,30 @@ public class AjouterUtilisateur {
         String cin = cinField.getText();
         String adresse = adresseField.getText();
         String numTel = numTelField.getText();
+        String motDePasse = motDePasseField.getText(); // Récupération du mot de passe
         Role role = roleComboBox.getValue();
 
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() || adresse.isEmpty() || numTel.isEmpty() || role == null) {
+        // Vérification si tous les champs sont remplis
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() || adresse.isEmpty() || numTel.isEmpty() || motDePasse.isEmpty() || role == null) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Tous les champs sont obligatoires.");
             return;
         }
 
-        Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel, role);
+        // Vérification si le mot de passe n'est pas vide
+        if (motDePasse == null || motDePasse.trim().isEmpty()) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le mot de passe ne peut pas être vide.");
+            return;
+        }
+
+        // Création d'un nouveau membre avec le mot de passe
+        Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel, role, motDePasse);
 
         try {
-            membresService.AjouterMem(nouveauMembre);
+            membresService.AjouterMem(nouveauMembre); // Ajouter le membre via le service
             afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Membre ajouté avec succès.");
-            viderChamps();
+            viderChamps(); // Réinitialiser les champs
 
-            // Navigation vers AfficherUtilisateur
+            // Navigation vers la page AfficherUtilisateur
             Parent root = FXMLLoader.load(getClass().getResource("/AfficherUtilisateur.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
@@ -67,12 +80,29 @@ public class AjouterUtilisateur {
         }
     }
 
-
     @FXML
     public void cancel(ActionEvent event) {
         viderChamps();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    public void goToAcceuil() {
+        try {
+            java.net.URL fileUrl = getClass().getResource("/Acceuil.fxml");
+            if (fileUrl == null) {
+                System.err.println("Erreur : Impossible de trouver Acceuil.fxml dans /");
+                return;
+            }
+            Parent root = FXMLLoader.load(fileUrl);
+            Stage stage = (Stage) retourButton.getScene().getWindow();
+            Scene scene = new Scene(root, 1022, 687);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void afficherAlerte(Alert.AlertType type, String titre, String message) {
@@ -90,5 +120,6 @@ public class AjouterUtilisateur {
         adresseField.clear();
         numTelField.clear();
         roleComboBox.setValue(null);
+        motDePasseField.clear(); // Effacer le mot de passe après soumission
     }
 }
