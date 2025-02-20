@@ -53,7 +53,6 @@ public class Service {
             e.printStackTrace();
         }
     }
-    @FXML
     private void handleAddAction_partenaire(ActionEvent event) {
         try {
             // Charger la nouvelle fenêtre (AjouterPartenaire.fxml)

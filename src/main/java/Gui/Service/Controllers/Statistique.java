@@ -1,11 +1,10 @@
 package Gui.Service.Controllers;
+
 import Services.Service.Crud.ServiceService;
 import Models.Service.Location;
 import Models.Service.TypeService;
-import Services.Service.Crud.ServiceService;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.chart.BarChart;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -15,40 +14,45 @@ import java.util.Map;
 public class Statistique {
 
     @FXML
-    private BarChart<String, Number> locationBarChart;
+    private AreaChart<String, Number> locationAreaChart;
+
     @FXML
-    private BarChart<String, Number> typeServiceBarChart;
+    private AreaChart<String, Number> typeServiceAreaChart;
+
     @FXML
     private CategoryAxis locationXAxis;
-    @FXML
-    private CategoryAxis typeServiceXAxis;
+
     @FXML
     private NumberAxis locationYAxis;
+
+    @FXML
+    private CategoryAxis typeServiceXAxis;
+
     @FXML
     private NumberAxis typeServiceYAxis;
 
-    private ServiceService serviceservice = new ServiceService();
+    private final ServiceService serviceService = new ServiceService();
 
     // Initialisation des graphiques
     public void initialize() {
-        // Récupérer les statistiques par Location depuis la base de données
-        Map<Location, Integer> locationStats = serviceservice.getLocationStats();
+        // Récupérer les statistiques par Location et les ajouter au graphique
+        Map<Location, Integer> locationStats = serviceService.getLocationStats();
+        populateAreaChart(locationAreaChart, locationStats, "Services par Location");
 
-        XYChart.Series<String, Number> locationSeries = new XYChart.Series<>();
-        locationSeries.setName("Services par Location");
-        for (Map.Entry<Location, Integer> entry : locationStats.entrySet()) {
-            locationSeries.getData().add(new XYChart.Data<>(entry.getKey().getLabel(), entry.getValue()));
+        // Récupérer les statistiques par TypeService et les ajouter au graphique
+        Map<TypeService, Integer> typeServiceStats = serviceService.getTypeServiceStats();
+        populateAreaChart(typeServiceAreaChart, typeServiceStats, "Services par Type");
+    }
+
+    // Méthode générique pour remplir un AreaChart avec des données
+    private <T> void populateAreaChart(AreaChart<String, Number> chart, Map<T, Integer> data, String seriesName) {
+        XYChart.Series<String, Number> series = new XYChart.Series<>();
+        series.setName(seriesName);
+
+        for (Map.Entry<T, Integer> entry : data.entrySet()) {
+            series.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
         }
-        locationBarChart.getData().add(locationSeries);
 
-        // Récupérer les statistiques par TypeService depuis la base de données
-        Map<TypeService, Integer> typeServiceStats = serviceservice.getTypeServiceStats();
-
-        XYChart.Series<String, Number> typeServiceSeries = new XYChart.Series<>();
-        typeServiceSeries.setName("Services par Type");
-        for (Map.Entry<TypeService, Integer> entry : typeServiceStats.entrySet()) {
-            typeServiceSeries.getData().add(new XYChart.Data<>(entry.getKey().getLabel(), entry.getValue()));
-        }
-        typeServiceBarChart.getData().add(typeServiceSeries);
+        chart.getData().add(series);
     }
 }

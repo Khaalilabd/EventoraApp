@@ -9,7 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Service.Controllers.Service"
 
     prefHeight="600.0" prefWidth="900.0"
@@ -66,6 +66,16 @@
                     text="Voir les services"
                     styleClass="view-button"
                     onAction="#handleViewAction"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER">
+            <Button fx:id="ajouterButton_partenaire"
+                    text="Ajouter un partenaire"
+                    styleClass="add-button_partenaire"
+                    onAction="#handleAddAction_partenaire"/>
+            <Button fx:id="viewButton_partenaire"
+                    text="Voir les partenaires"
+                    styleClass="view-button_partenaire"
+                    onAction="#handleViewAction_partenaire"/>
         </HBox>
 
     </VBox>

@@ -159,4 +159,13 @@ public class AfficherPartenaire {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service.fxml"));
+        AnchorPane partenaireLayout = loader.load();
+        Scene scene = new Scene(partenaireLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
 }

@@ -9,7 +9,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="650.0" prefWidth="900.0" style="-fx-background-color: #F4F1F1;" stylesheets="style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Service.Controllers.AjouterService">
+<AnchorPane prefHeight="600.0" prefWidth="900.0"
+            style="-fx-background-color: #F4F1F1;"
+            stylesheets="style.css" xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Service.Controllers.AjouterService">
     <!-- Barre de navigation latérale -->
     <VBox prefHeight="650.0" prefWidth="220" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
 
@@ -35,7 +39,7 @@
         <Label styleClass="main-title" text="Déposer un Service" />
         <HBox prefHeight="38.0" prefWidth="256.0">
             <children>
-                <Label prefHeight="38.0" prefWidth="162.0" text="Selectionne la partenaire" />
+                <Label prefHeight="38.0" prefWidth="162.0" text="Choisir le partenaire" />
                 <VBox prefHeight="38.0" prefWidth="256.0" />
 
 

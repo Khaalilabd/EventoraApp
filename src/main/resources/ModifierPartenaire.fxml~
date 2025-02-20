@@ -25,7 +25,7 @@
     </VBox>
 
     <!-- Contenu principal -->
-    <VBox alignment="CENTER" layoutX="220.0" prefHeight="523.0" prefWidth="650" spacing="20">
+    <VBox alignment="CENTER" layoutX="229.0" prefHeight="518.0" prefWidth="650" spacing="20">
         <!-- Titre -->
         <Label styleClass="main-title" text="Modifier une Partenaire" />
       <HBox prefHeight="100.0" prefWidth="200.0">
@@ -79,7 +79,7 @@
       </HBox>
 
         <!-- Boutons -->
-        <HBox alignment="CENTER" prefHeight="59.0" prefWidth="650.0" spacing="20">
+        <HBox alignment="CENTER" prefHeight="31.0" prefWidth="650.0" spacing="20">
             <Button fx:id="submitButton" styleClass="submit-button" text="Sauvegarder" />
             <Button fx:id="cancelButton" styleClass="cancel-button" text="Annuler" />
         </HBox>

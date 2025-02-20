@@ -25,7 +25,7 @@ public class ModifierService {
     @FXML
     private ComboBox<Location> locationfield;
     @FXML
-    private ComboBox<TypeService> sponsorfield;
+    private ComboBox<TypeService> type_servicefield;
     @FXML
     private ComboBox<Partenaire> idPartenaireField; // ComboBox pour les partenaires
     @FXML
@@ -41,10 +41,10 @@ public class ModifierService {
     @FXML
     public void initialize() {
         locationfield.getItems().setAll(Location.values()); // Charger les valeurs pour le Location
-        sponsorfield.getItems().setAll(TypeService.values()); // Charger les valeurs pour le TypeService
+        type_servicefield.getItems().setAll(TypeService.values()); // Charger les valeurs pour le TypeService
         loadPartenaires();
         submitButton.setOnAction(this::modifierService);
-        cancelButton.setOnAction(event -> annuler());
+        cancelButton.setOnAction(event -> annuler(event));
     }
     private void loadPartenaires() {
         PartenaireService partenaireService = new PartenaireService();
@@ -79,7 +79,7 @@ public class ModifierService {
         idPartenaireField.setValue(partenaire);
         titleField.setText(service.getTitre());
         locationfield.setValue(service.getLocation());
-        sponsorfield.setValue(service.getTypeService());
+        type_servicefield.setValue(service.getTypeService());
         descriptionField.setText(service.getDescription());
         prixField.setText(service.getPrix());
     }
@@ -94,29 +94,61 @@ public class ModifierService {
     private void modifierService(ActionEvent event) {
         String titre = titleField.getText();
         Location location = locationfield.getValue();
-        TypeService typeService = sponsorfield.getValue();
+        TypeService typeService = type_servicefield.getValue();
         String description = descriptionField.getText();
         String prix = prixField.getText();
         Partenaire partenaire = idPartenaireField.getValue();
         int idPartenaire = partenaire != null ? partenaire.getId_partenaire() : -1;
+
+        // Validation : Vérification que tous les champs sont remplis
+        if (titre.isEmpty() || location == null || typeService == null || description.isEmpty() || prix.isEmpty() || idPartenaire == -1) {
+            showAlert("Warning", "Veuillez remplir tous les champs.");
+            return;
+        }
+
+        // Validation : Le titre doit contenir uniquement des caractères alphabétiques
+        if (!titre.matches("[a-zA-Z ]+")) {
+            showAlert("Erreur", "Le titre doit contenir uniquement des caractères alphabétiques.");
+            return;
+        }
+
+        // Validation : La description doit contenir uniquement des caractères alphabétiques (ou espaces et caractères spéciaux)
+        if (!description.matches("[a-zA-Z ,.\\-']+")) { // Autorise des caractères spéciaux comme la virgule, le point, et l'apostrophe
+            showAlert("Erreur", "La description doit contenir uniquement des caractères alphabétiques.");
+            return;
+        }
+
+        // Validation : Le prix doit être un nombre et se terminer par 'dt' ou 'DT'
+        if (!prix.matches("\\d+(dt|DT)$")) {
+            showAlert("Erreur", "Le prix doit être un nombre et se terminer par 'dt' ou 'DT'.");
+            return;
+        }
+
+        // Mise à jour des données du service
         serviceToEdit.setId_partenaire(idPartenaire);
         serviceToEdit.setTitre(titre);
         serviceToEdit.setLocation(location);
         serviceToEdit.setTypeService(typeService);
         serviceToEdit.setDescription(description);
         serviceToEdit.setPrix(prix);
+
+        // Appel au service pour effectuer la modification
         serviceService.ModifierService(serviceToEdit);
+
+        // Message de confirmation
         showAlert("Succès", "Le service a été modifié avec succès !");
         clearFields();
         goToAfficherService(event);
     }
-    private void annuler() {
-        clearFields(); // Réinitialiser les champs si l'utilisateur annule
+
+    private void annuler(ActionEvent event) {
+        clearFields();
+            goToAfficherService(event);
     }
     private void clearFields() {
         titleField.clear();
         locationfield.setValue(null);
-        sponsorfield.setValue(null);
+        type_servicefield.setValue(null);
         descriptionField.clear();
         prixField.clear();
         idPartenaireField.setValue(null); // Vider le ComboBox ID partenaire

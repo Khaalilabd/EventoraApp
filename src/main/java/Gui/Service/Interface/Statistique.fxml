@@ -7,38 +7,34 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.chart.*?>
 
-<?import javafx.scene.chart.PieChart?>
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="Gui.Service.Controllers.Statistique"
-            prefHeight="400.0" prefWidth="600.0">
-
-
+            prefHeight="400.0" prefWidth="800.0">
 
     <children>
         <Label text="Statistiques des Services par Location" layoutX="20" layoutY="20" style="-fx-font-size: 18px;"/>
 
-        <!-- BarChart pour la répartition des services par Location -->
-        <BarChart fx:id="locationBarChart" layoutX="20" layoutY="50" prefWidth="350" prefHeight="300">
+        <!-- AreaChart pour les services par Location -->
+        <AreaChart fx:id="locationAreaChart" layoutX="20" layoutY="50" prefWidth="350" prefHeight="300">
             <xAxis>
                 <CategoryAxis fx:id="locationXAxis" label="Location"/>
             </xAxis>
             <yAxis>
                 <NumberAxis fx:id="locationYAxis" label="Nombre de Services"/>
             </yAxis>
-        </BarChart>
+        </AreaChart>
 
         <Label text="Statistiques des Services par Type" layoutX="420" layoutY="20" style="-fx-font-size: 18px;"/>
 
-        <!-- BarChart pour la répartition des services par Type -->
-        <BarChart fx:id="typeServiceBarChart" layoutX="420" layoutY="50" prefWidth="350" prefHeight="300">
+        <!-- AreaChart pour les services par Type -->
+        <AreaChart fx:id="typeServiceAreaChart" layoutX="420" layoutY="50" prefWidth="350" prefHeight="300">
             <xAxis>
                 <CategoryAxis fx:id="typeServiceXAxis" label="Type de Service"/>
             </xAxis>
             <yAxis>
                 <NumberAxis fx:id="typeServiceYAxis" label="Nombre de Services"/>
             </yAxis>
-        </BarChart>
-
+        </AreaChart>
     </children>
 </AnchorPane>
