@@ -62,19 +62,38 @@ public class ModifierReservationPack {
 
     }
     private void modifierReservationPack(ActionEvent event) {
-        String nom = nomfield.getText();
-        String prenom = prenomfield.getText();
-        String email = emailfield.getText();
-        String numTel = numtelfield.getText();
-        String description = descriptionfield.getText();
+        String nom = nomfield.getText().trim();
+        String prenom = prenomfield.getText().trim();
+        String email = emailfield.getText().trim();
+        String numTel = numtelfield.getText().trim();
+        String description = descriptionfield.getText().trim();
         LocalDate date = datefield.getValue();
 
-        if (nom.isEmpty() || email.isEmpty() || prenom.isEmpty() ) {
+        // Vérification des champs vides
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || numTel.isEmpty() || description.isEmpty() || date == null) {
             showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
 
-        // Mise à jour de la reservation avec les nouvelles valeurs
+        // Vérification du format de l'email
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            showAlert("Erreur", "Veuillez entrer une adresse email valide !");
+            return;
+        }
+
+        // Vérification du numéro de téléphone (exactement 8 chiffres)
+        if (!numTel.matches("^\\d{8}$")) {
+            showAlert("Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
+            return;
+        }
+
+        // Vérification que la date n'est pas dans le passé
+        if (date.isBefore(LocalDate.now())) {
+            showAlert("Erreur", "La date ne peut pas être dans le passé !");
+            return;
+        }
+
+        // Mise à jour de la réservation avec les nouvelles valeurs
         reservationToEdit.setNom(nom);
         reservationToEdit.setPrenom(prenom);
         reservationToEdit.setEmail(email);
@@ -85,11 +104,11 @@ public class ModifierReservationPack {
         // Appel à la méthode ModifierRec du service
         reservationservice.modifierReservationPack(reservationToEdit);
 
-        showAlert("Succès", "reservation modifiée avec succès !");
+        showAlert("Succès", "Réservation modifiée avec succès !");
         clearFields();
         goToReservationPack();
-
     }
+
     private void annuler() {
         clearFields();
     }

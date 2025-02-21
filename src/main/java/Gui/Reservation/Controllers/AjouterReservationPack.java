@@ -82,31 +82,63 @@ public class AjouterReservationPack {
     }
 
     public void ajouterReservationPack(ActionEvent event) {
-        String nom = nomfield.getText();
-        String prenom = prenomfield.getText();
-        String email = emailfield.getText();
-        String numTel = numtelfield.getText();
-        String description = descriptionfield.getText();
+        String nom = nomfield.getText().trim();
+        String prenom = prenomfield.getText().trim();
+        String email = emailfield.getText().trim();
+        String numTel = numtelfield.getText().trim();
+        String description = descriptionfield.getText().trim();
         LocalDate date = datefield.getValue();
 
         String selectedPackName = idPackfield.getValue();
-        if (selectedPackName == null || selectedPackName.isEmpty()) {
-            showAlert("Erreur", "Veuillez sélectionner un pack.");
+
+        // Vérification des champs vides
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || numTel.isEmpty() || description.isEmpty() || date == null || selectedPackName == null || selectedPackName.isEmpty()) {
+            showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
 
+        // Vérification du format de l'email
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            showAlert("Erreur", "Veuillez entrer une adresse email valide !");
+            return;
+        }
+
+        // Vérification du numéro de téléphone (exactement 8 chiffres)
+        if (!numTel.matches("^\\d{8}$")) {
+            showAlert("Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
+            return;
+        }
+
+        // Vérification que la date n'est pas dans le passé
+        if (date.isBefore(LocalDate.now())) {
+            showAlert("Erreur", "La date ne peut pas être dans le passé !");
+            return;
+        }
+
+        // Récupération de l'ID du pack
         int idPack = packService.getIdPackByNom(selectedPackName);
         if (idPack == -1) {
-            showAlert("Erreur", "ID du pack non trouvé.");
+            showAlert("Erreur", "Le pack sélectionné est invalide.");
             return;
         }
 
-        ReservationPack reservation = new ReservationPack(idPack, nom, prenom, email, numTel, description, Date.from(datefield.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
-        reservationservice.ajouterReservationPack(reservation);
-        showAlert("Succès", "ReservationPack ajouté avec succès !");
-        clearFields();
-        goToReservationListePack();
+        // Conversion de LocalDate en Date
+        Date reservationDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        try {
+            // Création de l'objet ReservationPack
+            ReservationPack reservation = new ReservationPack(idPack, nom, prenom, email, numTel, description, reservationDate);
+            reservationservice.ajouterReservationPack(reservation);
+
+            showAlert("Succès", "Réservation ajoutée avec succès !");
+            clearFields();
+            goToReservationListePack();
+
+        } catch (Exception e) {
+            showAlert("Erreur", "Une erreur est survenue lors de l'ajout de la réservation.");
+        }
     }
+
 
     private void annuler() {
         clearFields();

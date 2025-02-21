@@ -59,36 +59,55 @@ public class AjouterReservationPersonalise {
 
     @FXML
     public void ajouterReservationPersonalise(ActionEvent event) {
-        String nom = nomfield.getText();
-        String prenom = prenomfield.getText();
-        String email = emailfield.getText();
-        String numTel = numtelfield.getText();
-        String description = descriptionfield.getText();
-        LocalDate localDate = datefield.getValue(); // Get LocalDate
+        String nom = nomfield.getText().trim();
+        String prenom = prenomfield.getText().trim();
+        String email = emailfield.getText().trim();
+        String numTel = numtelfield.getText().trim();
+        String description = descriptionfield.getText().trim();
+        LocalDate localDate = datefield.getValue(); // Récupérer la date
 
         Service selectedService = idServicefield.getValue();
 
+        // Vérification des champs vides
         if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || numTel.isEmpty() || description.isEmpty() || localDate == null || selectedService == null) {
             showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
 
-        // Convert LocalDate to Date
-        Date date = java.util.Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        // Vérification du format de l'email
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            showAlert("Erreur", "Veuillez entrer une adresse email valide !");
+            return;
+        }
 
+        // Vérification du numéro de téléphone (exactement 8 chiffres)
+        if (!numTel.matches("^\\d{8}$")) {
+            showAlert("Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
+            return;
+        }
+
+        // Vérification que la date n'est pas dans le passé
+        if (localDate.isBefore(LocalDate.now())) {
+            showAlert("Erreur", "La date ne peut pas être dans le passé !");
+            return;
+        }
+
+        // Conversion de LocalDate en Date
+        Date date = java.util.Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
         try {
             ReservationPersonalise reservation = new ReservationPersonalise(nom, prenom, email, numTel, description, date, selectedService.getId()); // Passer idService
             reservationservice.ajouterReservationPersonalise(reservation);
 
-            showAlert("Succès", "ReservationPersonalise ajouté avec succès !");
+            showAlert("Succès", "Réservation ajoutée avec succès !");
             clearFields();
             goToReservationListePersonalise();
 
-        } catch (NumberFormatException e) {
-            showAlert("Erreur", "Le prix du service est invalide.");
+        } catch (Exception e) {
+            showAlert("Erreur", "Une erreur est survenue lors de l'ajout de la réservation.");
         }
     }
+
     private void annuler() {
         clearFields();
     }
