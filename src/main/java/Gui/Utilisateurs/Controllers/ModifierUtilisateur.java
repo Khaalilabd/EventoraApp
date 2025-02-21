@@ -68,12 +68,38 @@ public class ModifierUtilisateur {
         String numTel = numTelField.getText();
         Role role = roleComboBox.getValue();
 
+        // Vérification que tous les champs sont remplis
         if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() ||
                 adresse.isEmpty() || numTel.isEmpty() || role == null) {
             afficherAlerte("Erreur", "Tous les champs sont obligatoires.");
             return;
         }
 
+        // Contrainte : Vérifier le format de l'email
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            afficherAlerte("Erreur", "Format d'email invalide.");
+            return;
+        }
+
+        // Contrainte : Le numéro de téléphone doit contenir uniquement des chiffres
+        if (!numTel.matches("\\d+")) {
+            afficherAlerte("Erreur", "Le numéro de téléphone doit contenir uniquement des chiffres.");
+            return;
+        }
+
+        // Contrainte : Le CIN doit contenir exactement 8 chiffres
+        if (!cin.matches("\\d{8}")) {
+            afficherAlerte("Erreur", "Le CIN doit contenir exactement 8 chiffres.");
+            return;
+        }
+
+        // Contrainte optionnelle : Le nom et le prénom ne doivent contenir que des lettres, espaces ou tirets
+        if (!nom.matches("[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+") || !prenom.matches("[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+")) {
+            afficherAlerte("Erreur", "Le nom et le prénom doivent contenir uniquement des lettres, espaces ou tirets.");
+            return;
+        }
+
+        // Mise à jour de l'objet membre avec les nouvelles valeurs
         membreAModifier.setNom(nom);
         membreAModifier.setPrenom(prenom);
         membreAModifier.setEmail(email);
@@ -126,4 +152,3 @@ public class ModifierUtilisateur {
         stage.close();
     }
 }
-

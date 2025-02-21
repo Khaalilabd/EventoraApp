@@ -50,7 +50,13 @@ public class AjouterEvenement {
                 showAlert("Erreur", "Le type ne doit contenir que des lettres et des espaces.");
                 return;
             }
-                Evenement newEvenement = new Evenement(type);
+            Evenement newEvenement = new Evenement(type);
+
+            if (evenementService.getEvenementByName(newEvenement.getTypeEvenement()) != null) {
+                showAlert("Erreur", "Ce type d'événement existe déjà.");
+                return;
+            }
+
             evenementService.ajouter(newEvenement);
             showAlert("Succès", "Type ajouté avec succès !");
             goToAfficheEvenement(event);

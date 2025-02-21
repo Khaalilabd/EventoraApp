@@ -123,4 +123,20 @@ public class Reservation {
         stage.setScene(scene);
         stage.show();
     }
+    @FXML
+    private void gotoNavUSer(ActionEvent event) throws IOException {
+        try {
+            // Vérifier le chemin correct du fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Utilisateur.fxml"));
+            AnchorPane reservationLayout = loader.load();
+            Scene scene = new Scene(reservationLayout);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
+        }
+    }
+
 }

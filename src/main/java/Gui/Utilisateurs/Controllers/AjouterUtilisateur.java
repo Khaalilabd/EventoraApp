@@ -132,7 +132,7 @@ public class AjouterUtilisateur {
     }
     public void goToIdentification(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateur/Identification.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/Identification.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
