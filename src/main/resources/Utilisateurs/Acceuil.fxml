@@ -14,7 +14,7 @@
 <?import javafx.util.Duration?>
 
 <AnchorPane prefHeight="700.0" prefWidth="1050.0"
-            style="-fx-background-color: linear-gradient(to bottom right, #ff9a9e, #fad0c4);"
+            style="-fx-background-color: #F5E1C0;"
             xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Utilisateurs.Controllers.Acceuil">
@@ -33,24 +33,24 @@
                 <Image url="@/Images/EVENTORA.png"/>
             </image>
             <effect>
-                <DropShadow color="#ff758c" height="25" radius="20" width="40"/>
+                <DropShadow color="#C1272D" height="25" radius="20" width="40"/>
             </effect>
         </ImageView>
 
         <Text text="Bienvenue chez Eventora"
-              style="-fx-fill: white; -fx-font-weight: bold; -fx-font-family: 'Arial'; -fx-text-alignment: center;">
+              style="-fx-fill: #2E2E2E; -fx-font-weight: bold; -fx-font-family: 'Arial'; -fx-text-alignment: center;">
             <font>
                 <Font size="38.0"/>
             </font>
             <effect>
-                <Glow level="0.6"/>
+                <Glow level="0.3"/>
             </effect>
         </Text>
 
         <Button fx:id="experienceButton"
                 text="Vivez l'expérience"
-                onAction="#goToAccueil"
-                style="-fx-background-color: #ff758c;
+                onAction="#goToAuth"
+                style="-fx-background-color: #C1272D;
                         -fx-text-fill: white;
                         -fx-pref-width: 270;
                         -fx-pref-height: 65;
@@ -58,16 +58,17 @@
                         -fx-font-weight: bold;
                         -fx-background-radius: 35;
                         -fx-border-radius: 35;
-                        -fx-effect: dropshadow(gaussian, #ff9a9e, 20, 0.5, 0, 0);">
+                        -fx-border-color: #C1272D;
+                        -fx-effect: dropshadow(gaussian, #2E2E2E, 20, 0.5, 0, 0);">
             <effect>
-                <DropShadow color="#ff9a9e" height="20" radius="10.0" width="20"/>
+                <DropShadow color="#2E2E2E" height="20" radius="10.0" width="20"/>
             </effect>
         </Button>
 
         <Text text="Créez des moments inoubliables"
-              style="-fx-fill: white; -fx-font-style: italic; -fx-font-size: 20; -fx-font-family: 'Arial';">
+              style="-fx-fill: #2E2E2E; -fx-font-style: italic; -fx-font-size: 20; -fx-font-family: 'Arial';">
             <effect>
-                <Glow level="0.4"/>
+                <Glow level="0.2"/>
             </effect>
         </Text>
 

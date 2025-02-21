@@ -84,7 +84,7 @@
                         styleClass="action-button modify-button"/>
                 <Button fx:id="annulerButton" text="Annuler"
                         onAction="#cancel"
-                        style="-fx-background-color: #2196F3; -fx-text-fill: white;"
+                        style="-fx-background-color: #f3213a; -fx-text-fill: white;"
                         styleClass="action-button cancel-button"/>
             </HBox>
         </VBox>

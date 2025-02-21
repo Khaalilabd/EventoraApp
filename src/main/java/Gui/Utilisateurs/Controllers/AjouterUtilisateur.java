@@ -45,8 +45,6 @@ public class AjouterUtilisateur {
         String numTel = numTelField.getText();
         String motDePasse = motDePasseField.getText();
         Role role = roleComboBox.getValue();
-
-        // Vérification de la longueur du CIN
         if (cin.length() > 8) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le CIN ne peut pas dépasser 8 caractères.");
             return;
@@ -55,14 +53,17 @@ public class AjouterUtilisateur {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Tous les champs sont obligatoires.");
             return;
         }
-
         Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel, role, motDePasse);
-
         try {
+            System.out.println("Nom: " + nom);
+            System.out.println("Prénom: " + prenom);
+            System.out.println("Email: " + email);
+            System.out.println("CIN: " + cin);
+
             membresService.AjouterMem(nouveauMembre);
             afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Membre ajouté avec succès.");
             viderChamps();
-            goToIdentification(event);
+            goToAfficherUser(event);
 
         } catch (Exception e) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout du membre : " + e.getMessage());
@@ -130,9 +131,9 @@ public class AjouterUtilisateur {
         roleComboBox.setValue(null);
         motDePasseField.clear();
     }
-    public void goToIdentification(ActionEvent event) {
+    public void goToAfficherUser(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/Identification.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/AfficherUtilisateur.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

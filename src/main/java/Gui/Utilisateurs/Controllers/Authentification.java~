@@ -46,7 +46,7 @@ public class Authentification {
             stage.show();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.getDialogPane().getStyleClass().add("alert-style");
+            alert.getDialogPane().getStyleClass().add("alert-style"); 
             alert.setTitle("Erreur");
             alert.setContentText("Nom d'utilisateur ou mot de passe incorrect.");
             alert.showAndWait();

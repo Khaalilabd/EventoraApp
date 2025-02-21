@@ -20,8 +20,8 @@ public class MembresService implements Imembres<Utilisateurs> {
             PreparedStatement ps = connection.prepareStatement(req);
             ps.setString(1, membre.getNom());
             ps.setString(2, membre.getPrenom());
-            ps.setString(3, membre.getEmail());
-            ps.setString(4, membre.getCin());
+            ps.setString(3, membre.getCin());  // CIN
+            ps.setString(4, membre.getEmail()); // Email
             ps.setString(5, membre.getAdresse());
             ps.setString(6, membre.getNumTel());
             ps.setString(7, membre.getMotDePasse());
