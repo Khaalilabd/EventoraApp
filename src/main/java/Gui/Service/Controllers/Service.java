@@ -21,7 +21,7 @@ public class Service {
     private void handleAddAction(ActionEvent event) {
         try {
             // Charger la nouvelle fenêtre (AjouterPartenaire.fxml)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AjouterService.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AjouterService.fxml"));
             AnchorPane addRecLayout = loader.load();
             Scene addRecScene = new Scene(addRecLayout);
 
@@ -43,7 +43,7 @@ public class Service {
     @FXML
     private void handleViewAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AfficherService.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AfficherService.fxml"));
             AnchorPane viewRecLayout = loader.load();
             Scene viewRecScene = new Scene(viewRecLayout);
             Stage currentStage = (Stage) viewButton.getScene().getWindow();
@@ -57,7 +57,7 @@ public class Service {
     private void handleAddAction_partenaire(ActionEvent event) {
         try {
             // Charger la nouvelle fenêtre (AjouterPartenaire.fxml)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AjouterPartenaire.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AjouterPartenaire.fxml"));
             AnchorPane addRecLayout = loader.load();
             Scene addRecScene = new Scene(addRecLayout);
 
@@ -79,7 +79,7 @@ public class Service {
     @FXML
     private void handleViewAction_partenaire(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AfficherPartenaire.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AfficherPartenaire.fxml"));
             AnchorPane viewRecLayout = loader.load();
             Scene viewRecScene = new Scene(viewRecLayout);
             Stage currentStage = (Stage) viewButton_partenaire.getScene().getWindow();
@@ -91,7 +91,7 @@ public class Service {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene scene = new Scene(reclamationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

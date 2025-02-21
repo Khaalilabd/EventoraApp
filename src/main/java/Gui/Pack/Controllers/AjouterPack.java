@@ -181,7 +181,7 @@ public class AjouterPack {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 

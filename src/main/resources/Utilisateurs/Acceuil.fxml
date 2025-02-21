@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.DropShadow?>
 
 <AnchorPane prefHeight="687.0" prefWidth="1022.0"
             style="-fx-background-color: #F2F2F2;"
-            stylesheets="/style.css"            xmlns="http://javafx.com/javafx/20.0.2"
+            stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Utilisateurs.Controllers.Acceuil">
 
@@ -24,10 +27,16 @@
                    fitHeight="200.0"
                    fitWidth="200.0"
                    preserveRatio="true"
-                   style="-fx-effect: dropshadow(gaussian, #4CAF50, 20, 0.5, 0, 0);">
+                   style="-fx-effect: dropshadow(gaussian, #2dc2dd, 20, 0.5, 0, 0);">
             <image>
                 <Image url="@/Images/EVENTORA.png"/>
             </image>
+            <VBox.margin>
+                <Insets top="50.0"/>
+            </VBox.margin>
+            <effect>
+                <DropShadow color="#2dc2dd" height="20" radius="19.5" width="40"/>
+            </effect>
         </ImageView>
 
         <Text text="Bienvenue chez Eventora"
@@ -38,11 +47,14 @@
             <VBox.margin>
                 <Insets top="20.0" bottom="40.0"/>
             </VBox.margin>
+            <effect>
+                <Glow level="0.5"/>
+            </effect>
         </Text>
 
         <Button fx:id="experienceButton"
                 text="Vivez l'expérience"
-                onAction="#goToAjouterUtilisateur"
+                onAction="#goToAjouterUser"
                 style="-fx-background-color: #4CAF50;
                        -fx-text-fill: white;
                        -fx-pref-width: 250;
@@ -51,15 +63,16 @@
                        -fx-font-weight: bold;
                        -fx-background-radius: 30;
                        -fx-border-radius: 30;
-                       -fx-effect: dropshadow(gaussian, #2C3E50, 15, 0.2, 0, 0);"
-                styleClass="experience-button">
+                       -fx-effect: dropshadow(gaussian, #2C3E50, 15, 0.2, 0, 0);">
             <VBox.margin>
                 <Insets top="20.0"/>
             </VBox.margin>
+            <effect>
+                <DropShadow color="#2C3E50" height="15" radius="7.0" width="15"/>
+            </effect>
         </Button>
 
-        <Text text="Créez des moments inoubliables"
-              style="-fx-fill: #2C3E50; -fx-font-style: italic; -fx-font-family: 'Arial';">
+        <Text text="Créez des moments inoubliables" style="-fx-fill: #2C3E50; -fx-font-style: italic; -fx-font-family: 'Arial';">
             <font>
                 <Font size="18.0"/>
             </font>
@@ -67,5 +80,6 @@
                 <Insets top="30.0"/>
             </VBox.margin>
         </Text>
+
     </VBox>
 </AnchorPane>

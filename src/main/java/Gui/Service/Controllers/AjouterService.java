@@ -114,7 +114,7 @@ public class AjouterService {
     private void gotoAfficherService(ActionEvent event) {
         try {
             // Charger la nouvelle scène (AfficherService.fxml)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AfficherService.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AfficherService.fxml"));
             Parent root = loader.load();
             Scene newScene = new Scene(root);
 
@@ -152,7 +152,7 @@ public class AjouterService {
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         // Charger la nouvelle scène (Service.fxml)
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 

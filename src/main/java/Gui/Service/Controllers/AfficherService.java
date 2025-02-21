@@ -148,7 +148,7 @@ public class AfficherService {
 
     private void handleEdit(Service service) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/ModifierService.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/ModifierService.fxml"));
             AnchorPane modifRecLayout = loader.load();
 
             ModifierService controller = loader.getController();
@@ -218,7 +218,7 @@ public class AfficherService {
     @FXML
     private void goToStatistiques(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Statistique.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Statistique.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -232,7 +232,7 @@ public class AfficherService {
     private void addService(ActionEvent event) throws IOException {
         try {
             // Charger le fichier FXML pour la fenêtre "AjouterService"
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AjouterService.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AjouterService.fxml"));
             Scene scene = new Scene(loader.load());
 
             // Récupérer la fenêtre (Stage) actuelle à partir de l'événement
@@ -253,7 +253,7 @@ public class AfficherService {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 
@@ -270,7 +270,7 @@ public class AfficherService {
     }
     @FXML
     private void goToPartenaire(javafx.event.ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Partenaire.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
         AnchorPane partenaireLayout = loader.load();
         Scene scene = new Scene(partenaireLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

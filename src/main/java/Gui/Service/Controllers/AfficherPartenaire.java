@@ -103,7 +103,7 @@ public class AfficherPartenaire {
     private void handleEdit(Partenaire partenaire) {
         try {
             // Charger la fenêtre de modification du partenaire
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/ModifierPartenaire.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/ModifierPartenaire.fxml"));
             AnchorPane modifLayout = loader.load();
 
             // Obtenir le controller de la fenêtre de modification
@@ -129,7 +129,7 @@ public class AfficherPartenaire {
     }
     @FXML
     private void addPartenaire() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AjouterPartenaire.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AjouterPartenaire.fxml"));
         Scene scene = new Scene(loader.load());
         Stage stage = new Stage();
         stage.setScene(scene);
@@ -151,7 +151,7 @@ public class AfficherPartenaire {
     }
     @FXML
     private void goToPartenaire(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Partenaire.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
         AnchorPane partenaireLayout = loader.load();
         Scene scene = new Scene(partenaireLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -160,7 +160,7 @@ public class AfficherPartenaire {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         AnchorPane partenaireLayout = loader.load();
         Scene scene = new Scene(partenaireLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

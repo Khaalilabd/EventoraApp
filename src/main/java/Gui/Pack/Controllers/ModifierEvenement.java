@@ -136,7 +136,7 @@ public class ModifierEvenement {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 
@@ -145,6 +145,15 @@ public class ModifierEvenement {
         Stage newStage = new Stage();
         newStage.setScene(newScene);
         newStage.show();
+    }
+    @FXML
+    private void goToFeedback(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
+        AnchorPane feedbackLayout = loader.load();
+        Scene feedbackScene = new Scene(feedbackLayout);
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.setScene(feedbackScene);
+        currentStage.show();
     }
 
 }

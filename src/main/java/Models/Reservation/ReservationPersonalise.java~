@@ -42,9 +42,6 @@ public class ReservationPersonalise {
     public ReservationPersonalise() {
     }
 
-    public ReservationPersonalise(String nom, String prenom, String email, String numTel, String description, Date from) {
-    }
-
     // Getters et setters (incluant idService)
     public int getIdReservationPersonalise() {
         return idReservationPersonalise;

@@ -25,16 +25,14 @@ public class AjouterUtilisateur {
     @FXML private ComboBox<Role> roleComboBox;
     @FXML private Button ajouterButton;
     @FXML private Button annulerButton;
-    @FXML private Button retourButton; // Ajouté pour lier le bouton "Retour"
-
-    // Ajout du champ PasswordField pour le mot de passe
+    @FXML private Button retourButton;
     @FXML private PasswordField motDePasseField;
 
     private final MembresService membresService = new MembresService();
 
     @FXML
     public void initialize() {
-        roleComboBox.getItems().addAll(Role.values()); // Initialisation avec toutes les valeurs de l'enum Role
+        roleComboBox.getItems().addAll(Role.values());
     }
 
     @FXML
@@ -45,17 +43,16 @@ public class AjouterUtilisateur {
         String cin = cinField.getText();
         String adresse = adresseField.getText();
         String numTel = numTelField.getText();
-        String motDePasse = motDePasseField.getText(); // Récupération du mot de passe
+        String motDePasse = motDePasseField.getText();
         Role role = roleComboBox.getValue();
 
-        // Vérification si tous les champs sont remplis
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() || adresse.isEmpty() || numTel.isEmpty() || motDePasse.isEmpty() || role == null) {
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Tous les champs sont obligatoires.");
+        // Vérification de la longueur du CIN
+        if (cin.length() > 8) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le CIN ne peut pas dépasser 8 caractères.");
             return;
         }
-
-        if (motDePasse == null || motDePasse.trim().isEmpty()) {
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le mot de passe ne peut pas être vide.");
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() || adresse.isEmpty() || numTel.isEmpty() || motDePasse.isEmpty() || role == null) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Tous les champs sont obligatoires.");
             return;
         }
 
@@ -64,16 +61,14 @@ public class AjouterUtilisateur {
         try {
             membresService.AjouterMem(nouveauMembre);
             afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Membre ajouté avec succès.");
-            viderChamps(); // Réinitialiser les champs
+            viderChamps();
 
-            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/AfficherUtilisateur.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
+            // Naviguer vers l'interface suivante
+            goToUSer(event);
 
         } catch (Exception e) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout du membre : " + e.getMessage());
-            e.printStackTrace(); // Important pour le débogage
+            e.printStackTrace();
         }
     }
 
@@ -102,6 +97,24 @@ public class AjouterUtilisateur {
         }
     }
 
+    @FXML
+    public void goToUSer(ActionEvent event) {
+        try {
+            java.net.URL fileUrl = getClass().getResource("/Utilisateurs/Utilisateur.fxml");
+            if (fileUrl == null) {
+                System.err.println("Erreur : Impossible de trouver Utilisateur.fxml dans /");
+                return;
+            }
+            Parent root = FXMLLoader.load(fileUrl);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 1022, 687);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void afficherAlerte(Alert.AlertType type, String titre, String message) {
         Alert alert = new Alert(type);
         alert.setTitle(titre);
@@ -117,6 +130,6 @@ public class AjouterUtilisateur {
         adresseField.clear();
         numTelField.clear();
         roleComboBox.setValue(null);
-        motDePasseField.clear(); // Effacer le mot de passe après soumission
+        motDePasseField.clear();
     }
 }

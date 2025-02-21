@@ -11,15 +11,13 @@ import java.io.IOException;
 public class FXMain extends Application {
     @Override
     public void start(Stage stage)  {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Utilisateur.fxml"));
         try {
             Parent root = loader.load();
-
-
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setTitle("Ajouter");
-            stage.show();}git 
+            stage.setTitle("EventoraAP");
+            stage.show();}
         catch (RuntimeException | IOException r){
             System.out.println(r.getMessage());
         }

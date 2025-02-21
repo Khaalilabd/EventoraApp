@@ -3,7 +3,6 @@ package Gui.Reservation.Controllers;
 import Models.Reservation.ReservationPersonalise;
 import Models.Service.Service;
 import Services.Reservation.Crud.ReservationPersonaliseService;
-import Services.Service.Crud.ServiceService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -13,17 +12,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import Services.Service.Crud.ServiceService;
+
 
 import java.io.IOException;
-import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
-public class AjouterReservationPersonalise {
+public class ModifierReservationPersonalise {
     @FXML
-    private ComboBox<Service> idServicefield;
+    private ComboBox idServicefield;
     @FXML
     private TextField nomfield;
     @FXML
@@ -40,59 +41,67 @@ public class AjouterReservationPersonalise {
     private Button submitButton;
     @FXML
     private Button cancelButton;
-
     private ReservationPersonaliseService reservationservice = new ReservationPersonaliseService();
     private ServiceService serviceService = new ServiceService();
+    private ReservationPersonalise reservationToEdit;
 
     @FXML
     public void initialize() {
-        submitButton.setOnAction(this::ajouterReservationPersonalise);
+        // Ajoute tous les types de réclamation à la liste du ComboBox
+
+        submitButton.setOnAction(this::modifierReservationPersonalise);
         cancelButton.setOnAction(event -> annuler());
-
         loadServices();
-    }
 
+    }
     private void loadServices() {
         List<Service> services = serviceService.RechercherService();
         idServicefield.getItems().addAll(services);
     }
+    // Méthode pour pré-remplir les champs avec les données de la réclamation à modifier
+    public void setReservationToEdit(ReservationPersonalise reservation) {
+        this.reservationToEdit = reservation;
 
-    @FXML
-    public void ajouterReservationPersonalise(ActionEvent event) {
+        // Pré-remplir les champs avec les données de la réclamation existante
+        nomfield.setText(reservation.getNom());
+        prenomfield.setText(reservation.getPrenom());
+        emailfield.setText(reservation.getEmail());
+        numtelfield.setText(reservation.getNumtel());
+        descriptionfield.setText(reservation.getDescription());
+        datefield.setValue(LocalDate.ofInstant(Instant.ofEpochMilli(reservation.getDate().getTime()), ZoneId.systemDefault()));
+
+    }
+    private void modifierReservationPersonalise(ActionEvent event) {
         String nom = nomfield.getText();
         String prenom = prenomfield.getText();
         String email = emailfield.getText();
         String numTel = numtelfield.getText();
         String description = descriptionfield.getText();
-        LocalDate localDate = datefield.getValue(); // Get LocalDate
+        LocalDate date = datefield.getValue();
 
-        Service selectedService = idServicefield.getValue();
-
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || numTel.isEmpty() || description.isEmpty() || localDate == null || selectedService == null) {
+        if (nom.isEmpty() || email.isEmpty() || prenom.isEmpty() ) {
             showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
 
-        // Convert LocalDate to Date
-        Date date = java.util.Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        // Mise à jour de la reservation avec les nouvelles valeurs
+        reservationToEdit.setNom(nom);
+        reservationToEdit.setPrenom(prenom);
+        reservationToEdit.setEmail(email);
+        reservationToEdit.setNumtel(numTel);
+        reservationToEdit.setDescription(description);
+        reservationToEdit.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
+        // Appel à la méthode ModifierRec du service
+        reservationservice.modifierReservationPersonalise(reservationToEdit);
 
-        try {
-            ReservationPersonalise reservation = new ReservationPersonalise(nom, prenom, email, numTel, description, date, selectedService.getId()); // Passer idService
-            reservationservice.ajouterReservationPersonalise(reservation);
-
-            showAlert("Succès", "ReservationPersonalise ajouté avec succès !");
-            clearFields();
-            goToReservationListePersonalise();
-
-        } catch (NumberFormatException e) {
-            showAlert("Erreur", "Le prix du service est invalide.");
-        }
+        showAlert("Succès", "reservation modifiée avec succès !");
+        clearFields();
+        goToReservationListePersonalise();
     }
     private void annuler() {
         clearFields();
     }
-
     private void clearFields() {
         nomfield.clear();
         prenomfield.clear();
@@ -100,41 +109,41 @@ public class AjouterReservationPersonalise {
         numtelfield.clear();
         descriptionfield.clear();
         datefield.setValue(null);
-        idServicefield.setValue(null);
     }
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
+
         alert.setTitle(title);
-        alert.setHeaderText(null);
+        alert.setHeaderText(null);  // On peut personnaliser ou laisser vide
         alert.setContentText(content);
+
         alert.showAndWait();
     }
-
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-        AnchorPane ReservationLayout = loader.load();
-        Scene scene = new Scene(ReservationLayout);
+        AnchorPane reservationLayout = loader.load();
+        Scene scene = new Scene(reservationLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
     }
-
     @FXML
     private void goToReservationListePersonalise() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AfficherReservationPersonalise.fxml"));
             AnchorPane ReservationLayout = loader.load();
             Scene scene = new Scene(ReservationLayout);
-            Stage stage = (Stage) submitButton.getScene().getWindow();
+            Stage stage = (Stage) submitButton.getScene().getWindow(); // Récupère la fenêtre actuelle
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
@@ -144,7 +153,6 @@ public class AjouterReservationPersonalise {
         stage.setScene(scene);
         stage.show();
     }
-
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
@@ -154,10 +162,9 @@ public class AjouterReservationPersonalise {
         currentStage.setScene(feedbackScene);
         currentStage.show();
     }
-
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 
@@ -167,7 +174,6 @@ public class AjouterReservationPersonalise {
         newStage.setScene(newScene);
         newStage.show();
     }
-
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));

@@ -94,10 +94,9 @@ public class Service {
 
     @Override
     public String toString() {
-        return "G_service{" +
-                "id=" + id +
+        return "Service{" +
+
                 ", titre='" + titre + '\'' +
-                ", location='" + location + '\'' +
                 ", typeService='" + typeService + '\'' +
                 ", description='" + description + '\'' +
                 ", prix='" + prix + '\'' +

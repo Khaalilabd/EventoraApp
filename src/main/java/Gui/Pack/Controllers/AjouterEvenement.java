@@ -42,24 +42,18 @@ public class AjouterEvenement {
     private void ajouterEvenement(ActionEvent event) {
         try {
             String type = NomTypeField.getText();
-
-
             if (type.isEmpty()) {
                 showAlert("Erreur", "Le champ doit être remplis.");
                 return;
             }
-
             if (!type.matches("^[A-Za-zÀ-ÖØ-öø-ÿ ]+$")) {
                 showAlert("Erreur", "Le type ne doit contenir que des lettres et des espaces.");
                 return;
             }
-
-
                 Evenement newEvenement = new Evenement(type);
             evenementService.ajouter(newEvenement);
             showAlert("Succès", "Type ajouté avec succès !");
             goToAfficheEvenement(event);
-
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur est survenue lors de l'ajout du Type.");
             e.printStackTrace();
@@ -134,7 +128,7 @@ public class AjouterEvenement {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 
@@ -143,6 +137,15 @@ public class AjouterEvenement {
         Stage newStage = new Stage();
         newStage.setScene(newScene);
         newStage.show();
+    }
+    @FXML
+    private void goToFeedback(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
+        AnchorPane feedbackLayout = loader.load();
+        Scene feedbackScene = new Scene(feedbackLayout);
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.setScene(feedbackScene);
+        currentStage.show();
     }
 
 }

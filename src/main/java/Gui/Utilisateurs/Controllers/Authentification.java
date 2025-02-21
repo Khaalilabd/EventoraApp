@@ -40,7 +40,7 @@ public class Authentification {
 
         if (utilisateur != null && verifierMotDePasse(password, utilisateur.getMotDePasse())) {
             // Authentification réussie, redirection vers la page principale
-            Parent root = FXMLLoader.load(getClass().getResource("/Gui/Utilisateurs/Accueil.fxml")); // Chemin vers la page d'accueil
+            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/Accueil.fxml")); // Chemin vers la page d'accueil
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

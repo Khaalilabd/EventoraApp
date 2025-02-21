@@ -13,12 +13,10 @@ public class EvenementService implements IPack<Evenement> {
 
     @Override
     public void ajouter(Evenement evenement) {
-        // Vérifier si le type existe déjà
         if (getEvenementByName(evenement.getTypeEvenement()) != null) {
             System.out.println("L'événement '" + evenement.getTypeEvenement() + "' existe déjà !");
             return;
         }
-
         String req = "INSERT INTO `typepack`(`type`) VALUES (?)";
         try {
             PreparedStatement ps = connection.prepareStatement(req);
@@ -105,7 +103,7 @@ public class EvenementService implements IPack<Evenement> {
     }
 
     public List<Evenement> RechercherEvenementParMotCle(String motCle) {
-        String req = "SELECT id, type, sousType FROM typepack WHERE type LIKE ? ";
+        String req = "SELECT id, type FROM typepack WHERE type LIKE ? ";
 
         List<Evenement> evenements = new ArrayList<>();
         try (PreparedStatement ps = connection.prepareStatement(req)) {

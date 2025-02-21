@@ -1,6 +1,10 @@
 package Services.Service.Interface;
 
+import Models.Service.Location;
+import Models.Service.TypeService;
+
 import java.util.List;
+import java.util.Map;
 
 public interface Iservice <T>{
     void AjouterService(T t);
@@ -9,4 +13,9 @@ public interface Iservice <T>{
     List<T> RechercherService();
 
 
+    Map<Location, Integer> getLocationStats();
+
+    Map<TypeService, Integer> getTypeServiceStats();
+
+    List<String> getServiceNames();
 }

@@ -63,11 +63,10 @@ public class ModifierPartenaire {
         String telephone = telephoneField.getText();
         String adresse = adresseField.getText();
         String site_web = site_webField.getText();
-        String montantPart = montantPartField.getText();
         TypePartenaire type = typefield.getValue();
 
         // Vérifier que tous les champs sont remplis
-        if (nom.isEmpty() || email.isEmpty() || telephone.isEmpty() || adresse.isEmpty() || site_web.isEmpty() || montantPart.isEmpty() || type == null) {
+        if (nom.isEmpty() || email.isEmpty() || telephone.isEmpty() || adresse.isEmpty() || site_web.isEmpty()  || type == null) {
             showAlert("Warning", "Veuillez remplir tous les champs.");
             return;
         }
@@ -90,11 +89,6 @@ public class ModifierPartenaire {
             return;
         }
 
-        // Validation : le montant doit contenir uniquement des chiffres et se terminer par "dt" ou "DT"
-        if (!montantPart.matches("\\d+(dt|DT)$")) {
-            showAlert("Erreur", "Le montant doit être un nombre et se terminer par 'dt' ou 'DT'.");
-            return;
-        }
 
         // Si toutes les validations passent, mettre à jour le partenaire
         partenaireToEdit.setNom_partenaire(nom);
@@ -119,7 +113,6 @@ public class ModifierPartenaire {
         telephoneField.clear();
         adresseField.clear();
         site_webField.clear();
-        montantPartField.clear();
         typefield.setValue(null);
     }
     private void showAlert(String title, String content) {
@@ -132,7 +125,7 @@ public class ModifierPartenaire {
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         // Charger la nouvelle scène (Partenaire.fxml)
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Partenaire.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
         AnchorPane partenaireLayout = loader.load();
         Scene partenaireScene = new Scene(partenaireLayout);
 
@@ -152,7 +145,7 @@ public class ModifierPartenaire {
     private void goToAfficherPartenaire(ActionEvent event) {
         try {
             // Charger la nouvelle scène (AfficherPartenaire.fxml)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AfficherPartenaire.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AfficherPartenaire.fxml"));
             Parent root = loader.load();
             Scene newScene = new Scene(root);
 

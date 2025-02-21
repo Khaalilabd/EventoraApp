@@ -106,18 +106,6 @@ public class ModifierService {
             return;
         }
 
-        // Validation : Le titre doit contenir uniquement des caractères alphabétiques
-        if (!titre.matches("[a-zA-Z ]+")) {
-            showAlert("Erreur", "Le titre doit contenir uniquement des caractères alphabétiques.");
-            return;
-        }
-
-        // Validation : La description doit contenir uniquement des caractères alphabétiques (ou espaces et caractères spéciaux)
-        if (!description.matches("[a-zA-Z ,.\\-']+")) { // Autorise des caractères spéciaux comme la virgule, le point, et l'apostrophe
-            showAlert("Erreur", "La description doit contenir uniquement des caractères alphabétiques.");
-            return;
-        }
-
         // Validation : Le prix doit être un nombre et se terminer par 'dt' ou 'DT'
         if (!prix.matches("\\d+(dt|DT)$")) {
             showAlert("Erreur", "Le prix doit être un nombre et se terminer par 'dt' ou 'DT'.");
@@ -164,7 +152,7 @@ public class ModifierService {
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         // Charger la nouvelle scène (Service.fxml)
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         AnchorPane reclamationLayout = loader.load();
         Scene serviceScene = new Scene(reclamationLayout);
 
@@ -183,7 +171,7 @@ public class ModifierService {
     private void goToAfficherService(ActionEvent event) {
         try {
             // Charger la scène d'affichage des services (AfficherService.fxml)
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/AfficherService.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AfficherService.fxml"));
             Parent root = loader.load();
             Scene afficherServiceScene = new Scene(root);
 

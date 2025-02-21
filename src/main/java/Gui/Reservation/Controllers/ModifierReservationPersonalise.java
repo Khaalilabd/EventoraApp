@@ -1,6 +1,7 @@
 package Gui.Reservation.Controllers;
 
 import Models.Reservation.ReservationPersonalise;
+import Models.Service.Service;
 import Services.Reservation.Crud.ReservationPersonaliseService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -11,12 +12,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import Services.Service.Crud.ServiceService;
+
 
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 public class ModifierReservationPersonalise {
     @FXML
@@ -37,9 +41,9 @@ public class ModifierReservationPersonalise {
     private Button submitButton;
     @FXML
     private Button cancelButton;
-
+    private ReservationPersonaliseService reservationservice = new ReservationPersonaliseService();
+    private ServiceService serviceService = new ServiceService();
     private ReservationPersonalise reservationToEdit;
-    private ReservationPersonaliseService reservationservice=new ReservationPersonaliseService();
 
     @FXML
     public void initialize() {
@@ -47,6 +51,12 @@ public class ModifierReservationPersonalise {
 
         submitButton.setOnAction(this::modifierReservationPersonalise);
         cancelButton.setOnAction(event -> annuler());
+        loadServices();
+
+    }
+    private void loadServices() {
+        List<Service> services = serviceService.RechercherService();
+        idServicefield.getItems().addAll(services);
     }
     // Méthode pour pré-remplir les champs avec les données de la réclamation à modifier
     public void setReservationToEdit(ReservationPersonalise reservation) {
@@ -154,7 +164,7 @@ public class ModifierReservationPersonalise {
     }
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Services/Service.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
 

@@ -40,7 +40,7 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void modifierReservationPersonalise(ReservationPersonalise reservationPersonalise) {
-        String req = "UPDATE reservationpersonnalise SET nom=?, prenom=?, email=?, numtel=?, description=?, date=?, service=? WHERE idReservationPersonalise=?";
+        String req = "UPDATE reservationpersonnalise SET nom=?, prenom=?, email=?, numtel=?, description=?, date=?, id_service=? WHERE idReservationPersonalise=?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setString(1, reservationPersonalise.getNom());
             ps.setString(2, reservationPersonalise.getPrenom());
