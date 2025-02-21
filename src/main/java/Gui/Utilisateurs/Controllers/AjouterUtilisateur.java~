@@ -80,7 +80,7 @@ public class AjouterUtilisateur {
     @FXML
     public void goToAcceuil() {
         try {
-            java.net.URL fileUrl = getClass().getResource("/Utilisateurs/Identification.fxml");
+            java.net.URL fileUrl = getClass().getResource("/Utilisateurs/Acceuil.fxml");
             if (fileUrl == null) {
                 System.err.println("Erreur : Impossible de trouver Acceuil.fxml dans /");
                 return;

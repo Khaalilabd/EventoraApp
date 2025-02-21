@@ -10,8 +10,8 @@
     -fx-font-weight: 800;
     -fx-text-fill: white;
     -fx-font-family: 'Poppins', sans-serif;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75), 10, 0.5, 0, 0);
 }
-
 
 .menu-button {
     -fx-background-color: transparent;
@@ -34,7 +34,6 @@
     -fx-scale-y: 1.05;
 }
 
-/* Texte principal */
 .main-text {
     -fx-font-size: 18px;
     -fx-text-fill: #2C3E50;
@@ -55,10 +54,6 @@
 
 .add-button:hover {
     -fx-background-color: #16A085;
-}
-
-.menu-button {
-    -fx-font-family: "Segoe UI Emoji", "Apple Color Emoji", "Poppins";
 }
 
 .submit-button, .cancel-button {
@@ -180,17 +175,6 @@
     color: white;
 }
 
-.main-text {
-    -fx-font-size: 18px;
-    -fx-font-weight: bold;
-    -fx-font-family: "Arial", sans-serif;
-    -fx-text-fill: #2C3E50;
-    -fx-alignment: center;
-    -fx-padding: 20px;
-    -fx-line-spacing: 5px;
-}
-
-/* Style principal avec effet Glassmorphism */
 .main-container {
     -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-background-radius: 15px;
@@ -198,7 +182,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 0, 5);
 }
 
-/* Effet des boutons */
 .add-button, .view-button {
     -fx-background-color: linear-gradient(to bottom, #4CAF50, #388E3C);
     -fx-text-fill: white;
@@ -215,46 +198,48 @@
     -fx-scale-y: 1.05;
 }
 
-/* Style du menu */
-.menu-title {
-    -fx-font-size: 20px;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
 .title-text {
-    -fx-font-size: 22px;  /* Augmentation de la taille */
-    -fx-font-weight: bold; /* Texte en gras */
-    -fx-text-fill: #1ABC9C; /* Changement de couleur (vert turquoise) */
-    -fx-font-family: 'Poppins', sans-serif; /* Utilisation de Poppins */
-    -fx-padding: 10px; /* Espacement pour une meilleure lisibilité */
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1ABC9C;
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-padding: 10px;
 }
 
+.login-background {
+    -fx-background-color: #f0f0f0;
+}
 
+.back-button {
+    -fx-background-color: #fff;
+    -fx-text-fill: #333;
+}
 
-    .menu-button {
-        -fx-background-color: transparent;
-        -fx-text-fill: white;
-        -fx-font-size: 16px;
-        -fx-pref-height: 45px;
-        -fx-border-radius: 8px;
-        -fx-background-radius: 8px;
-        -fx-border-color: transparent;
-        -fx-padding: 10px;
-        -fx-font-weight: 500;
-        -fx-transition: all 0.3s ease-in-out;
-    }
+.login-container {
+    -fx-background-color: #fff;
+    -fx-padding: 20;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
 
-    .menu-button:hover {
-        -fx-border-color: #1ABC9C;
-        -fx-border-width: 2px;
-        -fx-background-color: rgba(255, 255, 255, 0.1);
-        -fx-scale-x: 1.05;
-        -fx-scale-y: 1.05;
-    }
+.logo {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75), 10, 0.5, 0, 0);
+}
 
-    .main-text {
-        -fx-font-size: 16px;
-        -fx-text-fill: #2C3E50;
-        -fx-font-weight: bold;
-        -fx-text-alignment: center;
-    }
+.login-title {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333;
+}
+
+.login-button, .signup-button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: #fff;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.login-button:hover, .signup-button:hover {
+    -fx-background-color: #005a9e;
+}

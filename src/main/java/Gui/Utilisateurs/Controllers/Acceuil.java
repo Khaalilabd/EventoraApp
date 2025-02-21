@@ -21,8 +21,7 @@ public class Acceuil {
     @FXML
     private void goToAccueil(ActionEvent event) {
         try {
-            // Get the FXML file URL.  More robust way to handle paths.
-            URL fxmlURL = getClass().getResource("/Utilisateurs/AjouterUtilisateur.fxml");
+            URL fxmlURL = getClass().getResource("/Utilisateurs/Identification.fxml");
 
             if (fxmlURL == null) {
                 System.err.println("Error: Could not find AjouterUtilisateur.fxml");
@@ -52,5 +51,15 @@ public class Acceuil {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
+    }
+    public void goToIdentification(ActionEvent event) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateur/Identification.fxml"));
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -54,7 +54,7 @@
 
         <Button fx:id="experienceButton"
                 text="Vivez l'expérience"
-                onAction="#goToAjouterUser"
+                onAction="#goToAccueil"
                 style="-fx-background-color: #4CAF50;
                        -fx-text-fill: white;
                        -fx-pref-width: 250;

@@ -11,7 +11,7 @@
             fx:controller="Gui.Utilisateurs.Controllers.Authentification">
     <VBox alignment="CENTER" prefHeight="687.0" prefWidth="1022.0" spacing="20" style="-fx-background-color: #FFFFFF; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10;">
         <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10;">
-            <Button text="Retour" onAction="#goToAccueil" style="-fx-background-color: #D9534F; -fx-text-fill: #FFFFFF; -fx-padding: 10 20; -fx-border-radius: 5; -fx-background-radius: 5;"/>
+            <Button text="Retour" onAction="#goBack" style="-fx-background-color: #D9534F; -fx-text-fill: #FFFFFF; -fx-padding: 10 20; -fx-border-radius: 5; -fx-background-radius: 5;"/>
         </HBox>
 
         <Label alignment="CENTER" text="Authentification" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #333333;"/>

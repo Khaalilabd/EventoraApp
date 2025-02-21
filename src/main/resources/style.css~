@@ -1,15 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
 
-<<<<<<< HEAD
-=======
-/* Style global */
->>>>>>> Gestion_Service
 .root {
     -fx-font-family: 'Poppins', sans-serif;
     -fx-background-color: #F4F6F8;
 }
 
-<<<<<<< HEAD
 .menu-title {
     -fx-font-size: 24px;
     -fx-font-weight: 800;
@@ -18,17 +13,6 @@
 }
 
 
-=======
-/* Titre du menu */
-.menu-title {
-    -fx-font-size: 20px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ECF0F1;
-    -fx-padding: 10px;
-}
-
-/* Boutons de la barre latérale */
->>>>>>> Gestion_Service
 .menu-button {
     -fx-background-color: transparent;
     -fx-text-fill: white;
@@ -39,24 +23,15 @@
     -fx-border-color: transparent;
     -fx-padding: 10px;
     -fx-font-weight: 500;
-<<<<<<< HEAD
     -fx-transition: all 0.3s ease-in-out;
 }
 
-=======
-}
-
-/* Contour coloré au survol */
->>>>>>> Gestion_Service
 .menu-button:hover {
     -fx-border-color: #1ABC9C;
     -fx-border-width: 2px;
     -fx-background-color: rgba(255, 255, 255, 0.1);
-<<<<<<< HEAD
     -fx-scale-x: 1.05;
     -fx-scale-y: 1.05;
-=======
->>>>>>> Gestion_Service
 }
 
 /* Texte principal */
@@ -68,12 +43,7 @@
     -fx-text-alignment: center;
 }
 
-<<<<<<< HEAD
 .add-button {
-=======
-/* Bouton de base */
-.add-button, .view-button {
->>>>>>> Gestion_Service
     -fx-background-color: #1ABC9C;
     -fx-text-fill: white;
     -fx-font-size: 16px;
@@ -81,34 +51,16 @@
     -fx-padding: 10 20;
     -fx-border-radius: 10;
     -fx-background-radius: 10;
-<<<<<<< HEAD
-=======
-    -fx-transition: -fx-translate-y 0.3s ease-in-out, -fx-effect 0.3s ease-in-out;
-}
-
-/* Animation de survol */
-.add-button:hover, .view-button:hover {
-    -fx-translate-y: -3px; /* Le bouton flotte vers le haut */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 10); /* Ombre du bouton */
->>>>>>> Gestion_Service
 }
 
 .add-button:hover {
     -fx-background-color: #16A085;
 }
 
-<<<<<<< HEAD
-=======
-/* Empêcher la modification des emojis */
->>>>>>> Gestion_Service
 .menu-button {
     -fx-font-family: "Segoe UI Emoji", "Apple Color Emoji", "Poppins";
 }
 
-<<<<<<< HEAD
-=======
-/* Modification des boutons 'Soumettre' et 'Annuler' */
->>>>>>> Gestion_Service
 .submit-button, .cancel-button {
     -fx-background-color: #1ABC9C;
     -fx-text-fill: white;
@@ -131,10 +83,6 @@
     -fx-background-color: #C0392B;
 }
 
-<<<<<<< HEAD
-=======
-/* Champs de saisie */
->>>>>>> Gestion_Service
 .input-field {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #BDC3C7;
@@ -147,10 +95,6 @@
     -fx-border-color: #1ABC9C;
 }
 
-<<<<<<< HEAD
-=======
-/* Déconnexion */
->>>>>>> Gestion_Service
 .logout-button {
     -fx-text-fill: #E74C3C;
     -fx-font-weight: bold;
@@ -161,10 +105,6 @@
     -fx-border-width: 1px;
 }
 
-<<<<<<< HEAD
-=======
-/* Effet de survol pour Déconnexion */
->>>>>>> Gestion_Service
 .logout-button:hover {
     -fx-border-color: #E74C3C;
     -fx-border-width: 2px;
@@ -172,10 +112,6 @@
     -fx-text-fill: #E74C3C;
 }
 
-<<<<<<< HEAD
-=======
-/* Style du tableau pour le rendre plus élégant */
->>>>>>> Gestion_Service
 .table-view {
     -fx-background-color: #FFFFFF;
     -fx-border-radius: 10px;
@@ -243,7 +179,6 @@
     background-color: #e74c3c;
     color: white;
 }
-<<<<<<< HEAD
 
 .main-text {
     -fx-font-size: 18px;
@@ -323,49 +258,41 @@
         -fx-font-weight: bold;
         -fx-text-alignment: center;
     }
-}
-=======
-.main-text {
-    -fx-font-size: 12px; /* Taille de police augmentée */
-    -fx-font-weight: bold; /* Texte en gras */
-    -fx-font-family: "Arial", sans-serif; /* Police de caractères */
-    -fx-text-fill: #2C3E50; /* Couleur du texte */
-    -fx-padding: 10px; /* Espacement autour du texte */
-    -fx-line-spacing: 5px; /* Espacement entre les lignes */
-}
-/* Style général pour tous les labels */
-Label {
-    -fx-font-family: "Arial";
-    -fx-font-size: 11px;
-    -fx-text-fill: #2C3E50;
-    -fx-padding: 5px 10px;
-}
-.table-row-cell {
-    -fx-pref-height: 60; /* Ajuste la hauteur des lignes */
+.login-background {
+    -fx-background-color: #f0f0f0;
 }
 
+.back-button {
+    -fx-background-color: #fff;
+    -fx-text-fill: #333;
+}
 
-/* Style spécifique pour le titre principal */
-.main-title {
-    -fx-font-size: 20px;
+.login-container {
+    -fx-background-color: #fff;
+    -fx-padding: 20;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.logo {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75), 10, 0.5, 0, 0);
+}
+
+.login-title {
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-text-fill: #34495E;
-    -fx-underline: true;
-    -fx-padding: 20px 0;
+    -fx-text-fill: #333;
 }
 
-/* Style pour le titre du menu latéral */
-.menu-title {
-    -fx-font-size: 11px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ECF0F1;
+.login-button, .signup-button {
+    -fx-background-color: #0078d7;
+    -fx-text-fill: #fff;
+    -fx-padding: 10 20;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
 }
 
-/* Style pour les labels dans les champs de formulaire */
-.form-label {
-    -fx-font-size: 10px;
-    -fx-font-weight: normal;
-    -fx-text-fill: #7F8C8D;
+.login-button:hover, .signup-button:hover {
+    -fx-background-color: #005a9e;
 }
 
->>>>>>> Gestion_Service

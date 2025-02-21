@@ -14,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
 
 public class Authentification {
@@ -40,7 +41,7 @@ public class Authentification {
 
         if (utilisateur != null && verifierMotDePasse(password, utilisateur.getMotDePasse())) {
             // Authentification réussie, redirection vers la page principale
-            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/Accueil.fxml")); // Chemin vers la page d'accueil
+            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/Utilisateur.fxml")); // Chemin vers la page d'accueil
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -66,5 +67,30 @@ public class Authentification {
         alert.setTitle(titre);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    @FXML
+    private void goToAccueil(ActionEvent event) {
+        try {
+            URL fxmlURL = getClass().getResource("/Utilisateurs/Identification.fxml");
+
+            if (fxmlURL == null) {
+                System.err.println("Error: Could not find AjouterUtilisateur.fxml");
+                return; // Important: Exit the method if the file isn't found.
+            }
+
+            FXMLLoader loader = new FXMLLoader(fxmlURL); // Use FXMLLoader directly
+            Parent root = loader.load();
+
+            // Get the Stage from the button's scene.  More reliable.
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+            Scene scene = new Scene(root, 1022, 687); // Set your desired dimensions
+            stage.setScene(scene);
+            stage.show();
+
+        } catch (IOException e) {
+            System.err.println("Error loading FXML: " + e.getMessage()); // More informative error message
+            e.printStackTrace(); // Keep this for debugging
+        }
     }
 }
