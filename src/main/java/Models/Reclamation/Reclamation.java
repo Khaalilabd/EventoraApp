@@ -7,9 +7,8 @@ public class Reclamation {
     private String titre;
     private String description;
     private TypeReclamation type;
-    private Statut statut;  // Utilisation de l'Enum Statut
+    private Statut statut;
 
-    // Constructeurs
     public Reclamation() {
         this.statut = Statut.EN_ATTENTE;
     }
@@ -19,7 +18,7 @@ public class Reclamation {
         this.titre = titre;
         this.description = description;
         this.type = type;
-        this.statut = Statut.EN_ATTENTE;  // Valeur par défaut
+        this.statut = Statut.EN_ATTENTE;
     }
 
     public Reclamation(int id, int idUser, String titre, String description, TypeReclamation type, Statut statut) {
@@ -34,7 +33,7 @@ public class Reclamation {
 
     public Reclamation(int id) {
         this.id = id;
-        this.statut = Statut.EN_ATTENTE;  // Valeur par défaut
+        this.statut = Statut.EN_ATTENTE;
     }
 
     // Getters et Setters
