@@ -1,17 +1,27 @@
 package Gui.Utilisateurs.Controllers;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.ImageView;  // Assurez-vous d'importer ImageView
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
-import java.net.URL;
 
 public class Identification {
+
+
+    @FXML
+    private FadeTransition fadeTransition;
+    @FXML
+    private ImageView backgroundImage;
+
+
 
     public void goToAuthentification(ActionEvent event) {
         try {
@@ -35,9 +45,9 @@ public class Identification {
         }
     }
 
-    public void goToAcceuil(ActionEvent event) { // <-- Correction ici
+    public void goToAcceuil(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/Acceuil.fxml")); // Charge Acceuil.fxml
+            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/Acceuil.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -45,6 +55,7 @@ public class Identification {
             e.printStackTrace();
         }
     }
+
     public void goToIdentification(ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/Utilisateur/Identification.fxml"));
@@ -55,31 +66,24 @@ public class Identification {
             e.printStackTrace();
         }
     }
+
     @FXML
-    private void goToAccueil(ActionEvent event) {
-        try {
-            // Get the FXML file URL.  More robust way to handle paths.
-            URL fxmlURL = getClass().getResource("/Utilisateurs/AjouterUtilisateur.fxml");
+    private void onFadeComplete() {
+        // Cette méthode sera appelée après la fin de la transition de fondu
+        System.out.println("Transition de fondu terminée");
+        // Par exemple, on pourrait passer à une autre scène ici
+    }
 
-            if (fxmlURL == null) {
-                System.err.println("Error: Could not find AjouterUtilisateur.fxml");
-                return; // Important: Exit the method if the file isn't found.
-            }
 
-            FXMLLoader loader = new FXMLLoader(fxmlURL); // Use FXMLLoader directly
-            Parent root = loader.load();
 
-            // Get the Stage from the button's scene.  More reliable.
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+    public void initialize() {
+        // Crée l'animation de fondu
+        fadeTransition = new FadeTransition(Duration.seconds(2), backgroundImage);
+        fadeTransition.setFromValue(0.0);
+        fadeTransition.setToValue(1.0);
 
-            Scene scene = new Scene(root, 1022, 687); // Set your desired dimensions
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            System.err.println("Error loading FXML: " + e.getMessage()); // More informative error message
-            e.printStackTrace(); // Keep this for debugging
-        }
+        fadeTransition.setOnFinished(event -> onFadeComplete());
+        // Démarre l'animation
+        fadeTransition.play();
     }
 }
-

@@ -1,5 +1,6 @@
 package Gui.Utilisateurs.Controllers;
 
+import javafx.animation.FadeTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,8 +8,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -17,6 +20,19 @@ public class Acceuil {
 
     @FXML
     private Button experienceButton;
+
+    @FXML
+    private ImageView logo; // Ajout de l'ImageView pour l'animation
+
+    @FXML
+    public void initialize() {
+        // Ajout de l'animation de fondu pour l'ImageView
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(2), logo);
+        fadeTransition.setFromValue(0.0);
+        fadeTransition.setToValue(1.0);
+        fadeTransition.setAutoReverse(true);
+        fadeTransition.play();
+    }
 
     @FXML
     private void goToAccueil(ActionEvent event) {
@@ -43,6 +59,7 @@ public class Acceuil {
             e.printStackTrace(); // Keep this for debugging
         }
     }
+
     @FXML
     private void goToAjouterUser(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/AjouterUtilisateur.fxml"));
@@ -52,6 +69,7 @@ public class Acceuil {
         stage.setScene(scene);
         stage.show();
     }
+
     public void goToIdentification(ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/Utilisateur/Identification.fxml"));
