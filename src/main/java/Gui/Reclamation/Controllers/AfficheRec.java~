@@ -163,6 +163,7 @@ public class AfficheRec {
     }
 
 
+    // Recherche dynamique dès que l'utilisateur tape
     private void searchReclamation(String motCle) {
         List<Reclamation> resultatRecherche = reclamationService.RechercherRecParMotCle(motCle.toLowerCase());
 

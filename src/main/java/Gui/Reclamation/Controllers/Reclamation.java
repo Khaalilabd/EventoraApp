@@ -27,6 +27,7 @@ public class Reclamation {
         animateImage();
     }
 
+    // Animation de l'image
     private void animateImage() {
         TranslateTransition floating = new TranslateTransition(Duration.seconds(2), imageReclamation);
         floating.setByY(10);
@@ -35,6 +36,7 @@ public class Reclamation {
         floating.play();
     }
 
+    // Méthodes pour gérer les actions des boutons
     @FXML
     private void handleAddAction(ActionEvent event) {
         switchScene(event, "/Reclamation/AjouterRec.fxml");
@@ -55,6 +57,26 @@ public class Reclamation {
         switchScene(event, "/Reclamation/Feedback.fxml");
     }
 
+    @FXML
+    private void goToService(ActionEvent event) {
+        switchScene(event, "/Service/Service.fxml");
+    }
+
+    @FXML
+    private void goToReservation(ActionEvent event) {
+        switchScene(event, "/Reservation/Reservation.fxml");
+    }
+
+    @FXML
+    private void goToPack(ActionEvent event) {
+        switchScene(event, "/Pack/Packs.fxml");
+    }
+
+    @FXML
+    private void goToAccueil(ActionEvent event) {
+        switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
+    }
+
     private void switchScene(ActionEvent event, String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -62,7 +84,9 @@ public class Reclamation {
             Scene scene = new Scene(layout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
+            stage.setMaximized(true);  // Maximiser la fenêtre
             stage.show();
+
         } catch (IOException e) {
             showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
             e.printStackTrace();
@@ -70,6 +94,7 @@ public class Reclamation {
     }
 
 
+    // Afficher une alerte en cas d'erreur
     private void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -77,38 +102,4 @@ public class Reclamation {
         alert.setContentText(content);
         alert.showAndWait();
     }
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-    @FXML
-    private void goToReservation(ActionEvent event) throws IOException {
-        try {
-            // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
-        }
-    }
-    @FXML
-    private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-
 }

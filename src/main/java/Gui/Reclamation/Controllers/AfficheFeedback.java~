@@ -3,6 +3,7 @@ package Gui.Reclamation.Controllers;
 import Services.Reclamation.Crud.FeedBackService;
 import Models.Reclamation.Feedback;
 import Models.Reclamation.Recommend;
+import javafx.animation.ScaleTransition;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,6 +25,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.application.Platform;
 import javafx.util.Callback;
+import javafx.util.Duration;
 import java.io.IOException;
 import java.util.List;
 
@@ -71,13 +73,19 @@ public class AfficheFeedback {
                 }
             }
         });
+
         addActionsColumn();
         loadFeedbacks();
+
+        // Ajout de l'écouteur sur le champ de recherche
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
+            searchFeedback();  // Modification de la signature de la méthode
+        });
     }
 
     private void loadFeedbacks() {
         try {
-            List<Feedback> feedbackList = feedbackService.RechercherFeedBack();
+            List<Feedback> feedbackList = feedbackService.rechercherFeedBack();  // Correction de la méthode appelée
             Platform.runLater(() -> feedbackTable.getItems().setAll(feedbackList));
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,16 +146,14 @@ public class AfficheFeedback {
 
     private void handleDelete(Feedback feedback) {
         if (feedback != null) {
-            // Créer une fenêtre de confirmation
             Alert confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Confirmation de suppression");
             confirmationAlert.setHeaderText(null);
             confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer ce feedback ?");
-
             confirmationAlert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
                     System.out.println("Supprimer le feedback avec ID : " + feedback.getId());
-                    feedbackService.SupprimerFeedBack(feedback);
+                    feedbackService.supprimerFeedBack(feedback);  // Correction de la méthode appelée
                     loadFeedbacks();
                     Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
                     successAlert.setTitle("Suppression réussie");
@@ -181,11 +187,13 @@ public class AfficheFeedback {
                 nonCount++;
             }
         }
+
         PieChart.Data ouiData = new PieChart.Data("Oui (" + ouiCount + ")", ouiCount);
         PieChart.Data nonData = new PieChart.Data("Non (" + nonCount + ")", nonCount);
         PieChart pieChart = new PieChart();
         pieChart.getData().addAll(ouiData, nonData);
         pieChart.setTitle("Répartition des Recommandations");
+
         for (PieChart.Data data : pieChart.getData()) {
             if (data.getName().startsWith("Oui")) {
                 data.getNode().setStyle("-fx-pie-color: pink;");
@@ -193,6 +201,7 @@ public class AfficheFeedback {
                 data.getNode().setStyle("-fx-pie-color: #11a791;");
             }
         }
+
         Stage chartStage = new Stage();
         chartStage.setTitle("Graphique des Recommandations");
         chartStage.setScene(new Scene(pieChart, 600, 400));
@@ -205,37 +214,13 @@ public class AfficheFeedback {
     }
 
     @FXML
-    private void searchFeedback(ActionEvent event) {
+    private void searchFeedback() {  // Modification de la signature de la méthode
         String motCle = searchField.getText().toLowerCase();
         List<Feedback> resultatRecherche = feedbackService.rechercherParMotCle(motCle);
         ObservableList<Feedback> data = FXCollections.observableArrayList(resultatRecherche);
         feedbackTable.setItems(data);
     }
 
-    @FXML
-    private void goToReclamation(ActionEvent event) throws IOException {
-        switchScene("/Reclamation/Reclamation.fxml", event);
-    }
-
-    @FXML
-    private void goToReservation(ActionEvent event) throws IOException {
-        switchScene("/Reservation/Reservation.fxml", event);
-    }
-
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        switchScene("/Service/Service.fxml", event);
-    }
-
-    @FXML
-    private void goToPack(ActionEvent event) throws IOException {
-        switchScene("/Pack/Packs.fxml", event);
-    }
-
-    @FXML
-    private void goToAccueil(ActionEvent event) throws IOException {
-        switchScene("/EventoraAPP/EventoraAPP.fxml", event);
-    }
     // Fonction générique pour changer de scène
     private void switchScene(String fxmlFile, ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
@@ -246,16 +231,12 @@ public class AfficheFeedback {
         currentStage.show();
     }
 
-    // Surcharge de switchScene pour éviter de dupliquer le code de changement de scène avec un objet spécifique
+    // Méthode avec Feedback comme paramètre pour le changement de scène
     private void switchScene(String fxmlFile, Feedback feedback) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent layout = loader.load();
-        if (fxmlFile.equals("/Reclamation/ModifierFeedback.fxml")) {
-            ModifierFeedback controller = loader.getController();
-            controller.setFeedback(feedback);
-        }
         Scene newScene = new Scene(layout);
-        Stage currentStage = (Stage) feedbackTable.getScene().getWindow();
+        Stage currentStage = (Stage) ((Node) feedback.getSource()).getScene().getWindow();
         currentStage.setScene(newScene);
         currentStage.show();
     }

@@ -38,19 +38,19 @@
             <TextField fx:id="prenomField" promptText="Entrez le prénom" styleClass="text-field" style="-fx-min-width: 200px;"/>
             <TextField fx:id="emailField" promptText="Entrez l'email" styleClass="text-field" style="-fx-min-width: 200px;"/>
             <TextField fx:id="cinField" promptText="Entrez le CIN" styleClass="text-field" style="-fx-min-width: 200px;"/>
-            <TextField fx:id="adresseField" promptText="Entrez l'adresse" styleClass="text-field" style="-fx-min-width: 200px;"/>
             <TextField fx:id="numTelField" promptText="Entrez le numéro de téléphone" styleClass="text-field" style="-fx-min-width: 200px;"/>
-            <ComboBox fx:id="roleComboBox" promptText="Sélectionnez un rôle" styleClass="combo-box" style="-fx-min-width: 200px;"/>
+            <TextField fx:id="adresseField" promptText="Entrez l'adresse" styleClass="text-field" style="-fx-min-width: 200px;"/>
             <PasswordField fx:id="motDePasseField" promptText="Entrez le mot de passe" styleClass="text-field" style="-fx-min-width: 200px;"/>
+            <ComboBox fx:id="roleComboBox" promptText="Sélectionnez un rôle" styleClass="combo-box" style="-fx-min-width: 200px;"/>
 
             <HBox spacing="10" alignment="CENTER">
-                <Button fx:id="ajouterButton" text="Ajouter Membre"
+                <Button fx:id="ajouterButton" text="S'inscrire"
                         onAction="#ajouterMembre"
-                        style="-fx-background-color: #C1272D; -fx-text-fill: white;"
-                />
+                        style="-fx-background-color: #C1272D; -fx-text-fill: white;"/>
                 <Button fx:id="annulerButton" text="Annuler"
-                        onAction="#cancel"
-                        style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+                        onAction="#goToAuth"
+                        style="-fx-background-color: #2196F3; -fx-text-fill: white;"
+                />
             </HBox>
         </VBox>
     </HBox>

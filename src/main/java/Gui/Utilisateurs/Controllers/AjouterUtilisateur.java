@@ -41,35 +41,42 @@ public class AjouterUtilisateur {
         String prenom = prenomField.getText();
         String email = emailField.getText();
         String cin = cinField.getText();
-        String adresse = adresseField.getText();
         String numTel = numTelField.getText();
+        String adresse = adresseField.getText();
         String motDePasse = motDePasseField.getText();
         Role role = roleComboBox.getValue();
+
         if (cin.length() > 8) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le CIN ne peut pas dépasser 8 caractères.");
             return;
         }
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() || adresse.isEmpty() || numTel.isEmpty() || motDePasse.isEmpty() || role == null) {
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() || numTel.isEmpty() || adresse.isEmpty() || motDePasse.isEmpty() || role == null) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Tous les champs sont obligatoires.");
             return;
         }
-        Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, adresse, numTel, role, motDePasse);
+
+        Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, numTel, adresse, role , motDePasse);
+
         try {
             System.out.println("Nom: " + nom);
             System.out.println("Prénom: " + prenom);
             System.out.println("Email: " + email);
             System.out.println("CIN: " + cin);
+            System.out.println("NumTel: " + numTel);
+            System.out.println("Adresse: " + adresse);
+            System.out.println("MotDePasse: " + motDePasse);
+            System.out.println("Role: " + role);
 
             membresService.AjouterMem(nouveauMembre);
             afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Membre ajouté avec succès.");
             viderChamps();
-            goToAfficherUser(event);
-
+            goToAuth(event);
         } catch (Exception e) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout du membre : " + e.getMessage());
             e.printStackTrace();
         }
     }
+
 
     @FXML
     public void cancel(ActionEvent event) {
@@ -131,9 +138,9 @@ public class AjouterUtilisateur {
         roleComboBox.setValue(null);
         motDePasseField.clear();
     }
-    public void goToAfficherUser(ActionEvent event) {
+    public void goToAuth(ActionEvent event) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/AfficherUtilisateur.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/Authentification.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();

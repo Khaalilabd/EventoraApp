@@ -162,4 +162,13 @@ public class ModifierRec {
         newStage.setScene(newScene);
         newStage.show();
     }
+    @FXML
+    private void goToAccueil(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/EventoraAPP.fxml"));
+        AnchorPane packLayout = loader.load();
+        Scene scene = new Scene(packLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
 }

@@ -8,50 +8,47 @@
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Reclamation.Controllers.Feedback"
-            prefHeight="600.0" prefWidth="900.0"
             stylesheets="/style.css">
 
-    <!-- Barre de navigation latérale -->
-    <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
-        <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
+    <!-- Barre de navigation moderne -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"  />
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" />
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button" />
+            <Button text="🛑 Déconnexion" styleClass="logout-button" />
+        </HBox>
+    </HBox>
 
-        <!-- Menu Buttons -->
-        <VBox spacing="10">
-            <Button text="🏠 Accueil" styleClass="menu-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
-            <Button text="📲 Réservation" styleClass="menu-button" onAction="#goToReservation" />
-            <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
-            <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
-            <Button text="⭐ FeedBack" styleClass="menu-button" onAction="#goToFeedback"/>
-            <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
-            <Button text="🔧 Paramètres" styleClass="menu-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
-        </VBox>
-    </VBox>
+    <!-- Contenu principal avec introduction et boutons -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
 
-    <!-- Contenu principal centré -->
-    <VBox layoutX="240" layoutY="30" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="540" styleClass="main-container">
-
-        <!-- Titre -->
-        <Label text="Bienvenue dans l’espace Feedback 🌟 " styleClass="title-text"/>
-
-        <!-- Texte d'introduction -->
-        <Label wrapText="true" prefWidth="500" styleClass="main-text"
-               text="Votre avis nous aide à améliorer nos services. Souhaitez-vous partager votre expérience ?" />
-
-        <!-- Image illustrative -->
-        <ImageView fx:id="imageFeedback" fitWidth="150" fitHeight="150" preserveRatio="true">
+        <!-- Image en arrière-plan, s'adaptant à l'écran -->
+        <ImageView fx:id="imageFeedback" fitWidth="200" fitHeight="200" preserveRatio="true">
             <image>
-                <Image url="/Images/feedback.gif"/>
+                <Image url="/Images/feedback.png"/>
             </image>
         </ImageView>
 
-        <!-- Boutons avec actions -->
-        <HBox spacing="30" alignment="CENTER">
-            <Button fx:id="ajouterButton" text="✅ Oui, je veux donner mon avis" styleClass="add-button" onAction="#handleAddAction"/>
+        <Label text="Bienvenue dans l’espace Feedback 🌟 " styleClass="main-title"/>
+        <Label wrapText="true" styleClass="main-description"
+               text="Votre avis nous aide à améliorer nos services. Souhaitez-vous partager votre expérience ?"/>
+
+        <!-- Image et boutons -->
+        <HBox spacing="30" alignment="CENTER" styleClass="button-container">
+            <Button fx:id="ajouterButton" text="✅ Oui, je veux donner mon avis" styleClass="add-button2" onAction="#handleAddAction"/>
             <Button fx:id="annulerButton" text="❌ Non, merci" styleClass="cancel-button" onAction="#handleCancelAction"/>
         </HBox>
-
     </VBox>
-
 </AnchorPane>

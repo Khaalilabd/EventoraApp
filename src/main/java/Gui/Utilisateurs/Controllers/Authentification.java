@@ -24,18 +24,17 @@ public class Authentification {
     @FXML
     private PasswordField passwordField;
     private final MembresService membresService = new MembresService();
+
     @FXML
     private void seConnecter(ActionEvent event) throws IOException, SQLException {
         String username = usernameField.getText();
         String password = passwordField.getText();
+
         if (username.isEmpty() || password.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.getDialogPane().getStyleClass().add("alert-style"); // Applique le style CSS
-            alert.setTitle("Erreur");
-            alert.setContentText("Veuillez saisir votre nom d'utilisateur et votre mot de passe.");
-            alert.showAndWait();
+            afficherAlerte("Erreur", "Veuillez saisir votre nom d'utilisateur et votre mot de passe.");
             return;
         }
+
         Utilisateurs utilisateur = membresService.rechercherMemParNom(username);
         if (utilisateur != null && verifierMotDePasse(password, utilisateur.getMotDePasse())) {
             Parent root = FXMLLoader.load(getClass().getResource("/Utilisateurs/AfficherUtilisateur.fxml"));
@@ -45,20 +44,12 @@ public class Authentification {
             stage.setScene(scene);
             stage.show();
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.getDialogPane().getStyleClass().add("alert-style");
-            alert.setTitle("Erreur");
-            alert.setContentText("Nom d'utilisateur ou mot de passe incorrect.");
-            alert.showAndWait();
+            afficherAlerte("Erreur", "Nom d'utilisateur ou mot de passe incorrect.");
         }
     }
 
-
     private boolean verifierMotDePasse(String motDePasseSaisi, String motDePasseStocke) throws SQLException {
-        if (motDePasseStocke == null) {
-            return false;
-        }
-        return motDePasseSaisi.equals(motDePasseStocke);
+        return motDePasseStocke != null && motDePasseSaisi.equals(motDePasseStocke);
     }
 
     private void afficherAlerte(String titre, String message) {
@@ -69,39 +60,25 @@ public class Authentification {
     }
 
     @FXML
-    public void goToinscription(ActionEvent event) { // Méthode publique
-        try {
-            URL fxmlURL = getClass().getResource("/Utilisateurs/AjouterUtilisateur.fxml");
-
-            if (fxmlURL == null) {
-                System.err.println("Error: Could not find AjouterUtilisateur.fxml");
-                return;
-            }
-            FXMLLoader loader = new FXMLLoader(fxmlURL); // Use FXMLLoader directly
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 1022, 687); // Set your desired dimensions
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            System.err.println("Error loading FXML: " + e.getMessage());
-            e.printStackTrace();
-        }
+    public void goToinscription(ActionEvent event) {
+        changerScene(event, "/Utilisateurs/AjouterUtilisateur.fxml");
     }
 
     @FXML
-    public void goBack(ActionEvent event) { // Méthode publique
-        try {
-            URL fxmlURL = getClass().getResource("/Utilisateurs/Acceuil.fxml");
+    public void goBack(ActionEvent event) {
+        changerScene(event, "/EventoraAPP/Acceuil.fxml");
+    }
 
+    private void changerScene(ActionEvent event, String cheminFXML) {
+        try {
+            URL fxmlURL = getClass().getResource(cheminFXML);
             if (fxmlURL == null) {
-                System.err.println("Error: Could not find Accueil.fxml");
+                System.err.println("Error: Could not find " + cheminFXML);
                 return;
             }
-            FXMLLoader loader = new FXMLLoader(fxmlURL); // Use FXMLLoader directly
-            Parent root = loader.load();
+            Parent root = FXMLLoader.load(fxmlURL);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 1022, 687); // Set your desired dimensions
+            Scene scene = new Scene(root, 1022, 687);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

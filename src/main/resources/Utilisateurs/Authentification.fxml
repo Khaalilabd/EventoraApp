@@ -5,10 +5,8 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
-<?import javafx.animation.FadeTransition?>
-<?import javafx.util.Duration?>
-
 <?import javafx.scene.text.Text?>
+
 <AnchorPane prefHeight="687" prefWidth="1022"
             style="-fx-background-color: #F5E1C0;"
             xmlns="http://javafx.com/javafx/20.0.2"
@@ -16,21 +14,11 @@
             fx:controller="Gui.Utilisateurs.Controllers.Authentification">
 
     <HBox prefWidth="1022" prefHeight="687">
-        <!-- Left side with gradient background, logo, and background image -->
+        <!-- Left side with logo only -->
         <VBox alignment="CENTER"
               spacing="20"
               prefWidth="511" prefHeight="687"
               style="-fx-background-color: #F5E1C0;">
-
-            <ImageView fx:id="backgroundImage"
-                       fitHeight="687"
-                       fitWidth="511"
-                       preserveRatio="true"
-                       style="-fx-opacity: 0.5;">
-                <image>
-                    <Image url="@/Images/mariage.jpg"/>
-                </image>
-            </ImageView>
 
             <ImageView fx:id="logo"
                        fitHeight="180.0"
@@ -89,5 +77,4 @@
                            -fx-border-radius: 30;" onAction="#goToinscription"/>
         </VBox>
     </HBox>
-
 </AnchorPane>

@@ -14,7 +14,7 @@ public class MembresService implements Imembres<Utilisateurs> {
 
     @Override
     public void AjouterMem(Utilisateurs membre) {
-        String req = "INSERT INTO membres (Nom, Prénom, Email, CIN, Adresse, NumTel, MotDePasse) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO membres (Nom, Prénom, Email, CIN, NumTel , Adresse,  MotDePasse  ) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement ps = connection.prepareStatement(req);
@@ -25,6 +25,7 @@ public class MembresService implements Imembres<Utilisateurs> {
             ps.setString(5, membre.getAdresse());
             ps.setString(6, membre.getNumTel());
             ps.setString(7, membre.getMotDePasse());
+
             ps.executeUpdate();
             System.out.println("Membre ajouté avec succès !");
         } catch (Exception e) {

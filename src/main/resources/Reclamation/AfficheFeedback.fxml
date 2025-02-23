@@ -8,60 +8,59 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 <?import javafx.scene.control.TextField?>
-<AnchorPane prefHeight="687.0" prefWidth="1022.0" style="-fx-background-color: #F2F2F2;"
+
+<AnchorPane prefHeight="764.0" prefWidth="1163.0" style="-fx-background-color: #F2F2F2;"
             stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Reclamation.Controllers.AfficheFeedback">
-    <HBox prefHeight="687.0" prefWidth="1022.0" spacing="0">
-        <!-- Barre de navigation latérale -->
-        <VBox prefHeight="687.0" prefWidth="220" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
-            <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
-            <VBox spacing="10">
-                <Button text="🏠 Accueil" styleClass="menu-button"/>
-                <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
-                <Button text="📲 Réservation" styleClass="menu-button" onAction="#goToReservation" />
-                <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
-                <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
-                <Button text="⭐ FeedBack" styleClass="menu-button" onAction="#goToFeedback"/>
-                <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
-                <Button text="🔧 Paramètres" styleClass="menu-button"/>
-                <Button text="🛑 Déconnexion" styleClass="logout-button"/>
-            </VBox>
-        </VBox>
 
-        <!-- Contenu principal -->
-        <VBox alignment="CENTER" layoutX="240" layoutY="50" prefHeight="687.0" prefWidth="802.0" spacing="20" style="-fx-padding: 20px;">
-            <Label prefHeight="55.0" prefWidth="422.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 10px;" text="⛔ Liste des Feedback ⛔" textAlignment="CENTER">
-                <font>
-                    <Font size="49.0" />
-                </font>
-            </Label>
-
-            <!-- Ajouter et Actualiser Buttons -->
-            <HBox spacing="10">
-                <Button text="Ajouter" onAction="#goToAjouterFeedback" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
-                <Button text="Actualiser" onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
-
-                <TextField fx:id="searchField" promptText="Rechercher..." style="-fx-min-width: 200px;"/>
-                <Button text="Rechercher" onAction="#searchFeedback" style="-fx-background-color: #FFC107; -fx-text-fill: white;"/>
-                <Button text="Afficher Graphique" onAction="#handleShowPieChart" />
-
-            </HBox>
-
-            <!-- Tableau des Feedbacks -->
-            <TableView fx:id="feedbackTable" prefHeight="577.0" prefWidth="762.0">
-                <columns>
-                    <TableColumn fx:id="colId" prefWidth="100" text="ID" />
-                    <TableColumn fx:id="colUser" prefWidth="150" text="Utilisateur" />
-                    <TableColumn fx:id="colVote" prefWidth="150" text="Vote" />
-                    <TableColumn fx:id="colDescription" prefWidth="250" text="Description" />
-                    <TableColumn fx:id="colRecommend" prefWidth="150" text="Recommande" />
-                    <TableColumn fx:id="colActions" prefWidth="150" text="Actions" />
-                </columns>
-            </TableView>
-        </VBox>
-
+    <!-- Barre de navigation en haut -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil" />
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" />
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button" />
+            <Button text="🛑 Déconnexion" styleClass="logout-button" />
+        </HBox>
     </HBox>
+
+    <!-- Contenu principal -->
+    <VBox alignment="CENTER" spacing="20" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+
+        <!-- Ajouter, Actualiser et Rechercher Buttons -->
+        <HBox spacing="10">
+            <Button text="Ajouter" onAction="#goToAjouterFeedback" style="-fx-background-color: #11a791; -fx-text-fill: white; -fx-font-weight: bold;-fx-pref-width: 250px; -fx-padding: 5px; -fx-border-radius: 5px;"/>
+            <Button text="Actualiser" onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-weight: bold;-fx-pref-width: 250px; -fx-padding: 5px; -fx-border-radius: 5px;"/>
+            <TextField fx:id="searchField" promptText="Rechercher..." style="-fx-min-width: 200px; -fx-padding: 5px; -fx-border-radius: 5px;"/>
+            <Button text="Rechercher" onAction="#searchFeedback" style="-fx-background-color: #FFC107; -fx-text-fill: white; -fx-font-weight: bold;-fx-pref-width: 250px; -fx-padding: 5px; -fx-border-radius: 5px;"/>
+            <Button text="Afficher Graphique" onAction="#handleShowPieChart" style="-fx-background-color: #F5DEB3; -fx-text-fill: white; -fx-font-weight: bold;-fx-pref-width: 250px; -fx-padding: 5px; -fx-border-radius: 5px;"/>
+        </HBox>
+
+        <!-- Tableau des Feedbacks -->
+        <TableView fx:id="feedbackTable" prefHeight="577.0" prefWidth="999.0" style="-fx-border-color: #D1D1D1; -fx-border-radius: 8px;
+                                                                                    -fx-background-color: white; -fx-padding: 10px;
+                                                                                    -fx-selection-bar: #C8102E; -fx-selection-bar-text: white;">
+            <columns>
+                <TableColumn fx:id="colId" prefWidth="100" text="ID" />
+                <TableColumn fx:id="colUser" prefWidth="150" text="Utilisateur" />
+                <TableColumn fx:id="colVote" prefWidth="150" text="Vote" />
+                <TableColumn fx:id="colDescription" prefWidth="250" text="Description" />
+                <TableColumn fx:id="colRecommend" prefWidth="150" text="Recommande" />
+                <TableColumn fx:id="colActions" prefWidth="150" text="Actions" />
+            </columns>
+        </TableView>
+    </VBox>
+
 </AnchorPane>

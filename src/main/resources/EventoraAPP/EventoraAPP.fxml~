@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Pos?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.EventoraAPP.Controllers.EventoraAPP"
+            stylesheets="/style.css">
+
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text=" Accueil" styleClass="nav-button" onAction="#goToAccueil"/>
+            <Button text=" Utilisateur" styleClass="nav-button" onAction="#goToUtilisateur"/>
+            <Button text=" Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text=" Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text=" Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text=" Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text=" Paramètres" styleClass="nav-button" onAction="#goToParametres"/>
+            <Button text=" Déconnexion" styleClass="logout-button" onAction="#logout"/>
+        </HBox>
+    </HBox>
+
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <Label text="Eventora" styleClass="main-title"/>
+        <Label styleClass="main-description">
+            Application de gestion d'événements pour mariages, anniversaires, soirées privées, etc.
+            Simplifiez l'organisation de vos événements avec Eventora !
+        </Label>
+
+        <HBox spacing="20" alignment="CENTER" styleClass="card-container">
+            <VBox fx:id="card1" styleClass="card">
+                <ImageView fitHeight="400" fitWidth="400">
+                    <image>
+                        <Image url="/Images/reservation.jpg"/>
+                    </image>
+                </ImageView>
+                <Label text="Réservation" styleClass="card-title"/>
+                <Label text="Réservez votre événement dès maintenant !" styleClass="card-description"/>
+                <Button text="Réserver" styleClass="card-button" onAction="#goToReservation"/>
+            </VBox>
+
+            <VBox fx:id="card2" styleClass="card">
+                <ImageView fitHeight="400" fitWidth="400">
+                    <image>
+                        <Image url="/Images/reservation.jpg"/>
+                    </image>
+                </ImageView>
+                <Label text="Services" styleClass="card-title"/>
+                <Label text="Découvrez nos services exceptionnels !" styleClass="card-description"/>
+                <Button text="Voir les services" styleClass="card-button" onAction="#goToService"/>
+            </VBox>
+
+            <VBox fx:id="card3" styleClass="card">
+                <ImageView fitHeight="400" fitWidth="400">
+                    <image>
+                        <Image url="/Images/reservation.jpg"/>
+                    </image>
+                </ImageView>
+                <Label text="Packs" styleClass="card-title"/>
+                <Label text="Profitez de nos offres groupées avantageuses !" styleClass="card-description"/>
+                <Button text="Voir les packs" styleClass="card-button" onAction="#goToPack"/>
+            </VBox>
+        </HBox>
+    </VBox>
+</AnchorPane>
