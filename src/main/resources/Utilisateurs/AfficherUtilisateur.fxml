@@ -1,16 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.geometry.Pos?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.2"
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            stylesheets="/style.css"
-            fx:controller="Gui.Utilisateurs.Controllers.AfficherUtilisateur">
-    <VBox alignment="CENTER" spacing="20" style="-fx-padding: 20;">
-        <Label text="Liste des Utilisateurs" style="-fx-font-size: 20px; -fx-font-weight: bold;"/>
+            fx:controller="Gui.Utilisateurs.Controllers.AfficherUtilisateur"
+            prefHeight="600.0" prefWidth="800.0"
+            stylesheets="/style.css">
 
-        <!-- TableView pour afficher les utilisateurs -->
+    <!-- Navbar horizontale (identique à AjouterRec) -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
+    </HBox>
+
+    <!-- Contenu principal (structure inspirée de AjouterRec) -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+
+        <!-- Titre principal -->
+        <Label text="Liste des Utilisateurs" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Consultez et gérez les utilisateurs enregistrés dans le système."/>
+
+        <!-- Tableau des utilisateurs -->
         <TableView fx:id="tableView" prefHeight="400.0" prefWidth="700.0">
             <columns>
                 <TableColumn fx:id="colId" text="ID" prefWidth="50.0"/>
@@ -24,12 +54,10 @@
             </columns>
         </TableView>
 
-        <!-- Boutons -->
-        <HBox spacing="20" alignment="CENTER">
-            <Button fx:id="supprimerButton" text="Supprimer" onAction="#supprimerUtilisateur"
-                    style="-fx-background-color: #F44336; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;"/>
-            <Button fx:id="modifierButton" text="Modifier" onAction="#modifierUtilisateur"
-                    style="-fx-background-color: #2196F3; -fx-text-fill: white; -fx-font-size: 14px; -fx-padding: 10px 20px;"/>
+        <!-- Boutons avec icônes -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="supprimerButton" text="🗑️ Supprimer" styleClass="card-button" onAction="#supprimerUtilisateur"/>
+            <Button fx:id="modifierButton" text="✏️ Modifier" styleClass="card-button" onAction="#modifierUtilisateur"/>
         </HBox>
     </VBox>
 </AnchorPane>

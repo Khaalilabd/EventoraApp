@@ -1,70 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
-
-<AnchorPane prefHeight="764.0" prefWidth="1163.0" style="-fx-background-color: #F2F2F2;"
-            stylesheets="/style.css"
-            xmlns="http://javafx.com/javafx/20.0.2"
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Pack.Controllers.AfficheEvenement">
+            fx:controller="Gui.Pack.Controllers.AfficheEvenement"
+            prefHeight="764.0" prefWidth="1163.0"
+            stylesheets="/style.css">
 
-    <HBox prefHeight="774.0" prefWidth="1213.0" spacing="0">
-        <!-- Barre de navigation latérale -->
-        <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
-            <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
-
-            <!-- Menu Buttons -->
-            <VBox spacing="10">
-                <Button text="🏠 Accueil" styleClass="menu-button"/>
-                <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
-                <Button text="📲 Réservation" styleClass="menu-button" onAction="#goToReservation" />
-                <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
-                <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
-                <Button text="⭐ FeedBack" styleClass="menu-button" onAction="#goToFeedback"/>
-                <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
-                <Button text="🔧 Paramètres" styleClass="menu-button"/>
-                <Button text="🛑 Déconnexion" styleClass="logout-button"/>
-            </VBox>
-        </VBox>
-
-        <!-- Contenu principal -->
-        <VBox alignment="CENTER" layoutX="240" layoutY="50" prefHeight="774.0" prefWidth="1051.0" spacing="20" style="-fx-padding: 20px;">
-            <Label prefHeight="55.0" prefWidth="422.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 10px;"
-                   text="⛔ Type des Evénements ⛔" textAlignment="CENTER">
-                <font>
-                    <Font size="49.0" />
-                </font>
-            </Label>
-
-            <!-- Search Field with Icon -->
-            <StackPane alignment="CENTER_LEFT">
-                <TextField fx:id="searchField" promptText="Rechercher...🔍" style="-fx-padding: 8px 30px 8px 40px; -fx-background-radius: 20px;"/>
-            </StackPane>
-
-            <!-- Buttons Row -->
-            <HBox prefHeight="25.0" prefWidth="814.0" spacing="10">
-                <Button style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Ajouter Event" onAction="#addEvenement"/>
-                <Button style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Actualiser" onAction="#refreshList"/>
-
-            </HBox>
-
-            <!-- Tableau des packs -->
-            <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
-                <columns>
-                    <TableColumn fx:id="colType" prefWidth="150.0" text="Evenement"/>
-                    <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
-                </columns>
-            </TableView>
-        </VBox>
-
+    <!-- Navbar horizontale (identique à AjouterRec) -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
     </HBox>
+
+    <!-- Contenu principal (structure inspirée de AjouterRec) -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+
+        <!-- Titre principal -->
+        <Label text="Type des Événements" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Consultez, ajoutez ou gérez les types d'événements disponibles dans votre catalogue."/>
+
+        <!-- Champ de recherche -->
+        <TextField fx:id="searchField" promptText="Rechercher... 🔍" styleClass="input-field"/>
+
+        <!-- Boutons avec icônes -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button text="➕ Ajouter Événement" styleClass="card-button" onAction="#addEvenement"/>
+            <Button text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
+        </HBox>
+
+        <!-- Tableau des événements -->
+        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
+            <columns>
+                <TableColumn fx:id="colType" prefWidth="150.0" text="Événement"/>
+                <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
+            </columns>
+        </TableView>
+    </VBox>
 </AnchorPane>

@@ -3,13 +3,22 @@ package Gui.Utilisateurs.Controllers;
 import Models.Utilisateur.Role;
 import Models.Utilisateur.Utilisateurs;
 import Services.Utilisateur.Crud.MembresService;
+import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
+import java.io.IOException;
 
 public class ModifierUtilisateur {
 
-    @FXML private TextField idField; // Champ pour l'ID du membre à modifier
+    @FXML private TextField idField;
     @FXML private TextField nomField;
     @FXML private TextField prenomField;
     @FXML private TextField emailField;
@@ -19,16 +28,27 @@ public class ModifierUtilisateur {
     @FXML private ComboBox<Role> roleComboBox;
     @FXML private Button modifierButton;
     @FXML private Button annulerButton;
+    @FXML private Button rechercherButton;
 
     private final MembresService membresService = new MembresService();
-    private Utilisateurs membreAModifier; // Variable pour stocker le membre à modifier
+    private Utilisateurs membreAModifier;
 
     @FXML
     public void initialize() {
         roleComboBox.getItems().addAll(Role.ADMIN, Role.AGENT, Role.MEMBRE);
+        animateButton();
     }
 
-    // Nouvelle méthode pour définir l'utilisateur à modifier depuis AfficherUtilisateur
+    // Animation du bouton "Rechercher" (inspirée de Reclamation)
+    private void animateButton() {
+        TranslateTransition floating = new TranslateTransition(Duration.seconds(2), rechercherButton);
+        floating.setByY(10);
+        floating.setAutoReverse(true);
+        floating.setCycleCount(TranslateTransition.INDEFINITE);
+        floating.play();
+    }
+
+    // Charger un utilisateur depuis AfficherUtilisateur
     public void setUtilisateur(Utilisateurs utilisateur) {
         this.membreAModifier = utilisateur;
         if (membreAModifier != null) {
@@ -37,7 +57,7 @@ public class ModifierUtilisateur {
     }
 
     @FXML
-    public void rechercherMembre() {
+    private void rechercherMembre(ActionEvent event) {
         try {
             int id = Integer.parseInt(idField.getText());
             membreAModifier = membresService.rechercherMem(id);
@@ -45,18 +65,18 @@ public class ModifierUtilisateur {
             if (membreAModifier != null) {
                 remplirChamps();
             } else {
-                afficherAlerte("Erreur", "Aucun membre trouvé avec cet ID.");
+                showError("Erreur de recherche", "Aucun membre trouvé avec cet ID.");
                 viderChamps();
             }
         } catch (NumberFormatException e) {
-            afficherAlerte("Erreur", "ID invalide. Veuillez entrer un nombre entier.");
+            showError("Erreur d'entrée", "ID invalide. Veuillez entrer un nombre entier.");
         }
     }
 
     @FXML
-    public void modifierMembre() {
+    private void modifierMembre(ActionEvent event) {
         if (membreAModifier == null) {
-            afficherAlerte("Erreur", "Veuillez d'abord sélectionner ou rechercher un membre.");
+            showError("Erreur", "Veuillez d'abord sélectionner ou rechercher un membre.");
             return;
         }
 
@@ -68,38 +88,32 @@ public class ModifierUtilisateur {
         String numTel = numTelField.getText();
         Role role = roleComboBox.getValue();
 
-        // Vérification que tous les champs sont remplis
         if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() ||
                 adresse.isEmpty() || numTel.isEmpty() || role == null) {
-            afficherAlerte("Erreur", "Tous les champs sont obligatoires.");
+            showError("Erreur", "Tous les champs sont obligatoires.");
             return;
         }
 
-        // Contrainte : Vérifier le format de l'email
         if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            afficherAlerte("Erreur", "Format d'email invalide.");
+            showError("Erreur", "Format d'email invalide.");
             return;
         }
 
-        // Contrainte : Le numéro de téléphone doit contenir uniquement des chiffres
         if (!numTel.matches("\\d+")) {
-            afficherAlerte("Erreur", "Le numéro de téléphone doit contenir uniquement des chiffres.");
+            showError("Erreur", "Le numéro de téléphone doit contenir uniquement des chiffres.");
             return;
         }
 
-        // Contrainte : Le CIN doit contenir exactement 8 chiffres
         if (!cin.matches("\\d{8}")) {
-            afficherAlerte("Erreur", "Le CIN doit contenir exactement 8 chiffres.");
+            showError("Erreur", "Le CIN doit contenir exactement 8 chiffres.");
             return;
         }
 
-        // Contrainte optionnelle : Le nom et le prénom ne doivent contenir que des lettres, espaces ou tirets
         if (!nom.matches("[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+") || !prenom.matches("[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+")) {
-            afficherAlerte("Erreur", "Le nom et le prénom doivent contenir uniquement des lettres, espaces ou tirets.");
+            showError("Erreur", "Le nom et le prénom doivent contenir uniquement des lettres, espaces ou tirets.");
             return;
         }
 
-        // Mise à jour de l'objet membre avec les nouvelles valeurs
         membreAModifier.setNom(nom);
         membreAModifier.setPrenom(prenom);
         membreAModifier.setEmail(email);
@@ -109,15 +123,63 @@ public class ModifierUtilisateur {
         membreAModifier.setRole(role);
 
         membresService.ModifierMem(membreAModifier);
-        afficherAlerte("Succès", "Membre modifié avec succès.");
-        fermerFenetre(); // Fermer la fenêtre après modification réussie
+        showSuccess("Succès", "Membre modifié avec succès.");
+        switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
     }
 
     @FXML
-    public void cancel() {
-        fermerFenetre(); // Fermer la fenêtre au lieu de juste vider les champs
+    private void cancel(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
     }
 
+    // Méthodes de navigation inspirées de Reclamation et du FXML fourni
+    @FXML
+    private void goToAccueil(ActionEvent event) {
+        switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
+    }
+
+    @FXML
+    private void goToReservation(ActionEvent event) {
+        switchScene(event, "/Reservation/Reservation.fxml");
+    }
+
+    @FXML
+    private void goToService(ActionEvent event) {
+        switchScene(event, "/Service/Service.fxml");
+    }
+
+    @FXML
+    private void goToPack(ActionEvent event) {
+        switchScene(event, "/Pack/Packs.fxml");
+    }
+
+    @FXML
+    private void goToFeedback(ActionEvent event) {
+        switchScene(event, "/Reclamation/Feedback.fxml");
+    }
+
+    @FXML
+    private void goToReclamation(ActionEvent event) {
+        switchScene(event, "/Reclamation/Reclamation.fxml");
+    }
+
+    // Méthode de navigation générique
+    private void switchScene(ActionEvent event, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            AnchorPane layout = loader.load();
+            Scene scene = new Scene(layout);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+        } catch (IOException e) {
+            showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
+
+    // Méthodes utilitaires
     private void remplirChamps() {
         idField.setText(String.valueOf(membreAModifier.getId()));
         nomField.setText(membreAModifier.getNom());
@@ -127,13 +189,6 @@ public class ModifierUtilisateur {
         adresseField.setText(membreAModifier.getAdresse());
         numTelField.setText(membreAModifier.getNumTel());
         roleComboBox.setValue(membreAModifier.getRole());
-    }
-
-    private void afficherAlerte(String titre, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titre);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     private void viderChamps() {
@@ -147,8 +202,20 @@ public class ModifierUtilisateur {
         roleComboBox.setValue(null);
     }
 
-    private void fermerFenetre() {
-        Stage stage = (Stage) annulerButton.getScene().getWindow();
-        stage.close();
+    // Gestion des erreurs et succès
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    private void showSuccess(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 }

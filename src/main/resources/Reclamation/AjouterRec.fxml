@@ -1,52 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Pos?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Reclamation.Controllers.AjouterRec"
-            stylesheets="/style.css">
+            fx:controller="Gui.Pack.Controllers.AjouterPack"
+            prefHeight="600.0" prefWidth="900.0"
+            stylesheets="/style.css"
+            style="-fx-background-color: #ECF0F1;">
 
-    <!-- Barre de navigation supérieure -->
-    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
+    <!-- Navbar horizontale -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
           AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <HBox alignment="CENTER_LEFT">
             <Label text="Eventora Menu" styleClass="nav-title"/>
         </HBox>
         <HBox spacing="20" alignment="CENTER_RIGHT">
-            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil" />
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" />
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
             <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
             <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
             <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
-            <Button text="🔧 Paramètres" styleClass="nav-button" />
-            <Button text="🛑 Déconnexion" styleClass="logout-button" />
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
         </HBox>
     </HBox>
 
     <!-- Contenu principal -->
     <VBox alignment="CENTER" styleClass="main-content"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
 
-        <Label text="Déposer une Réclamation" styleClass="main-title"/>
-        <Label text="Remplissez le formulaire pour soumettre votre réclamation." styleClass="main-description"/>
+        <!-- Titre principal -->
+        <Label text="Ajouter un pack" styleClass="main-title"/>
 
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Remplissez le formulaire pour ajouter un nouveau pack à votre catalogue."/>
+
+        <!-- Formulaire -->
         <VBox spacing="15" alignment="CENTER" styleClass="form-container">
-            <ComboBox fx:id="userField" promptText="Sélectionner un utilisateur" styleClass="input-field"/>
-            <TextField fx:id="titleField" promptText="Titre de la Réclamation" styleClass="input-field"/>
-            <ComboBox fx:id="typeField" promptText="Sélectionner un type" styleClass="input-field"/>
-            <TextArea fx:id="descField" promptText="Expliquez votre problème..." styleClass="input-field"/>
-
-            <HBox spacing="20" alignment="CENTER" styleClass="hbox-buttons">
-                <Button text="Soumettre" fx:id="submitButton" styleClass="submit-button"/>
-                <Button text="Annuler" fx:id="cancelButton" styleClass="cancel-button"/>
-            </HBox>
+            <TextField fx:id="NomPackField" promptText="Titre du pack" styleClass="input-field"/>
+            <TextArea fx:id="DescriptionField" promptText="Donner la description du pack" styleClass="input-field"/>
+            <TextField fx:id="PrixField" promptText="Prix du pack" styleClass="input-field"/>
+            <ComboBox fx:id="LocationField" promptText="Sélectionner la localisation" styleClass="input-field"/>
+            <ComboBox fx:id="TypeField" promptText="Sélectionner le type du pack" styleClass="input-field"/>
+            <TextField fx:id="NbrGuestsField" promptText="Le nombre max des invités" styleClass="input-field"/>
+            <TextField fx:id="ServiceField" promptText="Les Services" styleClass="input-field"/>
         </VBox>
+
+        <!-- Boutons avec icônes -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="submitButton" text="✔ Soumettre" styleClass="card-button"/>
+            <Button fx:id="cancelButton" text="❌ Annuler" styleClass="card-button"/>
+            <Button fx:id="ReturnToListButton" text="↩ Retour" styleClass="card-button"/>
+        </HBox>
     </VBox>
 </AnchorPane>

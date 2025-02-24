@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Pos?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -9,86 +10,55 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="465.0"
-            prefWidth="700.0"
-            style="-fx-background-color: #F4F1F1;"
-            stylesheets="/style.css"
-            xmlns="http://javafx.com/javafx/23.0.1"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Service.Controllers.ModifierService">
+<AnchorPane prefHeight="465.0" prefWidth="700.0" stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Service.Controllers.ModifierService">
 
-    <!-- Barre de navigation latérale -->
-    <VBox prefHeight="510.0" prefWidth="220" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
-        <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
-        <VBox spacing="10">
-            <Button styleClass="menu-button" text="🏠 Accueil" />
-            <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
-            <Button styleClass="menu-button" text="📲 Réservation" />
-            <Button onAction="#goToService" styleClass="menu-button" text="🎁 Services" />
-            <Button styleClass="menu-button" text="⭐ FeedBack" />
-            <Button styleClass="menu-button" text="🚨 Réclamations" />
-            <Button styleClass="menu-button" text="🔧 Paramètres" />
-            <Button styleClass="logout-button" text="🛑 Déconnexion" />
-        </VBox>
-    </VBox>
+    <!-- Navbar horizontale en haut -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
+    </HBox>
 
     <!-- Contenu principal -->
-    <VBox alignment="CENTER" layoutX="240.0" layoutY="-1.0" prefHeight="510.0" prefWidth="650.0" spacing="20">
-        <Label styleClass="main-title" text="Modifier un Service" />
-      <HBox prefHeight="38.0" prefWidth="256.0">
-          <children>
-              <Label prefHeight="38.0" prefWidth="162.0" text="Choisir le partenaire" />
-              <VBox prefHeight="38.0" prefWidth="256.0" />
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
 
+        <!-- Titre principal -->
+        <Label text="Modifier un Service" styleClass="main-title"/>
 
-              <!-- Champ Titre de la Réclamation -->
-              <ComboBox fx:id="idPartenaireField" prefHeight="42.0" prefWidth="250.0" styleClass="input-field" />
-          </children>
-      </HBox>
-        <HBox prefHeight="38.0" prefWidth="256.0">
-            <children>
-                <Label prefHeight="38.0" prefWidth="153.0" text="Entrer la titre de service" />
-                <VBox prefHeight="42.0" prefWidth="266.0" />
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Modifiez les détails du service ci-dessous."/>
 
-                <TextField fx:id="titleField" prefHeight="42.0" prefWidth="250.0" styleClass="input-field" />
-            </children>
-        </HBox>
-        <HBox prefHeight="38.0" prefWidth="256.0">
-            <children>
-                <Label prefHeight="18.0" prefWidth="148.0" text="Choisir la localisatiiion" />
-                <VBox prefHeight="38.0" prefWidth="274.0" />
-                <!-- Champ location -->
-                <ComboBox fx:id="locationfield" prefHeight="42.0" prefWidth="250.0" styleClass="input-field" />
-            </children>
-        </HBox>
-        <HBox prefHeight="38.0" prefWidth="256.0">
-            <children>
-                <Label prefHeight="39.0" prefWidth="159.0" text="Choisir type de service" />
-                <VBox prefHeight="38.0" prefWidth="262.0" />
-                <!-- Champ sponsor -->
-                <ComboBox fx:id="type_servicefield" prefHeight="42.0" prefWidth="250.0" styleClass="input-field" />
-            </children>
-        </HBox>
-        <HBox prefHeight="86.0" prefWidth="256.0">
-            <children>
-                <Label prefHeight="86.0" prefWidth="149.0" text="Entrer la discription" />
-                <VBox prefHeight="86.0" prefWidth="318.0" />
-                <!-- Description -->
-                <TextArea fx:id="descriptionField" prefHeight="86.0" prefWidth="271.0" styleClass="input-field" />
-            </children>
-        </HBox>
-        <HBox prefHeight="38.0" prefWidth="256.0">
-            <children>
-                <Label prefHeight="42.0" prefWidth="162.0" text="Entrer le prix" />
-                <VBox prefHeight="38.0" prefWidth="260.0" />
-                <!-- Prix -->
-                <TextField fx:id="prixField" prefHeight="42.0" prefWidth="250.0" styleClass="input-field" />
-            </children>
-      </HBox>
+        <!-- Formulaire -->
+        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
+            <ComboBox fx:id="idPartenaireField" promptText="Sélectionner un partenaire" styleClass="input-field"/>
+            <TextField fx:id="titleField" promptText="Titre du service" styleClass="input-field"/>
+            <ComboBox fx:id="locationfield" promptText="Sélectionner un lieu" styleClass="input-field"/>
+            <ComboBox fx:id="type_servicefield" promptText="Sélectionner un type de service" styleClass="input-field"/>
+            <TextArea fx:id="descriptionField" promptText="Description du service..." styleClass="input-field"/>
+            <TextField fx:id="prixField" promptText="Prix du service" styleClass="input-field"/>
+        </VBox>
 
-        <!-- Boutons -->
-        <HBox alignment="CENTER" spacing="20">
-            <Button fx:id="submitButton" styleClass="submit-button" text="Sauvegarder" />
-            <Button fx:id="cancelButton" styleClass="cancel-button" text="Annuler" />
+        <!-- Boutons avec icônes -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="submitButton" text="✔ Sauvegarder" styleClass="card-button"/>
+            <Button fx:id="cancelButton" text="❌ Annuler" styleClass="card-button"/>
         </HBox>
     </VBox>
 </AnchorPane>

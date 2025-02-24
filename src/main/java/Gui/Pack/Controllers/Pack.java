@@ -46,10 +46,7 @@ public class Pack {
         switchScene(event, "/Pack/AffichePack.fxml");
     }
 
-    @FXML
-    private void goToPack(ActionEvent event) {
-        switchScene(event, "/Pack/Packs.fxml");
-    }
+
 
 
     private void switchScene(ActionEvent event, String fxmlPath) {
@@ -59,13 +56,14 @@ public class Pack {
             Scene scene = new Scene(layout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
+            stage.setMaximized(true);  // Maximiser la fenêtre
             stage.show();
+
         } catch (IOException e) {
             showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
             e.printStackTrace();
         }
     }
-
 
     private void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -75,50 +73,38 @@ public class Pack {
         alert.showAndWait();
     }
     @FXML
-    private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+    private void goToReclamation(ActionEvent event) {
+        switchScene(event, "/Reclamation/Reclamation.fxml");
     }
-    @FXML
-    private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
-        currentStage.show();
-    }
-    @FXML
-    private void goToReservation(ActionEvent event) throws IOException {
-        try {
-            // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
-        }
-    }
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
 
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
+    @FXML
+    private void goToFeedback(ActionEvent event) {
+        switchScene(event, "/Reclamation/Feedback.fxml");
     }
+
+    @FXML
+    private void goToService(ActionEvent event) {
+        switchScene(event, "/Service/Service.fxml");
+    }
+
+    @FXML
+    private void goToReservation(ActionEvent event) {
+        switchScene(event, "/Reservation/Reservation.fxml");
+    }
+
+    @FXML
+    private void goToPack(ActionEvent event) {
+        switchScene(event, "/Pack/Packs.fxml");
+    }
+
+    @FXML
+    private void goToAccueil(ActionEvent event) {
+        switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
+    }
+
+
+
+
 
 
 }
