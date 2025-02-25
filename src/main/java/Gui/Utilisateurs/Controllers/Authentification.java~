@@ -37,7 +37,7 @@ public class Authentification {
 
         Utilisateurs utilisateur = membresService.rechercherMemParNom(username);
         if (utilisateur != null && verifierMotDePasse(password, utilisateur.getMotDePasse())) {
-            Parent root = FXMLLoader.load(getClass().getResource("/EventoraAPP/EventoraAPP.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/EventoraAPP/Acceuil.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             scene.getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
