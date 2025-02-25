@@ -96,7 +96,6 @@ public class Feedback {
         loadScene(event, "/Reclamation/Feedback.fxml");
     }
 
-    // Ouvre une nouvelle scène dans une nouvelle fenêtre
     private void loadSceneInNewStage(ActionEvent event, String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
@@ -113,8 +112,6 @@ public class Feedback {
             e.printStackTrace();
         }
     }
-
-    // Afficher une alerte en cas d'erreur
     private void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
