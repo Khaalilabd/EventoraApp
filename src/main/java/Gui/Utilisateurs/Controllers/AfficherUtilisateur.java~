@@ -147,7 +147,7 @@ public class AfficherUtilisateur {
             Scene scene = new Scene(layout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
-            stage.setMaximized(true);  
+            stage.setMaximized(true);  // Maximiser la fenêtre
             stage.show();
 
         } catch (IOException e) {
