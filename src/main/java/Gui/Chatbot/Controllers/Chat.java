@@ -57,7 +57,6 @@ public class Chat {
 
             chatMessages.getChildren().add(userMessageBox);
 
-            // Générer la réponse de l'assistant sans délai immédiat
             String botResponse = generateResponse(userText);
             animateBotResponse(botResponse);
 
@@ -71,10 +70,8 @@ public class Chat {
         ImageView botImage = new ImageView(new Image(getClass().getResourceAsStream("/Images/assistant.jpg")));
         botImage.setFitHeight(50);
         botImage.setFitWidth(50);
-
         Label botMessage = new Label("Evi: ");
         botMessage.setStyle("-fx-font-size: " + currentFontSize + "px; -fx-background-color: lightblue; -fx-border-color: transparent; -fx-padding: 5px;");
-
         botMessageBox.getChildren().addAll(botImage, botMessage);
         botMessageBox.setAlignment(Pos.CENTER_LEFT);
 
@@ -96,11 +93,8 @@ public class Chat {
         timeline.setCycleCount(1);
         timeline.play();
     }
-    // Générer une réponse de l'Assistant basée sur l'entrée de l'utilisateur
     private String generateResponse(String input) {
-        input = input.toLowerCase().trim(); // Mettre en minuscule et enlever les espaces inutiles
-
-        // Réponses pour les demandes spécifiques
+        input = input.toLowerCase().trim();
         if (input.contains("eventora")) {
             return "Eventora est une plateforme complète qui révolutionne la gestion \n " +
                     "d’événements, en simplifiant chaque étape du processus.\n" +
