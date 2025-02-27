@@ -229,3 +229,26 @@
     -fx-padding: 20px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
 }
+.statut-resolue {
+    -fx-background-color: #2ecc71 !important; /* Vert */
+    -fx-text-fill: white !important;
+    -fx-padding: 5 !important;
+}
+
+.statut-rejetee {
+    -fx-background-color: #e74c3c !important; /* Rouge */
+    -fx-text-fill: white !important;
+    -fx-padding: 5 !important;
+}
+
+.statut-en-cours {
+    -fx-background-color: #f1c40f !important; /* Jaune */
+    -fx-text-fill: black !important;
+    -fx-padding: 5 !important;
+}
+
+.statut-en-attente {
+    -fx-background-color: #3498db !important; /* Bleu */
+    -fx-text-fill: white !important;
+    -fx-padding: 5 !important;
+}

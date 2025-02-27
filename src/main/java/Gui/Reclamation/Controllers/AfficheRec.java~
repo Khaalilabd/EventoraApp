@@ -199,7 +199,7 @@ public class AfficheRec {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/SuiviRec.fxml"));
             AnchorPane suiviLayout = loader.load();
-            SuiviRec controller = loader.getController();
+            SuiviRecController controller = loader.getController();
             controller.setReclamation(reclamation);
 
             Scene suiviScene = new Scene(suiviLayout, 500, 400);

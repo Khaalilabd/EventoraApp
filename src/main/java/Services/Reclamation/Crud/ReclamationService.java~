@@ -131,7 +131,6 @@ public class ReclamationService implements Ireclamation<Reclamation> {
     }
 
     public Reclamation findById(int id) {
-        long startTime = System.currentTimeMillis();
         System.out.println("Recherche de la réclamation avec ID : " + id);
         String req = "SELECT Id, idUser, Titre, Description, Type, Statut, qr_code_url FROM reclamation WHERE Id = ?";
         try (Connection conn = Mydatasource.getInstance().getConnection();
@@ -148,8 +147,6 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                     r.setStatut(Statut.fromLabel(rs.getString("Statut")));
                     r.setQrCodeUrl(rs.getString("qr_code_url"));
                     System.out.println("Réclamation trouvée : " + r.getTitre());
-                    long endTime = System.currentTimeMillis();
-                    System.out.println("Temps de traitement de findById : " + (endTime - startTime) + " ms");
                     return r;
                 } else {
                     System.out.println("Aucune réclamation trouvée pour l'ID : " + id);
@@ -160,8 +157,6 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             e.printStackTrace();
             throw new RuntimeException("Erreur lors de la récupération de la réclamation", e);
         }
-        long endTime = System.currentTimeMillis();
-        System.out.println("Temps de traitement de findById : " + (endTime - startTime) + " ms");
         return null;
     }
 

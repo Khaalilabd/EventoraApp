@@ -61,6 +61,7 @@
                 <TableColumn fx:id="colType" prefWidth="208.0" text="Type"/>
                 <TableColumn fx:id="colStatut" prefWidth="94.0" text="Statut"/>
                 <TableColumn fx:id="colActions" prefWidth="282.0" text="Actions"/>
+                <TableColumn fx:id="colQrCode" prefWidth="150.0" text="QR Code"/>
             </columns>
         </TableView>
     </VBox>
