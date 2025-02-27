@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
 <?import javafx.animation.FadeTransition?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -19,12 +19,18 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Utilisateurs.Controllers.Acceuil">
 
+    <!-- VBox centré dans l'AnchorPane -->
     <VBox alignment="CENTER"
           spacing="20"
-          prefHeight="700.0"
-          prefWidth="1050.0"
-          style="-fx-background-color: transparent;">
+          style="-fx-background-color: transparent;"
+          prefWidth="600.0"
+          prefHeight="500.0"
+          AnchorPane.topAnchor="100.0"
+          AnchorPane.bottomAnchor="100.0"
+          AnchorPane.leftAnchor="225.0"
+          AnchorPane.rightAnchor="225.0">
 
+        <!-- Logo centré -->
         <ImageView fx:id="logo"
                    fitHeight="180.0"
                    fitWidth="180.0"
@@ -37,8 +43,9 @@
             </effect>
         </ImageView>
 
+        <!-- Texte principal -->
         <Text text="Bienvenue chez Eventora"
-              style="-fx-fill: #2E2E2E; -fx-font-weight: bold; -fx-font-family: 'Arial'; -fx-text-alignment: center;">
+              style="-fx-fill: #2E2E2E; -fx-font-weight: bold; -fx-font-family: 'Arial'; -fx-text-alignment: CENTER;">
             <font>
                 <Font size="38.0"/>
             </font>
@@ -47,6 +54,7 @@
             </effect>
         </Text>
 
+        <!-- Bouton centré -->
         <Button fx:id="experienceButton"
                 text="Vivez l'expérience"
                 onAction="#goToAuth"
@@ -56,6 +64,7 @@
                         -fx-pref-height: 65;
                         -fx-font-size: 22px;
                         -fx-font-weight: bold;
+                        -fx-text-alignment: CENTER;
                         -fx-background-radius: 35;
                         -fx-border-radius: 35;
                         -fx-border-color: #C1272D;
@@ -65,8 +74,9 @@
             </effect>
         </Button>
 
+        <!-- Texte secondaire -->
         <Text text="Créez des moments inoubliables"
-              style="-fx-fill: #2E2E2E; -fx-font-style: italic; -fx-font-size: 20; -fx-font-family: 'Arial';">
+              style="-fx-fill: #2E2E2E; -fx-font-style: italic; -fx-font-size: 20; -fx-font-family: 'Arial';-fx-text-alignment: CENTER;">
             <effect>
                 <Glow level="0.2"/>
             </effect>
@@ -74,3 +84,4 @@
 
     </VBox>
 </AnchorPane>
+

@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -40,20 +41,54 @@ public class Acceuil {
             URL fxmlURL = getClass().getResource("/Utilisateurs/Authentification.fxml");
 
             if (fxmlURL == null) {
-                System.err.println("Error: Could not find AjouterUtilisateur.fxml");
+                System.err.println("Error: Could not find Authentification.fxml");
                 return;
             }
+
             FXMLLoader loader = new FXMLLoader(fxmlURL);
             Parent root = loader.load();
+
+            // Récupération de la scène et de la fenêtre actuelle
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 1022, 687); // Set your desired dimensions
+            Scene scene = new Scene(root);
+
             stage.setScene(scene);
+            stage.setMaximized(true); // Ouvre en plein écran
             stage.show();
 
         } catch (IOException e) {
-            System.err.println("Error loading FXML: " + e.getMessage());
+            System.err.println("Error loading Authentification.fxml: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
+    @FXML
+    private void goToPartenaire(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
+        AnchorPane partenaireLayout = loader.load();
+
+        // Récupérer la fenêtre via l'élément déclencheur
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        Scene scene = new Scene(partenaireLayout);
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        Stage stage;
+
+        // Vérifier si l'élément source est un MenuItem ou un Node
+        if (event.getSource() instanceof MenuItem) {
+            stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        } else {
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
+        AnchorPane serviceLayout = loader.load();
+        Scene scene = new Scene(serviceLayout);
+
+        stage.setScene(scene);
+        stage.show();
+    }
 }

@@ -10,6 +10,8 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.MenuButton?>
 <AnchorPane prefHeight="569.0" prefWidth="1005.0" stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Service.Controllers.AfficherService">
@@ -24,8 +26,13 @@
             <Button text="🏠 Accueil" styleClass="nav-button"/>
             <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
             <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
-            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
-            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <MenuButton text="🎁 Services" styleClass="nav-button" >
+                <items>
+                    <MenuItem text="Services" onAction="#goToService" />
+                    <MenuItem text="Partenaires" onAction="#goToPartenaire" />
+
+                </items>
+            </MenuButton>            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
             <Button text="🔧 Paramètres" styleClass="nav-button"/>

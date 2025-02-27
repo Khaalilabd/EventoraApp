@@ -28,8 +28,13 @@
             <Button styleClass="menu-button" text="🏠 Accueil" />
             <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
             <Button styleClass="menu-button" text="📲 Réservation" onAction="#goToReservation"/>
-            <Button onAction="#goToService" styleClass="menu-button" text="🎁 Services" />
-            <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
+            <MenuButton text="🎁 Services" styleClass="nav-button" >
+                <items>
+                    <MenuItem text="Services" onAction="#goToService" />
+                    <MenuItem text="Partenaires" onAction="#goToPartenaire" />
+
+                </items>
+            </MenuButton>            <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
             <Button styleClass="menu-button" text="⭐ FeedBack" onAction="#goToFeedback"/>
             <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
             <Button styleClass="menu-button" text="🔧 Paramètres" />

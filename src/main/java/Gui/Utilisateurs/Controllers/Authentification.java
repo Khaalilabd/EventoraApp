@@ -9,8 +9,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -85,5 +87,34 @@ public class Authentification {
             System.err.println("Error loading FXML: " + e.getMessage());
             e.printStackTrace();
         }
+    }
+    @FXML
+    private void goToPartenaire(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
+        AnchorPane partenaireLayout = loader.load();
+
+        // Récupérer la fenêtre via l'élément déclencheur
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        Scene scene = new Scene(partenaireLayout);
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        Stage stage;
+
+        // Vérifier si l'élément source est un MenuItem ou un Node
+        if (event.getSource() instanceof MenuItem) {
+            stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        } else {
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
+        AnchorPane serviceLayout = loader.load();
+        Scene scene = new Scene(serviceLayout);
+
+        stage.setScene(scene);
+        stage.show();
     }
 }

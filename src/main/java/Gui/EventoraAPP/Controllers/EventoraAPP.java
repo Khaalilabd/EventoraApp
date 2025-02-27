@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -38,10 +39,8 @@ public class EventoraAPP {
         changeScene(event, "/Reservation/Reservation.fxml");
     }
 
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        changeScene(event, "/Service/Service.fxml");
-    }
+
+
 
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
@@ -96,4 +95,52 @@ public class EventoraAPP {
         stage.setMaximized(true); // 🔥 Permet à la fenêtre d'occuper tout l'écran sans mode plein écran
         stage.show();
     }
+    @FXML
+    private void goToPartenaire(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
+        AnchorPane partenaireLayout = loader.load();
+
+        // Récupérer la fenêtre via l'élément déclencheur
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        Scene scene = new Scene(partenaireLayout);
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        Stage stage;
+
+        // Vérifier si l'élément source est un MenuItem ou un Node
+        if (event.getSource() instanceof MenuItem) {
+            stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        } else {
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
+        AnchorPane serviceLayout = loader.load();
+        Scene scene = new Scene(serviceLayout);
+
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    private void goToChat(ActionEvent event) throws IOException {
+        // Charger la nouvelle scène
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Chatbot/Chat.fxml"));
+        Parent chatLayout = loader.load();
+        Scene feedbackScene = new Scene(chatLayout);
+
+        // Obtenir la fenêtre actuelle
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+
+        // Ouvrir la nouvelle scène dans une nouvelle fenêtre
+        Stage newStage = new Stage();
+        newStage.setScene(feedbackScene);
+        newStage.show();
+    }
+
+
+
 }

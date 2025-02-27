@@ -252,32 +252,6 @@ public class AfficherService {
         }
     }
     @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
-
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
-    }
-
-    @FXML
-    private void refreshList() {
-        loadServices(); // Recharge la liste des services
-    }
-    @FXML
-    private void goToPartenaire(javafx.event.ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
-        AnchorPane partenaireLayout = loader.load();
-        Scene scene = new Scene(partenaireLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-    @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
         AnchorPane reclamationLayout = loader.load();
@@ -316,6 +290,35 @@ public class AfficherService {
         AnchorPane packLayout = loader.load();
         Scene scene = new Scene(packLayout);
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    private void goToPartenaire(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
+        AnchorPane partenaireLayout = loader.load();
+
+        // Récupérer la fenêtre via l'élément déclencheur
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        Scene scene = new Scene(partenaireLayout);
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        Stage stage;
+
+        // Vérifier si l'élément source est un MenuItem ou un Node
+        if (event.getSource() instanceof MenuItem) {
+            stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        } else {
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
+        AnchorPane serviceLayout = loader.load();
+        Scene scene = new Scene(serviceLayout);
+
         stage.setScene(scene);
         stage.show();
     }

@@ -4,30 +4,40 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Pos?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.animation.TranslateTransition?>
+<?import javafx.util.Duration?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.EventoraAPP.Controllers.EventoraAPP"
             stylesheets="/style.css">
 
+    <!-- Navbar -->
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
           AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <HBox alignment="CENTER_LEFT">
             <Label text="Eventora Menu" styleClass="nav-title"/>
         </HBox>
         <HBox spacing="20" alignment="CENTER_RIGHT">
-            <Button text=" Accueil" styleClass="nav-button" onAction="#goToAccueil"/>
-            <Button text=" Utilisateur" styleClass="nav-button" onAction="#goToUtilisateur"/>
-            <Button text=" Réservation" styleClass="nav-button" onAction="#goToReservation"/>
-            <Button text=" Services" styleClass="nav-button" onAction="#goToService"/>
-            <Button text=" Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil" />
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" />
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <MenuButton text="🎁 Services" styleClass="nav-button" >
+                <items>
+                    <MenuItem text="Services" onAction="#goToService" />
+                    <MenuItem text="Partenaires" onAction="#goToPartenaire" />
+                </items>
+            </MenuButton>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
-            <Button text=" Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
-            <Button text=" Paramètres" styleClass="nav-button" onAction="#goToParametres"/>
-            <Button text=" Déconnexion" styleClass="logout-button" onAction="#logout"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button" />
+            <Button text="🛑 Déconnexion" styleClass="logout-button" />
         </HBox>
     </HBox>
 
+    <!-- Main content -->
     <VBox alignment="CENTER" styleClass="main-content"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
@@ -72,4 +82,20 @@
             </VBox>
         </HBox>
     </VBox>
+
+    <!-- Floating Button -->
+    <Button fx:id="chatButton" styleClass="floating-button" onAction="#goToChat"
+            AnchorPane.rightAnchor="20.0" AnchorPane.bottomAnchor="20.0"
+            shape="CIRCLE">
+        <graphic>
+            <Circle radius="40" >
+                <effect>
+                    <DropShadow color="rgba(0,0,0,0.4)" radius="15" offsetX="5" offsetY="5"/>
+                </effect>
+            </Circle>
+        </graphic>
+    </Button>
+
+
+    <!-- Floating Button Animation -->
 </AnchorPane>

@@ -4,12 +4,15 @@ import Models.Utilisateur.Utilisateurs;
 import Services.Utilisateur.Crud.MembresService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -106,5 +109,34 @@ public class AfficherUtilisateur {
                 e.printStackTrace();
             }
         }
+    }
+    @FXML
+    private void goToPartenaire(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
+        AnchorPane partenaireLayout = loader.load();
+
+        // Récupérer la fenêtre via l'élément déclencheur
+        Stage stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        Scene scene = new Scene(partenaireLayout);
+        stage.setScene(scene);
+        stage.show();
+    }
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        Stage stage;
+
+        // Vérifier si l'élément source est un MenuItem ou un Node
+        if (event.getSource() instanceof MenuItem) {
+            stage = (Stage) ((MenuItem) event.getSource()).getParentPopup().getOwnerWindow();
+        } else {
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        }
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
+        AnchorPane serviceLayout = loader.load();
+        Scene scene = new Scene(serviceLayout);
+
+        stage.setScene(scene);
+        stage.show();
     }
 }

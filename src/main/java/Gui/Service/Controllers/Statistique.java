@@ -55,4 +55,5 @@ public class Statistique {
 
         chart.getData().add(series);
     }
+
 }
