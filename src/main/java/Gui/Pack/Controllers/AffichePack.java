@@ -19,15 +19,15 @@ import javafx.util.Callback;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import Services.Pack.Crud.PackService;
 import Models.Pack.Pack;
+import Models.Service.Service;
 
 public class AffichePack {
 
     @FXML
     private TableView<Pack> tableView;
-    //@FXML
-    //private TableColumn<Pack, Integer> colId;
     @FXML
     private TableColumn<Pack, String> colNom;
     @FXML
@@ -41,7 +41,7 @@ public class AffichePack {
     @FXML
     private TableColumn<Pack, Integer> colNbrGuests;
     @FXML
-    private TableColumn<Pack, String> colServices;
+    private TableColumn<Pack, String> colServices; // Updated to display List<Service>
     @FXML
     private TableColumn<Pack, String> colActions;
     @FXML
@@ -53,14 +53,21 @@ public class AffichePack {
     @FXML
     public void initialize() {
         // Set cell value factories
-        //colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colNom.setCellValueFactory(new PropertyValueFactory<>("nomPack"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
-        colLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
-        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        colLocation.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getLocation().getLabel()));
+        colType.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getType().getTypeEvenement()));
         colNbrGuests.setCellValueFactory(new PropertyValueFactory<>("nbrGuests"));
-        colServices.setCellValueFactory(new PropertyValueFactory<>("nomService"));
+
+        // Custom cell value factory for colServices to display List<Service> as a comma-separated string
+        colServices.setCellValueFactory(cellData -> {
+            List<Service> services = cellData.getValue().getNomServices();
+            String servicesString = services.stream()
+                    .map(Service::getTitre)
+                    .collect(Collectors.joining(", "));
+            return new javafx.beans.property.SimpleStringProperty(servicesString);
+        });
 
         // Actions column (Edit & Delete buttons with icons)
         colActions.setCellFactory(createActionButtons());
@@ -218,6 +225,7 @@ public class AffichePack {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
@@ -227,10 +235,10 @@ public class AffichePack {
         currentStage.setScene(reclamationScene);
         currentStage.show();
     }
+
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         try {
-            // Vérifier le chemin correct du fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
@@ -242,18 +250,19 @@ public class AffichePack {
             System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
     }
+
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
-
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
         Stage newStage = new Stage();
         newStage.setScene(newScene);
         newStage.show();
     }
+
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));

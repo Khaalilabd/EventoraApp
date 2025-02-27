@@ -3,7 +3,9 @@ package Gui.Pack.Controllers;
 import Models.Pack.Location;
 import Models.Pack.Pack;
 import Models.Pack.Evenement;
+import Models.Service.Service;
 import Services.Pack.Crud.PackService;
+import Services.Service.Crud.ServiceService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,9 +17,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.controlsfx.control.CheckComboBox; // Import CheckComboBox
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AjouterPack {
 
@@ -34,7 +39,7 @@ public class AjouterPack {
     @FXML
     private TextField NbrGuestsField;
     @FXML
-    private TextField ServiceField;
+    private CheckComboBox<Service> ServiceField; // Changed to CheckComboBox<Service>
     @FXML
     private Button submitButton;
     @FXML
@@ -42,8 +47,8 @@ public class AjouterPack {
     @FXML
     private Button ReturnToListButton;
 
-
     private final PackService packService = new PackService();
+    private final ServiceService serviceService = new ServiceService();
 
     @FXML
     public void initialize() {
@@ -51,32 +56,52 @@ public class AjouterPack {
         LocationField.getItems().setAll(Location.values());
 
         // Chargement des types de packs depuis la base de données
-        List<Evenement> evenements = packService.getAllEvenements(); // Appel via l'instance
+        List<Evenement> evenements = packService.getAllEvenements();
         ObservableList<Evenement> observableEvenements = FXCollections.observableArrayList(evenements);
         TypeField.setItems(observableEvenements);
+
+        // Chargement des services depuis la base de données
+        List<Service> services = serviceService.RechercherService();
+        ObservableList<Service> observableServices = FXCollections.observableArrayList(services);
+        ServiceField.getItems().addAll(observableServices);
+        // Customize display to show titre
+        ServiceField.setConverter(new javafx.util.StringConverter<Service>() {
+            @Override
+            public String toString(Service service) {
+                return service != null ? service.getTitre() : "";
+            }
+
+            @Override
+            public Service fromString(String string) {
+                return null; // Not needed for this use case
+            }
+        });
 
         submitButton.setOnAction(this::ajouterPack);
         cancelButton.setOnAction(this::annuler);
         ReturnToListButton.setOnAction(this::goToAffichePack);
-
     }
 
     @FXML
     private void ajouterPack(ActionEvent event) {
         try {
-            String nomPack = NomPackField.getText();
+            String nomPack = NomPackField.getText().trim();
             String description = DescriptionField.getText();
             String prixText = PrixField.getText();
             Location location = LocationField.getValue();
             Evenement type = TypeField.getValue();
             String nbrGuestsText = NbrGuestsField.getText();
-            String nomService = ServiceField.getText();
+            ObservableList<Service> selectedServices = ServiceField.getCheckModel().getCheckedItems();
 
-            if (nomPack.isEmpty() || description.isEmpty() || prixText.isEmpty() || location == null || type == null || nbrGuestsText.isEmpty() || nomService.isEmpty()) {
-                showAlert("Erreur", "Tous les champs doivent être remplis.");
+            if (nomPack.isEmpty() || description.isEmpty() || prixText.isEmpty() || location == null || type == null || nbrGuestsText.isEmpty() || selectedServices.isEmpty()) {
+                showAlert("Erreur", "Tous les champs doivent être remplis, y compris au moins un service.");
                 return;
             }
-
+            int existingPackId = packService.getIdPackByNom(nomPack);
+            if (existingPackId != -1) {
+                showAlert("Erreur", "Un pack avec le nom '" + nomPack + "' existe déjà ! Veuillez choisir un autre nom.");
+                return;
+            }
             double prix;
             int nbrGuests;
             try {
@@ -87,7 +112,7 @@ public class AjouterPack {
                 return;
             }
 
-            Pack newPack = new Pack(nomPack, description, prix, location, type, nbrGuests, nomService);
+            Pack newPack = new Pack(nomPack, description, prix, location, type, nbrGuests, new ArrayList<>(selectedServices));
             packService.ajouter(newPack);
             showAlert("Succès", "Pack ajouté avec succès !");
             goToAffichePack(event);
@@ -110,7 +135,7 @@ public class AjouterPack {
         LocationField.setValue(null);
         TypeField.setValue(null);
         NbrGuestsField.clear();
-        ServiceField.clear();
+        ServiceField.getCheckModel().clearChecks(); // Clear all selections
     }
 
     private void showAlert(String title, String content) {
@@ -133,6 +158,7 @@ public class AjouterPack {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void goToPack(ActionEvent event) {
         try {
@@ -146,6 +172,7 @@ public class AjouterPack {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
@@ -155,6 +182,7 @@ public class AjouterPack {
         currentStage.setScene(feedbackScene);
         currentStage.show();
     }
+
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
@@ -164,10 +192,10 @@ public class AjouterPack {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         try {
-            // Vérifier le chemin correct du fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
@@ -179,12 +207,12 @@ public class AjouterPack {
             System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
     }
+
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
-
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
         Stage newStage = new Stage();

@@ -94,6 +94,12 @@ public class Service {
 
     @Override
     public String toString() {
-        return titre;
+        return "Service{" +
+
+                ", titre='" + titre + '\'' +
+                ", typeService='" + typeService + '\'' +
+                ", description='" + description + '\'' +
+                ", prix='" + prix + '\'' +
+                '}';
     }
 }
