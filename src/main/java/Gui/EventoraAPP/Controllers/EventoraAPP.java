@@ -96,4 +96,20 @@ public class EventoraAPP {
         stage.setMaximized(true); // 🔥 Permet à la fenêtre d'occuper tout l'écran sans mode plein écran
         stage.show();
     }
+    @FXML
+    private void goToChat(ActionEvent event) throws IOException {
+        // Charger la nouvelle scène
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Chatbot/Chat.fxml"));
+        Parent chatLayout = loader.load();
+        Scene feedbackScene = new Scene(chatLayout);
+
+        // Obtenir la fenêtre actuelle
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+
+        // Ouvrir la nouvelle scène dans une nouvelle fenêtre
+        Stage newStage = new Stage();
+        newStage.setScene(feedbackScene);
+        newStage.show();
+    }
 }

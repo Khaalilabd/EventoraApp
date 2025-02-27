@@ -70,6 +70,8 @@
                 <Label text="Profitez de nos offres groupées avantageuses !" styleClass="card-description"/>
                 <Button text="Voir les packs" styleClass="card-button" onAction="#goToPack"/>
             </VBox>
+            <Button text="Besoin D'un AI ?" styleClass="card-button" onAction="#goToChat"/>
+
         </HBox>
     </VBox>
 </AnchorPane>
