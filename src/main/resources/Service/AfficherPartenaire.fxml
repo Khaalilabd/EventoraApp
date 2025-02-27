@@ -53,7 +53,7 @@
         </HBox>
 
         <!-- Tableau des partenaires -->
-        <TableView fx:id="tableView" prefHeight="356.0" prefWidth="699.0" styleClass="custom-table">
+        <TableView fx:id="tableView" prefHeight="300.0" prefWidth="999.0" styleClass="custom-table">
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="46.0" text="ID"/>
                 <TableColumn fx:id="nomColumn" prefWidth="108.0" text="Nom"/>
@@ -64,5 +64,14 @@
                 <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions"/>
             </columns>
         </TableView>
+
+        <!-- Section météo actuelle et future pour l'adresse du partenaire -->
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Météo pour l'adresse du partenaire :" styleClass="main-description"/>
+            <Label fx:id="weatherLabel" text="Météo: Chargement..."
+                   styleClass="main-description"/>
+            <Label fx:id="futureWeatherLabel" text="Prévision (5 jours) : Chargement..."
+                   styleClass="main-description"/>
+        </VBox>
     </VBox>
 </AnchorPane>

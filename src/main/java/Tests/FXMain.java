@@ -11,7 +11,7 @@ import java.io.IOException;
 public class FXMain extends Application {
     @Override
     public void start(Stage stage)  {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AffichePack.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AfficherPartenaire.fxml"));
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);
