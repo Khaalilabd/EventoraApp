@@ -51,7 +51,7 @@
         </HBox>
 
         <!-- Tableau des packs -->
-        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
+        <TableView fx:id="tableView" prefHeight="400.0" prefWidth="999.0">
             <columns>
                 <TableColumn fx:id="colNom" prefWidth="150.0" text="Nom"/>
                 <TableColumn fx:id="colDescription" prefWidth="250.0" text="Description"/>
@@ -63,5 +63,14 @@
                 <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
             </columns>
         </TableView>
+
+        <!-- Section météo actuelle et future pour la localisation du pack -->
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Météo pour la localisation du pack :" styleClass="main-description"/>
+            <Label fx:id="weatherLabel" text="Météo: Chargement..."
+                   styleClass="main-description"/>
+            <Label fx:id="futureWeatherLabel" text="Prévision (7 jours) : Chargement..."
+                   styleClass="main-description"/>
+        </VBox>
     </VBox>
 </AnchorPane>
