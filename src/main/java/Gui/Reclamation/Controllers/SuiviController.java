@@ -26,7 +26,6 @@ public class SuiviController {
                 model.addAttribute("error", "Réclamation non trouvée");
                 return "error";
             }
-
             System.out.println("Réclamation trouvée : " + reclamation.getTitre());
             System.out.println("ID : " + reclamation.getId());
             System.out.println("Titre : " + reclamation.getTitre());

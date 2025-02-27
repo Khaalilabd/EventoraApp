@@ -115,7 +115,6 @@ public class AfficheRec {
                             setGraphic(hBox);
                         }
                     }
-
                     private void handleStatutChange(Reclamation reclamation, Statut newStatut) {
                         if (reclamation != null) {
                             reclamation.setStatut(newStatut);
@@ -144,7 +143,6 @@ public class AfficheRec {
             public TableCell<Reclamation, String> call(TableColumn<Reclamation, String> param) {
                 return new TableCell<>() {
                     final Button qrButton = new Button("Voir QR");
-
                     @Override
                     public void updateItem(String item, boolean empty) {
                         super.updateItem(item, empty);
@@ -168,14 +166,11 @@ public class AfficheRec {
                 ImageView imageView = new ImageView(qrImage);
                 imageView.setFitHeight(200);
                 imageView.setFitWidth(200);
-
                 Button scanButton = new Button("Simuler le scan");
                 scanButton.setOnAction(e -> showSuivi(reclamation));
                 scanButton.getStyleClass().add("card-button");
-
                 VBox content = new VBox(10, imageView, scanButton);
                 content.setAlignment(Pos.CENTER);
-
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("QR Code de suivi");
                 alert.setHeaderText("Scannez ce QR code pour suivre la réclamation");

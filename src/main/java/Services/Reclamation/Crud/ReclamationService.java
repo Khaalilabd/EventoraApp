@@ -11,7 +11,6 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.sql.Connection;
@@ -51,23 +50,26 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                 ps.setString(5, reclamation.getStatut().getLabel());
                 ps.setString(6, "");
                 ps.executeUpdate();
-
                 ResultSet rs = ps.getGeneratedKeys();
                 if (rs.next()) {
                     int id = rs.getInt(1);
                     reclamation.setId(id);
-
-                    String qrUrl = BASE_URL + id;
-                    String qrFilePath = generateQRCode(qrUrl, id);
-
+                    String reclamationInfo = String.format(
+                            "Réclamation ID: %d\nTitre: %s\nDescription: %s\nType: %s\nStatut: %s",
+                            id,
+                            reclamation.getTitre(),
+                            reclamation.getDescription(),
+                            reclamation.getType().getLabel(),
+                            reclamation.getStatut().getLabel()
+                    );
+                    String qrFilePath = generateQRCode(reclamationInfo, id);
                     String updateReq = "UPDATE reclamation SET qr_code_url = ? WHERE id = ?";
                     try (PreparedStatement updatePs = conn.prepareStatement(updateReq)) {
-                        updatePs.setString(1, qrUrl);
+                        updatePs.setString(1, ""); // Laisser vide car nous n'utilisons plus une URL
                         updatePs.setInt(2, id);
                         updatePs.executeUpdate();
                     }
-
-                    reclamation.setQrCodeUrl(qrUrl);
+                    reclamation.setQrCodeUrl(""); // Pas d'URL, juste un texte
                     System.out.println("Réclamation ajoutée avec succès ! QR Code généré : " + qrFilePath);
                 }
                 conn.commit();
@@ -177,6 +179,13 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Réclamation mise à jour avec succès !");
+                Reclamation updatedReclamation = findById(reclamation.getId());
+                if (updatedReclamation != null) {
+                    String reclamationInfo = generateReclamationText(updatedReclamation);
+                    generateQRCode(reclamationInfo, reclamation.getId());
+                } else {
+                    System.out.println("Erreur : Impossible de récupérer la réclamation mise à jour pour régénérer le QR code.");
+                }
             } else {
                 System.out.println("Aucune réclamation trouvée avec cet ID !");
             }
@@ -184,6 +193,9 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             System.out.println("Erreur lors de la mise à jour de la réclamation : " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Erreur lors de la mise à jour de la réclamation", e);
+        } catch (WriterException | IOException e) {
+            System.out.println("Erreur lors de la régénération du QR code : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -245,6 +257,14 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
                 System.out.println("Statut de la réclamation mis à jour avec succès !");
+
+                Reclamation updatedReclamation = findById(reclamation.getId());
+                if (updatedReclamation != null) {
+                    String reclamationInfo = generateReclamationText(updatedReclamation);
+                    generateQRCode(reclamationInfo, reclamation.getId());
+                } else {
+                    System.out.println("Erreur : Impossible de récupérer la réclamation mise à jour pour régénérer le QR code.");
+                }
             } else {
                 System.out.println("Aucune réclamation trouvée avec cet ID !");
             }
@@ -252,6 +272,19 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             System.out.println("Erreur lors de la mise à jour du statut de la réclamation : " + e.getMessage());
             e.printStackTrace();
             throw new RuntimeException("Erreur lors de la mise à jour du statut de la réclamation", e);
+        } catch (WriterException | IOException e) {
+            System.out.println("Erreur lors de la régénération du QR code : " + e.getMessage());
+            e.printStackTrace();
         }
+    }
+    private String generateReclamationText(Reclamation reclamation) {
+        return String.format(
+                "Réclamation ID: %d\nTitre: %s\nDescription: %s\nType: %s\nStatut: %s",
+                reclamation.getId(),
+                reclamation.getTitre(),
+                reclamation.getDescription(),
+                reclamation.getType().getLabel(),
+                reclamation.getStatut().getLabel()
+        );
     }
 }
