@@ -173,7 +173,7 @@ public class AjouterReservationPack {
 
             System.out.println("SMS envoyé avec succès avec SID: " + message.getSid());
         } catch (Exception e) {
-            System.err.println("Échec de l'envoi du SMS: " + e.getMessage());
+            System.err.println("Échec lors de l'envoi du SMS: " + e.getMessage());
             e.printStackTrace();
         }
     }
