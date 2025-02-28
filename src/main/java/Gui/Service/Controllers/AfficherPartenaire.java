@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -48,8 +49,15 @@ public class AfficherPartenaire {
     @FXML private TableColumn<Partenaire, Void> colActions;
     @FXML private TextField searchField; // Le champ de texte pour la recherche
 
-    @FXML private Label weatherLabel; // Label pour la météo actuelle
-    @FXML private Label futureWeatherLabel; // Label pour les prévisions futures
+    @FXML private HBox currentWeatherBox; // Conteneur pour la météo actuelle
+    @FXML private ImageView currentWeatherIcon; // Icône pour la météo actuelle
+    @FXML private Label currentWeatherLabel; // Label pour la météo actuelle
+    @FXML private HBox forecastWeatherBox; // Conteneur pour la prévision
+    @FXML private ImageView forecastWeatherIcon; // Icône pour la prévision
+    @FXML private Label forecastWeatherLabel; // Label pour la prévision
+
+    @FXML private Label locationLabel; // Label pour les coordonnées GPS
+    @FXML private WebView mapView; // WebView pour afficher la carte OpenStreetMap
 
     private final PartenaireService partenaireService;
     private ObservableList<Partenaire> partenairesList = FXCollections.observableArrayList();
@@ -78,15 +86,32 @@ public class AfficherPartenaire {
         });
         tableView.setItems(filteredData);
 
-        // Listener pour afficher la météo lorsqu’un partenaire est sélectionné
+        // Listener pour afficher la météo et la localisation lorsqu’un partenaire est sélectionné
         tableView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             System.out.println("Partenaire sélectionné : " + (newVal != null ? newVal.getNom_partenaire() : "Aucun"));
             if (newVal != null) {
                 fetchWeatherForPartner(newVal);
                 fetchFutureWeatherForPartner(newVal, LocalDate.now().plusDays(5)); // Limité à 5 jours avec /forecast
+                fetchLocationForPartner(newVal); // Récupérer et afficher la localisation
             } else {
-                weatherLabel.setText("Météo: Aucun partenaire sélectionné");
-                futureWeatherLabel.setText("Prévision (5 jours) : Aucun partenaire sélectionné");
+                if (currentWeatherLabel != null) {
+                    currentWeatherLabel.setText("Météo: Aucun partenaire sélectionné");
+                }
+                if (currentWeatherIcon != null) {
+                    currentWeatherIcon.setImage(null);
+                }
+                if (forecastWeatherLabel != null) {
+                    forecastWeatherLabel.setText("Prévision (5 jours) : Aucun partenaire sélectionné");
+                }
+                if (forecastWeatherIcon != null) {
+                    forecastWeatherIcon.setImage(null);
+                }
+                if (locationLabel != null) {
+                    locationLabel.setText("Coordonnées: Aucun partenaire sélectionné");
+                }
+                if (mapView != null) {
+                    mapView.getEngine().loadContent(""); // Effacer la carte
+                }
             }
         });
 
@@ -261,13 +286,23 @@ public class AfficherPartenaire {
         System.out.println("Clé API pour météo actuelle du partenaire : " + (apiKey != null ? "Présente" : "Absente"));
         System.out.println("Clé API utilisée : " + apiKey);
         if (apiKey == null || apiKey.isEmpty()) {
-            weatherLabel.setText("Météo: Clé API non configurée. Vérifiez les variables d’environnement.");
+            if (currentWeatherLabel != null) {
+                currentWeatherLabel.setText("Météo: Clé API non configurée. Vérifiez les variables d’environnement.");
+            }
+            if (currentWeatherIcon != null) {
+                currentWeatherIcon.setImage(null);
+            }
             return;
         }
 
         String city = extractCityFromAddress(partenaire.getAdresse_partenaire());
         if (city == null || city.isEmpty()) {
-            weatherLabel.setText("Météo: Adresse invalide ou non disponible");
+            if (currentWeatherLabel != null) {
+                currentWeatherLabel.setText("Météo: Adresse invalide ou non disponible");
+            }
+            if (currentWeatherIcon != null) {
+                currentWeatherIcon.setImage(null);
+            }
             return;
         }
 
@@ -287,15 +322,39 @@ public class AfficherPartenaire {
                         JsonObject json = JsonParser.parseString(response).getAsJsonObject();
                         double temperature = json.getAsJsonObject("main").get("temp").getAsDouble();
                         String description = json.getAsJsonArray("weather").get(0).getAsJsonObject().get("description").getAsString();
-                        weatherLabel.setText("Météo à " + city + " : " + temperature + "°C, " + description);
+                        String iconCode = json.getAsJsonArray("weather").get(0).getAsJsonObject().get("icon").getAsString();
+
+                        // Afficher le texte de la météo
+                        if (currentWeatherLabel != null) {
+                            currentWeatherLabel.setText("Météo à " + city + " : " + temperature + "°C, " + description);
+                        }
+
+                        // Charger l’icône météo
+                        if (currentWeatherIcon != null) {
+                            String iconUrl = "http://openweathermap.org/img/wn/" + iconCode + ".png";
+                            Image icon = new Image(iconUrl);
+                            currentWeatherIcon.setImage(icon);
+                        }
                     } catch (Exception e) {
-                        weatherLabel.setText("Météo: Erreur lors du chargement");
+                        if (currentWeatherLabel != null) {
+                            currentWeatherLabel.setText("Météo: Erreur lors du chargement");
+                        }
+                        if (currentWeatherIcon != null) {
+                            currentWeatherIcon.setImage(null);
+                        }
                         System.out.println("Erreur de parsing JSON : " + e.getMessage());
                         e.printStackTrace();
                     }
                 }))
                 .exceptionally(e -> {
-                    Platform.runLater(() -> weatherLabel.setText("Météo: Erreur réseau - " + e.getMessage()));
+                    Platform.runLater(() -> {
+                        if (currentWeatherLabel != null) {
+                            currentWeatherLabel.setText("Météo: Erreur réseau - " + e.getMessage());
+                        }
+                        if (currentWeatherIcon != null) {
+                            currentWeatherIcon.setImage(null);
+                        }
+                    });
                     System.out.println("Erreur réseau pour météo actuelle : " + e.getMessage());
                     return null;
                 });
@@ -306,21 +365,33 @@ public class AfficherPartenaire {
         System.out.println("Clé API pour prévision future du partenaire : " + (apiKey != null ? "Présente" : "Absente"));
         System.out.println("Clé API utilisée : " + apiKey);
         if (apiKey == null || apiKey.isEmpty()) {
-            futureWeatherLabel.setText("Prévision (5 jours) : Clé API non configurée. Vérifiez les variables d’environnement.");
+            if (forecastWeatherLabel != null) {
+                forecastWeatherLabel.setText("Prévision (5 jours) : Clé API non configurée. Vérifiez les variables d’environnement.");
+            }
+            if (forecastWeatherIcon != null) {
+                forecastWeatherIcon.setImage(null);
+            }
             return;
         }
 
         String city = extractCityFromAddress(partenaire.getAdresse_partenaire());
         if (city == null || city.isEmpty()) {
-            futureWeatherLabel.setText("Prévision (5 jours) : Adresse invalide ou non disponible");
+            if (forecastWeatherLabel != null) {
+                forecastWeatherLabel.setText("Prévision (5 jours) : Adresse invalide ou non disponible");
+            }
+            if (forecastWeatherIcon != null) {
+                forecastWeatherIcon.setImage(null);
+            }
             return;
         }
 
         // Vérifiez si la prévision est déjà dans le cache
         String cacheKey = city + "_" + futureDate.toString();
         if (forecastCache.containsKey(cacheKey)) {
-            futureWeatherLabel.setText(forecastCache.get(cacheKey));
-            System.out.println("Prévision récupérée depuis le cache pour : " + cacheKey);
+            if (forecastWeatherLabel != null) {
+                forecastWeatherLabel.setText(forecastCache.get(cacheKey));
+            }
+            // Pas d’icône dans le cache, on peut recharger l’icône si nécessaire
             return;
         }
 
@@ -337,22 +408,42 @@ public class AfficherPartenaire {
                             System.out.println("Code de réponse : " + weatherResponse.statusCode());
                             System.out.println("Réponse API pour date future : " + weatherResponse.body());
                             if (weatherResponse.statusCode() == 404) {
-                                futureWeatherLabel.setText("Prévision (5 jours) : Données non disponibles pour cette localisation");
+                                if (forecastWeatherLabel != null) {
+                                    forecastWeatherLabel.setText("Prévision (5 jours) : Données non disponibles pour cette localisation");
+                                }
+                                if (forecastWeatherIcon != null) {
+                                    forecastWeatherIcon.setImage(null);
+                                }
                                 return;
                             }
                             if (weatherResponse.statusCode() == 401) {
-                                futureWeatherLabel.setText("Prévision (5 jours) : Clé API invalide ou limite atteinte");
+                                if (forecastWeatherLabel != null) {
+                                    forecastWeatherLabel.setText("Prévision (5 jours) : Clé API invalide ou limite atteinte");
+                                }
+                                if (forecastWeatherIcon != null) {
+                                    forecastWeatherIcon.setImage(null);
+                                }
                                 return;
                             }
                             if (weatherResponse.statusCode() != 200) {
-                                futureWeatherLabel.setText("Prévision (5 jours) : Erreur API - Code " + weatherResponse.statusCode());
+                                if (forecastWeatherLabel != null) {
+                                    forecastWeatherLabel.setText("Prévision (5 jours) : Erreur API - Code " + weatherResponse.statusCode());
+                                }
+                                if (forecastWeatherIcon != null) {
+                                    forecastWeatherIcon.setImage(null);
+                                }
                                 return;
                             }
                             String responseBody = weatherResponse.body();
                             JsonObject json = JsonParser.parseString(responseBody).getAsJsonObject();
                             JsonArray hourlyList = json.getAsJsonArray("list");
                             if (hourlyList == null || hourlyList.size() == 0) {
-                                futureWeatherLabel.setText("Prévision (5 jours) : Aucune donnée disponible");
+                                if (forecastWeatherLabel != null) {
+                                    forecastWeatherLabel.setText("Prévision (5 jours) : Aucune donnée disponible");
+                                }
+                                if (forecastWeatherIcon != null) {
+                                    forecastWeatherIcon.setImage(null);
+                                }
                                 return;
                             }
 
@@ -364,23 +455,155 @@ public class AfficherPartenaire {
                                 if (forecastDate.equals(futureDate)) {
                                     double temperature = forecast.getAsJsonObject("main").get("temp").getAsDouble();
                                     String description = forecast.getAsJsonArray("weather").get(0).getAsJsonObject().get("description").getAsString();
+                                    String iconCode = forecast.getAsJsonArray("weather").get(0).getAsJsonObject().get("icon").getAsString();
+
                                     String forecastText = "Prévision (5 jours, " + futureDate + ") à " + city + " : " + temperature + "°C, " + description;
-                                    futureWeatherLabel.setText(forecastText);
+                                    if (forecastWeatherLabel != null) {
+                                        forecastWeatherLabel.setText(forecastText);
+                                    }
                                     forecastCache.put(cacheKey, forecastText);
+
+                                    // Charger l’icône météo
+                                    if (forecastWeatherIcon != null) {
+                                        String iconUrl = "http://openweathermap.org/img/wn/" + iconCode + ".png";
+                                        Image icon = new Image(iconUrl);
+                                        forecastWeatherIcon.setImage(icon);
+                                    }
                                     return;
                                 }
                             }
-                            futureWeatherLabel.setText("Prévision (5 jours) : Données non disponibles pour cette date");
+                            if (forecastWeatherLabel != null) {
+                                forecastWeatherLabel.setText("Prévision (5 jours) : Données non disponibles pour cette date");
+                            }
+                            if (forecastWeatherIcon != null) {
+                                forecastWeatherIcon.setImage(null);
+                            }
                         } catch (Exception e) {
-                            futureWeatherLabel.setText("Prévision (5 jours) : Erreur lors du chargement");
+                            if (forecastWeatherLabel != null) {
+                                forecastWeatherLabel.setText("Prévision (5 jours) : Erreur lors du chargement");
+                            }
+                            if (forecastWeatherIcon != null) {
+                                forecastWeatherIcon.setImage(null);
+                            }
                             System.out.println("Erreur de parsing JSON : " + e.getMessage());
                             e.printStackTrace();
                         }
                     });
                 })
                 .exceptionally(e -> {
-                    Platform.runLater(() -> futureWeatherLabel.setText("Prévision (5 jours) : Erreur réseau - " + e.getMessage()));
+                    Platform.runLater(() -> {
+                        if (forecastWeatherLabel != null) {
+                            forecastWeatherLabel.setText("Prévision (5 jours) : Erreur réseau - " + e.getMessage());
+                        }
+                        if (forecastWeatherIcon != null) {
+                            forecastWeatherIcon.setImage(null);
+                        }
+                    });
                     System.out.println("Erreur réseau pour prévision future : " + e.getMessage());
+                    return null;
+                });
+    }
+
+    private void fetchLocationForPartner(Partenaire partenaire) {
+        String address = partenaire.getAdresse_partenaire();
+        if (address == null || address.isEmpty()) {
+            System.out.println("Adresse nulle ou vide : " + address);
+            locationLabel.setText("Coordonnées: Adresse invalide ou non disponible");
+            mapView.getEngine().loadContent("");
+            return;
+        }
+        System.out.println("Log 1 - Adresse complète utilisée pour le géocodage : " + address);
+
+        // Remplacer les espaces par des "+" pour l’URL
+        String encodedAddress = address.replace(" ", "+");
+        System.out.println("Log 2 - Adresse encodée pour l’URL : " + encodedAddress);
+
+        HttpClient client = HttpClient.newHttpClient();
+        String url = "https://nominatim.openstreetmap.org/search?q=" + encodedAddress + "&format=json&limit=1";
+        System.out.println("Log 3 - URL de géocodage (Nominatim) : " + url);
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("User-Agent", "EventoraApp/1.0 (contact: your-email@example.com)") // Remplace par ton e-mail
+                .build();
+
+        // Ajouter un délai pour respecter la politique de Nominatim (1 requête par seconde)
+        try {
+            System.out.println("Log 4 - Ajout d’un délai de 1 seconde avant la requête");
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println("Erreur lors du délai : " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenApply(HttpResponse::body)
+                .thenAccept(response -> Platform.runLater(() -> {
+                    System.out.println("Log 5 - Réponse API pour géocodage (Nominatim) : " + response);
+                    try {
+                        JsonArray jsonArray = JsonParser.parseString(response).getAsJsonArray();
+                        if (jsonArray == null || jsonArray.size() == 0) {
+                            System.out.println("Log 6 - Aucune donnée de géocodage trouvée pour l’adresse : " + address);
+                            locationLabel.setText("Coordonnées: Adresse non trouvée (" + address + ")");
+                            mapView.getEngine().loadContent("");
+                            return;
+                        }
+
+                        JsonObject json = jsonArray.get(0).getAsJsonObject();
+                        double lat = json.get("lat").getAsDouble();
+                        double lon = json.get("lon").getAsDouble();
+                        String displayName = json.has("display_name") ? json.get("display_name").getAsString() : address;
+
+                        System.out.println("Log 7 - Coordonnées extraites : lat=" + lat + ", lon=" + lon + ", display_name=" + displayName);
+
+                        // Afficher les coordonnées dans le label
+                        locationLabel.setText("Coordonnées: Latitude = " + lat + ", Longitude = " + lon);
+
+                        // Utiliser Leaflet pour afficher la carte
+                        String htmlContent = "<!DOCTYPE html>" +
+                                "<html>" +
+                                "<head>" +
+                                "<link rel=\"stylesheet\" href=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.css\" />" +
+                                "<script src=\"https://unpkg.com/leaflet@1.9.4/dist/leaflet.js\" defer></script>" +
+                                "<style>" +
+                                "html, body, #map {" +
+                                "    margin: 0;" +
+                                "    padding: 0;" +
+                                "    width: 100%;" +
+                                "    height: 100%;" +
+                                "}" +
+                                "</style>" +
+                                "</head>" +
+                                "<body>" +
+                                "<div id=\"map\"></div>" +
+                                "<script>" +
+                                "document.addEventListener('DOMContentLoaded', function() {" +
+                                "    var map = L.map('map').setView([" + lat + ", " + lon + "], 13);" +
+                                "    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {" +
+                                "        attribution: '© OpenStreetMap contributors'" +
+                                "    }).addTo(map);" +
+                                "    L.marker([" + lat + ", " + lon + "]).addTo(map)" +
+                                "        .bindPopup('" + displayName + "')" +
+                                "        .openPopup();" +
+                                "});" +
+                                "</script>" +
+                                "</body>" +
+                                "</html>";
+
+                        System.out.println("Log 8 - Chargement du contenu HTML dans le WebView");
+                        mapView.getEngine().loadContent(htmlContent);
+                    } catch (Exception e) {
+                        System.out.println("Log 9 - Erreur lors du traitement de la réponse API : " + e.getMessage());
+                        locationLabel.setText("Coordonnées: Erreur lors du chargement");
+                        mapView.getEngine().loadContent("");
+                        e.printStackTrace();
+                    }
+                }))
+                .exceptionally(e -> {
+                    Platform.runLater(() -> {
+                        System.out.println("Log 10 - Erreur réseau lors du géocodage : " + e.getMessage());
+                        locationLabel.setText("Coordonnées: Erreur réseau - " + e.getMessage());
+                        mapView.getEngine().loadContent("");
+                    });
                     return null;
                 });
     }
@@ -388,8 +611,9 @@ public class AfficherPartenaire {
     private String extractCityFromAddress(String address) {
         if (address == null || address.isEmpty()) return null;
         String[] parts = address.trim().split("[,\\-]");
-        for (String part : parts) {
-            part = part.trim();
+        // Parcourir les parties de la fin vers le début pour privilégier la ville principale
+        for (int i = parts.length - 1; i >= 0; i--) {
+            String part = parts[i].trim();
             if (part.matches("[A-Za-z\\s]+")) { // Vérifie si c’est une ville (lettres et espaces)
                 return part;
             }
