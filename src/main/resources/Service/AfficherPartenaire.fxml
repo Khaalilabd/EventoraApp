@@ -65,7 +65,6 @@
             </columns>
         </TableView>
 
-        <!-- Section météo actuelle et future pour l'adresse du partenaire -->
         <VBox spacing="10" alignment="CENTER">
             <Label text="Météo pour l'adresse du partenaire :" styleClass="main-description"/>
             <Label fx:id="weatherLabel" text="Météo: Chargement..."

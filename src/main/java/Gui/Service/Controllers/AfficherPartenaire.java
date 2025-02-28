@@ -356,7 +356,6 @@ public class AfficherPartenaire {
                                 return;
                             }
 
-                            // Trouver les données pour la date future
                             for (int i = 0; i < hourlyList.size(); i++) {
                                 JsonObject forecast = hourlyList.get(i).getAsJsonObject();
                                 long timestamp = forecast.get("dt").getAsLong();
