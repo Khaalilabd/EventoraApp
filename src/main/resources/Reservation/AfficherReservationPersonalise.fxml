@@ -63,6 +63,7 @@
                 <TableColumn fx:id="colnumTel" prefWidth="113.0" text="Num. Téléphone"/>
                 <TableColumn fx:id="colDescription" minWidth="0.0" prefWidth="178.0" text="Description"/>
                 <TableColumn fx:id="colDate" minWidth="0.0" prefWidth="116.0" text="Date"/>
+                <TableColumn fx:id="colServices" minWidth="0.0" prefWidth="150.0" text="Services"/> <!-- Nouvelle colonne -->
                 <TableColumn fx:id="colActions" prefWidth="88.0" text="Actions"/>
             </columns>
         </TableView>

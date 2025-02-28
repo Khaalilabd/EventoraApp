@@ -1,66 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.paint.Color?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Reservation.Controllers.ModifierReservationPersonalise"
-            prefHeight="600.0" prefWidth="900.0"
-            stylesheets="style.css"
-            style="-fx-background-color: #F4F1F1;">
+<AnchorPane prefHeight="600.0" prefWidth="900.0" stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Reservation.Controllers.ModifierReservationPersonalise">
 
-    <!-- Barre de navigation latérale -->
-    <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
-
-        <!-- Titre -->
-        <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
-
-        <!-- Menu Buttons -->
-        <VBox spacing="10">
-            <Button text="🏠 Accueil" styleClass="menu-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
-            <Button text="📲 Réservation" styleClass="menu-button" onAction="#goToReservation"/>
-            <Button text="🎁 Services" styleClass="menu-button"/>
-            <Button text="⭐ FeedBack" styleClass="menu-button"/>
-            <Button styleClass="menu-button" text="🚨 Réclamations"/>
-            <Button text="🔧 Paramètres" styleClass="menu-button"/>
+    <!-- Navbar horizontale en haut -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
             <Button text="🛑 Déconnexion" styleClass="logout-button"/>
-        </VBox>
-    </VBox>
+        </HBox>
+    </HBox>
 
     <!-- Contenu principal -->
-    <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
-        <!-- Titre -->
-        <Label text="Modifier une Reservation" styleClass="main-title"/>
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
 
-        <!-- Champ Titre de la Reservation -->
-        <ComboBox fx:id="idServicefield" promptText="Sélectionnez un ou plusieurs services" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <!-- Titre principal -->
+        <Label text="Modifier une Réservation Personnalisée" styleClass="main-title"/>
 
-        <TextField fx:id="nomfield" promptText="Entrez votre nom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Modifiez les détails de votre réservation personnalisée ci-dessous."/>
 
-        <TextField fx:id="prenomfield" promptText="Entrez votre prénom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        <!-- Formulaire avec GridPane -->
+        <GridPane hgap="10" vgap="10" styleClass="form-container">
+            <!-- Remplacement du ComboBox par un VBox pour les CheckBox -->
+            <VBox fx:id="serviceCheckboxes" spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <TextField fx:id="nomfield" promptText="Entrez votre nom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+            <TextField fx:id="prenomfield" promptText="Entrez votre prénom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <TextField fx:id="emailfield" promptText="Entrez votre email" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            <TextField fx:id="numtelfield" promptText="Entrez votre téléphone" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+            <TextArea fx:id="descriptionfield" promptText="Expliquez votre besoin..." styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+            <DatePicker fx:id="datefield" promptText="Sélectionnez une date" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            </rowConstraints>
+        </GridPane>
 
-        <TextField fx:id="emailfield" promptText="Entrez votre email" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-
-        <TextField fx:id="numtelfield" promptText="Entrez votre téléphone" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-
-        <TextArea fx:id="descriptionfield" promptText="Expliquez votre besoin..." styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-
-        <DatePicker fx:id="datefield" promptText="Sélectionnez une date" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-
-
-        <!-- Boutons -->
-        <HBox spacing="20" alignment="CENTER">
-            <Button text="Sauvegarder" fx:id="submitButton" styleClass="submit-button"/>
-            <Button text="Annuler" fx:id="cancelButton" styleClass="cancel-button"/>
+        <!-- Boutons avec icônes -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="submitButton" text="✔ Sauvegarder" styleClass="card-button"/>
+            <Button fx:id="cancelButton" text="❌ Annuler" styleClass="card-button"/>
         </HBox>
     </VBox>
 </AnchorPane>

@@ -1,9 +1,7 @@
 package Gui.Reservation.Controllers;
 
 import Models.Reservation.ReservationPersonalise;
-import Models.Service.Service;
 import Services.Reservation.Crud.ReservationPersonaliseService;
-import Services.Service.Crud.ServiceService;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
@@ -26,8 +24,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class AfficheReservationPersonalise {
 
@@ -59,22 +55,17 @@ public class AfficheReservationPersonalise {
     private TableColumn<ReservationPersonalise, Date> colDate;
 
     @FXML
-    private TableColumn<ReservationPersonalise, String> colServices; // Nouvelle colonne
-
-    @FXML
     private TableColumn<ReservationPersonalise, String> colActions;
 
-    private final ReservationPersonaliseService reservationService;
-    private final ServiceService serviceService;
+    private final ReservationPersonaliseService reservationservice;
 
     public AfficheReservationPersonalise() {
-        this.reservationService = new ReservationPersonaliseService();
-        this.serviceService = new ServiceService();
+        this.reservationservice = new ReservationPersonaliseService();
     }
 
     @FXML
     public void initialize() {
-        // Liaison des colonnes avec les propriétés de la classe ReservationPersonalise
+        // Liaison des colonnes avec les propriétés de la classe Reservation
         colId.setCellValueFactory(new PropertyValueFactory<>("idReservationPersonalise"));
         colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
         colPrenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
@@ -82,33 +73,9 @@ public class AfficheReservationPersonalise {
         colnumTel.setCellValueFactory(new PropertyValueFactory<>("numtel"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
-
-        // Configuration de la colonne Services
-        colServices.setCellValueFactory(cellData -> {
-            ReservationPersonalise reservation = cellData.getValue();
-            List<Integer> serviceIds = reservation.getServiceIds();
-            if (serviceIds == null || serviceIds.isEmpty()) {
-                return new SimpleStringProperty("Aucun service");
-            }
-
-            // Récupérer les titres des services depuis ServiceService
-            List<Service> allServices = serviceService.RechercherService();
-            String serviceTitles = serviceIds.stream()
-                    .map(id -> allServices.stream()
-                            .filter(s -> s.getId() == id)
-                            .findFirst()
-                            .map(Service::getTitre)
-                            .orElse("Service inconnu (" + id + ")"))
-                    .collect(Collectors.joining(", "));
-            return new SimpleStringProperty(serviceTitles);
-        });
-
-        // Ajout de la colonne Actions
         addActionsColumn();
-
         // Charger les données dans le TableView
         loadReservations();
-
         // Ajout du filtre de recherche
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterReservations(newValue));
     }
@@ -121,7 +88,7 @@ public class AfficheReservationPersonalise {
 
         String lowerCaseKeyword = keyword.toLowerCase();
         tableView.getItems().setAll(
-                reservationService.rechercherReservationPersonalise().stream()
+                reservationservice.rechercherReservationPersonalise().stream()
                         .filter(res -> res.getNom().toLowerCase().contains(lowerCaseKeyword) ||
                                 res.getPrenom().toLowerCase().contains(lowerCaseKeyword))
                         .toList()
@@ -131,7 +98,7 @@ public class AfficheReservationPersonalise {
     private void addActionsColumn() {
         colActions.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
 
-        colActions.setCellFactory(param -> new TableCell<>() {
+        colActions.setCellFactory(param -> new TableCell<ReservationPersonalise, String>() {
             final Button editButton = new Button();
             final Button deleteButton = new Button();
             final Button exportReservationButton = new Button();
@@ -185,13 +152,13 @@ public class AfficheReservationPersonalise {
 
     private void handleEdit(ReservationPersonalise reservation) {
         try {
-            // Charger le fichier FXML de la vue ModifierReservationPersonalise
+            // Charger le fichier FXML de la vue ModifierReservation
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/ModifierReservationPersonalise.fxml"));
             AnchorPane modifReservationLayout = loader.load();
 
             // Obtenez le contrôleur du fichier FXML
             ModifierReservationPersonalise controller = loader.getController();
-            controller.setReservationToEdit(reservation);  // Passer la réservation à modifier
+            controller.setReservationToEdit(reservation);  // Utilisation correcte du contrôleur
 
             // Charger la nouvelle scène
             Scene currentScene = tableView.getScene();
@@ -224,21 +191,6 @@ public class AfficheReservationPersonalise {
             document.add(new Paragraph("Phone Number: " + reservation.getNumtel()));
             document.add(new Paragraph("Description: " + reservation.getDescription()));
             document.add(new Paragraph("Date: " + reservation.getDate().toString()));
-            // Add services
-            List<Integer> serviceIds = reservation.getServiceIds();
-            if (serviceIds != null && !serviceIds.isEmpty()) {
-                List<Service> allServices = serviceService.RechercherService();
-                String serviceTitles = serviceIds.stream()
-                        .map(id -> allServices.stream()
-                                .filter(s -> s.getId() == id)
-                                .findFirst()
-                                .map(Service::getTitre)
-                                .orElse("Service inconnu (" + id + ")"))
-                        .collect(Collectors.joining(", "));
-                document.add(new Paragraph("Services: " + serviceTitles));
-            } else {
-                document.add(new Paragraph("Services: Aucun service"));
-            }
 
             // Close the document
             document.close();
@@ -264,13 +216,13 @@ public class AfficheReservationPersonalise {
 
     private void handleDelete(ReservationPersonalise reservation) {
         System.out.println("Supprimer la Reservation avec ID : " + reservation.getIdReservationPersonalise());
-        reservationService.supprimerReservationPersonalise(reservation);
+        reservationservice.supprimerReservationPersonalise(reservation);
         loadReservations();
     }
 
     private void loadReservations() {
         // Récupérer les réservations depuis le service et les ajouter au TableView
-        tableView.getItems().setAll(reservationService.rechercherReservationPersonalise());
+        tableView.getItems().setAll(reservationservice.rechercherReservationPersonalise());
     }
 
     @FXML
@@ -281,11 +233,11 @@ public class AfficheReservationPersonalise {
             Scene scene = new Scene(loader.load());
             Stage stage = new Stage();
             stage.setScene(scene);
-            stage.setTitle("Ajouter une reservation Personnalisée");
+            stage.setTitle("Ajouter une reservation Personaliser");
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors du chargement de AjouterReservationPersonalise.fxml : " + e.getMessage());
+            e.printStackTrace(); // Afficher l'erreur dans la console
+            System.out.println("Erreur lors du chargement de ReservationPersonalise.fxml : " + e.getMessage());
         }
     }
 
@@ -308,6 +260,7 @@ public class AfficheReservationPersonalise {
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         try {
+            // Vérifier le chemin correct du fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
@@ -345,6 +298,7 @@ public class AfficheReservationPersonalise {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
+
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
         Stage newStage = new Stage();
