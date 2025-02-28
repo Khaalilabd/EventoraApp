@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 import Models.Pack.Pack;
 import Services.Pack.Crud.PackService;
 
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -45,6 +48,11 @@ public class AjouterReservationPack {
     private ReservationPackService reservationservice = new ReservationPackService();
     private PackService packService = new PackService();
     private ObservableList<String> packNames = FXCollections.observableArrayList();
+
+    // Twilio credentials (replace with your actual values)
+    private static final String ACCOUNT_SID = "ACc57c0b58eff936708b3208d34fd03469";
+    private static final String AUTH_TOKEN = "b2a441186c89d703043342fcd40b372a";
+    private static final String TWILIO_PHONE_NUMBER = "+12513125202"; // Your Twilio number
 
     @FXML
     public void initialize() {
@@ -134,11 +142,41 @@ public class AjouterReservationPack {
             clearFields();
             goToReservationListePack();
 
+            // Send SMS confirmation after successful reservation
+            sendSMSConfirmation(reservation);
+
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur est survenue lors de l'ajout de la réservation.");
         }
     }
 
+    private void sendSMSConfirmation(ReservationPack reservation) {
+        // Initialize Twilio with your credentials
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+
+        // Get the customer's phone number (format it for E.164, assuming Tunisian prefix +216)
+        String customerPhoneNumber = "+216" + reservation.getNumtel(); // Ensure this is in E.164 format, e.g., "+21651863242"
+
+        // Construct the SMS message
+        String messageBody = String.format(
+                "Réservation Confirmée ! ID: %d, Pack: %s, Date: %s. Répondez 'ANNULER' pour annuler.",
+                reservation.getIdReservationPack(), reservation.getNom(), reservation.getDate().toString()
+        );
+
+        try {
+            // Send the SMS
+            Message message = Message.creator(
+                    new PhoneNumber(customerPhoneNumber), // To: Customer's phone number
+                    new PhoneNumber(TWILIO_PHONE_NUMBER), // From: Your Twilio number
+                    messageBody // Message body
+            ).create();
+
+            System.out.println("SMS envoyé avec succès avec SID: " + message.getSid());
+        } catch (Exception e) {
+            System.err.println("Échec lors de l'envoi du SMS: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
 
     private void annuler() {
         clearFields();

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
@@ -41,7 +41,11 @@
 
         <!-- Formulaire avec GridPane pour une meilleure organisation -->
         <GridPane hgap="10" vgap="10">
-            <ComboBox fx:id="idServicefield" promptText="Sélectionnez un ou des services" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <VBox fx:id="serviceCheckboxes" prefHeight="100" prefWidth="200" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <children>
+                    <Label text="Sélectionnez un ou plusieurs services" />
+                </children>
+            </VBox>
 
             <TextField fx:id="nomfield" promptText="Entrez votre nom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 

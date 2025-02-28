@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Pos?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -8,60 +9,63 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="764.0" prefWidth="1163.0" style="-fx-background-color: #F2F2F2;"
-            stylesheets="style.css" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="764.0" prefWidth="1163.0"
+            stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Reservation.Controllers.AfficheReservationPersonalise">
-    <HBox prefHeight="774.0" prefWidth="1213.0" spacing="0">
-        <!-- Barre de navigation latérale -->
-        <VBox prefHeight="659.0" prefWidth="161.0" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
 
-
-            <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu" />
-
-            <VBox spacing="10">
-                <Button styleClass="menu-button" text="🏠 Accueil" />
-                <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
-                <Button styleClass="menu-button" text="📲 Réservation" onAction="#goToReservation"/>
-                <Button styleClass="menu-button" text="🎁 Services" />
-                <Button styleClass="menu-button" text="💎 Packs" />
-                <Button styleClass="menu-button" text="⭐ FeedBack" />
-                <Button styleClass="menu-button" text="🚨 Réclamations" />
-                <Button styleClass="menu-button" text="🔧 Paramètres" />
-                <Button styleClass="logout-button" text="🛑 Déconnexion" />
-            </VBox>
-        </VBox>
-        <!-- Contenu principal -->
-        <VBox alignment="CENTER" layoutX="240" layoutY="50" prefHeight="774.0" prefWidth="1051.0" spacing="20" style="-fx-padding: 20px;">
-            <Label prefHeight="55.0" prefWidth="473.0" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50; -fx-padding: 10px;" text="⛔ Liste des Reservations Personaliser ⛔" textAlignment="CENTER">
-                <font>
-                    <Font size="49.0" />
-                </font>
-            </Label>
-
-            <!-- Ajouter, Actualiser, et Rechercher Buttons -->
-            <HBox prefHeight="25.0" prefWidth="814.0" spacing="10">
-                <Button onAction="#addReservationPersonalise" style="-fx-background-color: #4CAF50; -fx-text-fill: white;" text="Ajouter" />
-                <Button onAction="#refreshList" style="-fx-background-color: #2196F3; -fx-text-fill: white;" text="Actualiser" />
-                <TextField fx:id="searchField" promptText="Rechercher..." />
-
-            </HBox>
-
-            <!-- Tableau des Rservations -->
-            <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
-                <columns>
-                    <TableColumn fx:id="colId" prefWidth="49.0" text="ID" />
-                    <TableColumn fx:id="colNom" prefWidth="85.0" text="Nom" />
-                    <TableColumn fx:id="colPrenom" prefWidth="110.0" text="Prenom" />
-                    <TableColumn fx:id="colEmail" prefWidth="183.0" text="Email" />
-                    <TableColumn fx:id="colnumTel" prefWidth="113.0" text="NumTel" />
-                    <TableColumn fx:id="colDescription" minWidth="0.0" prefWidth="178.0" text="Description" />
-                    <TableColumn fx:id="colDate" minWidth="0.0" prefWidth="116.0" text="Date" />
-                    <TableColumn fx:id="colActions" prefWidth="88.0" text="Actions" />
-                </columns>
-            </TableView>
-        </VBox>
-
+    <!-- Navbar (inspirée du premier fichier, mais adaptée en haut) -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
     </HBox>
+
+    <!-- Contenu principal (modernisé avec inspiration des cartes) -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+
+        <!-- Titre principal -->
+        <Label text="⛔ Liste des Réservations Personnalisées ⛔" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Consultez, ajoutez ou gérez vos réservations personnalisées en toute simplicité."/>
+
+        <!-- Section des actions -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="addReservationPersonalise" text="➕ Ajouter" styleClass="card-button" onAction="#addReservationPersonalise"/>
+            <Button fx:id="refreshList" text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
+            <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
+        </HBox>
+
+        <!-- Tableau des réservations -->
+        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0" styleClass="custom-table">
+            <columns>
+                <TableColumn fx:id="colId" prefWidth="49.0" text="ID"/>
+                <TableColumn fx:id="colNom" prefWidth="85.0" text="Nom"/>
+                <TableColumn fx:id="colPrenom" prefWidth="110.0" text="Prénom"/>
+                <TableColumn fx:id="colEmail" prefWidth="183.0" text="Email"/>
+                <TableColumn fx:id="colnumTel" prefWidth="113.0" text="Num. Téléphone"/>
+                <TableColumn fx:id="colDescription" minWidth="0.0" prefWidth="178.0" text="Description"/>
+                <TableColumn fx:id="colDate" minWidth="0.0" prefWidth="116.0" text="Date"/>
+                <TableColumn fx:id="colServices" minWidth="0.0" prefWidth="150.0" text="Services"/> <!-- Nouvelle colonne -->
+                <TableColumn fx:id="colActions" prefWidth="88.0" text="Actions"/>
+            </columns>
+        </TableView>
+    </VBox>
 </AnchorPane>

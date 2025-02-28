@@ -2,10 +2,15 @@ package Gui.Reservation.Controllers;
 
 import Models.Reservation.ReservationPack;
 import Services.Reservation.Crud.ReservationPackService;
+import com.itextpdf.io.image.ImageData;
+import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -174,16 +179,14 @@ public class AfficheReservationPack {
 
     private void handleExport(ReservationPack reservation) {
         try {
-            // Define the file path (e.g., save to the user's home directory)
             String homeDir = System.getProperty("user.home");
             String filePath = homeDir + File.separator + "ReservationPack_" + reservation.getIdReservationPack() + ".pdf";
 
-            // Initialize PDF writer and document
             PdfWriter writer = new PdfWriter(filePath);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
 
-            // Add title
+            // Add a title
             document.add(new Paragraph("Reservation Pack Details")
                     .setFontSize(18)
                     .setBold());
@@ -197,9 +200,6 @@ public class AfficheReservationPack {
             document.add(new Paragraph("Description: " + reservation.getDescription()));
             document.add(new Paragraph("Date: " + reservation.getDate().toString()));
 
-            // Close the document
-            document.close();
-
             // Show success message
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Export Successful");
@@ -210,7 +210,7 @@ public class AfficheReservationPack {
         } catch (IOException e) {
             e.printStackTrace();
 
-            // Show error message if something goes wrong
+            // Show error message
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Export Failed");
             alert.setHeaderText(null);
@@ -218,7 +218,7 @@ public class AfficheReservationPack {
             alert.showAndWait();
         }
     }
-
+    
     private void handleDelete(ReservationPack reservation) {
         System.out.println("Supprimer la réclamation avec ID : " + reservation.getIdReservationPack());
         reservationservice.supprimerReservationPack(reservation);

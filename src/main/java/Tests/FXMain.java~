@@ -11,7 +11,11 @@ import java.io.IOException;
 public class FXMain extends Application {
     @Override
     public void start(Stage stage)  {
+<<<<<<< HEAD
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/EventoraAPP.fxml"));
+=======
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/Acceuil.fxml"));
+>>>>>>> Reservation
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);
@@ -19,6 +23,10 @@ public class FXMain extends Application {
             stage.setTitle("EventoraAP");
             stage.setMaximized(true);
             stage.show();
+<<<<<<< HEAD
+=======
+
+>>>>>>> Reservation
         } catch (RuntimeException | IOException r){
             System.out.println(r.getMessage());
             r.printStackTrace();

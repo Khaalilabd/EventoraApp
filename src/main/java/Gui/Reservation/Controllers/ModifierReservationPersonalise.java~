@@ -71,6 +71,7 @@ public class ModifierReservationPersonalise {
         }
     }
 
+    // Méthode pour pré-remplir les champs avec les données de la réservation à modifier
     public void setReservationToEdit(ReservationPersonalise reservation) {
         this.reservationToEdit = reservation;
 
@@ -80,20 +81,7 @@ public class ModifierReservationPersonalise {
         emailfield.setText(reservation.getEmail());
         numtelfield.setText(reservation.getNumtel());
         descriptionfield.setText(reservation.getDescription());
-
-        // Convertir java.util.Date ou java.sql.Date en LocalDate pour le DatePicker
-        Date date = reservation.getDate();
-        if (date != null) {
-            LocalDate localDate;
-            if (date instanceof java.sql.Date) {
-                localDate = ((java.sql.Date) date).toLocalDate();
-            } else {
-                localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            }
-            datefield.setValue(localDate);
-        } else {
-            datefield.setValue(null);
-        }
+        datefield.setValue(reservation.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
         // Pré-cocher les services associés à la réservation
         List<Integer> selectedServiceIds = reservation.getServiceIds();
