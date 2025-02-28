@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.geometry.Pos?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.web.WebView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -53,7 +57,7 @@
         </HBox>
 
         <!-- Tableau des partenaires -->
-        <TableView fx:id="tableView" prefHeight="300.0" prefWidth="999.0" styleClass="custom-table">
+        <TableView fx:id="tableView" prefHeight="250.0" prefWidth="999.0" styleClass="custom-table">
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="46.0" text="ID"/>
                 <TableColumn fx:id="nomColumn" prefWidth="108.0" text="Nom"/>
@@ -65,12 +69,27 @@
             </columns>
         </TableView>
 
+        <!-- Section météo actuelle et future pour l'adresse du partenaire -->
         <VBox spacing="10" alignment="CENTER">
             <Label text="Météo pour l'adresse du partenaire :" styleClass="main-description"/>
-            <Label fx:id="weatherLabel" text="Météo: Chargement..."
-                   styleClass="main-description"/>
-            <Label fx:id="futureWeatherLabel" text="Prévision (5 jours) : Chargement..."
-                   styleClass="main-description"/>
+            <!-- Météo actuelle -->
+            <HBox fx:id="currentWeatherBox" spacing="10" alignment="CENTER" styleClass="weather-box">
+                <ImageView fx:id="currentWeatherIcon" fitHeight="50.0" fitWidth="50.0" preserveRatio="true"/>
+                <Label fx:id="currentWeatherLabel" text="Météo: Chargement..." styleClass="weather-text"/>
+            </HBox>
+            <!-- Prévision -->
+            <HBox fx:id="forecastWeatherBox" spacing="10" alignment="CENTER" styleClass="weather-box">
+                <ImageView fx:id="forecastWeatherIcon" fitHeight="50.0" fitWidth="50.0" preserveRatio="true"/>
+                <Label fx:id="forecastWeatherLabel" text="Prévision (5 jours) : Chargement..." styleClass="weather-text"/>
+            </HBox>
+        </VBox>
+
+        <!-- Section localisation GPS -->
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Localisation GPS de l'adresse :" styleClass="main-description"/>
+            <Label fx:id="locationLabel" text="Coordonnées: Chargement..." styleClass="main-description"/>
+            <!-- Carte OpenStreetMap -->
+            <WebView fx:id="mapView" prefHeight="150.0" prefWidth="999.0"/>
         </VBox>
     </VBox>
 </AnchorPane>
