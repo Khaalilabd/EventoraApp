@@ -50,8 +50,8 @@ public class AjouterReservationPack {
     private ObservableList<String> packNames = FXCollections.observableArrayList();
 
     // Twilio credentials (replace with your actual values)
-    //private static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
-   // private static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
+    private static final String ACCOUNT_SID = System.getenv("TWILIO_ACCOUNT_SID");
+    private static final String AUTH_TOKEN = System.getenv("TWILIO_AUTH_TOKEN");
     private static final String TWILIO_PHONE_NUMBER = "+12513125202"; // Your Twilio number
 
     @FXML
