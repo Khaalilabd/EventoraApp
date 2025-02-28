@@ -184,4 +184,21 @@ public class MembresService implements Imembres<Utilisateurs> {
         }
         return id;
     }
+    public List<String> getAllUserEmails() {
+        List<String> emails = new ArrayList<>();
+        String query = "SELECT Email FROM membres";
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String email = rs.getString("Email");
+                if (email != null && !email.trim().isEmpty()) {
+                    emails.add(email);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des emails des utilisateurs : " + e.getMessage());
+            e.printStackTrace();
+        }
+        return emails;
+    }
 }

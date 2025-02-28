@@ -16,18 +16,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
-
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 import Services.Pack.Crud.PackService;
 import Models.Pack.Pack;
+import Models.Pack.Evenement;
+import Models.Service.Service;
 
 public class AffichePack {
 
     @FXML
     private TableView<Pack> tableView;
-    //@FXML
-    //private TableColumn<Pack, Integer> colId;
     @FXML
     private TableColumn<Pack, String> colNom;
     @FXML
@@ -46,31 +47,46 @@ public class AffichePack {
     private TableColumn<Pack, String> colActions;
     @FXML
     private TextField searchField;
+    @FXML
+    private ComboBox<String> sortByCombo;
+    @FXML
+    private ToggleButton sortOrderToggle;
 
     private PackService packService = new PackService();
     private ObservableList<Pack> packList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        // Set cell value factories
-        //colId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        // Initialize TableView columns
         colNom.setCellValueFactory(new PropertyValueFactory<>("nomPack"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
-        colLocation.setCellValueFactory(new PropertyValueFactory<>("location"));
-        colType.setCellValueFactory(new PropertyValueFactory<>("type"));
+        colLocation.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getLocation().getLabel()));
+        colType.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getType().getTypeEvenement()));
         colNbrGuests.setCellValueFactory(new PropertyValueFactory<>("nbrGuests"));
-        colServices.setCellValueFactory(new PropertyValueFactory<>("nomService"));
-
-        // Actions column (Edit & Delete buttons with icons)
+        colServices.setCellValueFactory(cellData -> {
+            List<Service> services = cellData.getValue().getNomServices();
+            String servicesString = services.stream()
+                    .map(Service::getTitre)
+                    .collect(Collectors.joining(", "));
+            return new javafx.beans.property.SimpleStringProperty(servicesString);
+        });
         colActions.setCellFactory(createActionButtons());
+
+        // Initialize sorting options
+        sortByCombo.getItems().addAll("Nom Pack", "Prix", "Invités");
+        sortByCombo.setValue("Nom Pack"); // Default sort by nomPack
+        sortOrderToggle.setSelected(true); // Default to ascending
 
         // Load packs into the table
         loadPacks();
 
-        // Dynamic search functionality
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            searchPack(newValue);
+        // Listeners for dynamic search and sorting
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> searchPack(newValue));
+        sortByCombo.valueProperty().addListener((obs, old, newVal) -> applySort());
+        sortOrderToggle.selectedProperty().addListener((obs, old, newVal) -> {
+            sortOrderToggle.setText(newVal ? "⬆ Ascendant" : "⬇ Descendant");
+            applySort();
         });
 
         // Row hover effect
@@ -80,6 +96,37 @@ public class AffichePack {
     private void loadPacks() {
         packList.clear();
         packList.addAll(packService.rechercher());
+        applySort();
+    }
+
+    private void searchPack(String motCle) {
+        List<Pack> resultatRecherche = packService.RechercherPackParMotCle(motCle.toLowerCase());
+        packList.clear();
+        packList.addAll(resultatRecherche);
+        applySort(); // Reapply sorting after filtering
+    }
+
+    private void applySort() {
+        String sortBy = sortByCombo.getValue();
+        boolean ascending = sortOrderToggle.isSelected();
+        Comparator<Pack> comparator = null;
+        switch (sortBy) {
+            case "Nom Pack":
+                comparator = Comparator.comparing(Pack::getNomPack);
+                break;
+            case "Prix":
+                comparator = Comparator.comparingDouble(Pack::getPrix);
+                break;
+            case "Invités":
+                comparator = Comparator.comparingInt(Pack::getNbrGuests);
+                break;
+            default:
+                comparator = Comparator.comparing(Pack::getNomPack);
+        }
+        if (!ascending) {
+            comparator = comparator.reversed();
+        }
+        packList.sort(comparator);
         tableView.setItems(packList);
     }
 
@@ -90,7 +137,6 @@ public class AffichePack {
             final HBox buttons = new HBox(10, editButton, deleteButton);
 
             {
-                // Add icons to buttons
                 Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
                 Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
                 ImageView editImageView = new ImageView(editIcon);
@@ -101,12 +147,9 @@ public class AffichePack {
                 deleteImageView.setFitWidth(20);
                 editButton.setGraphic(editImageView);
                 deleteButton.setGraphic(deleteImageView);
-
-                // Styling for the buttons
                 editButton.getStyleClass().add("table-button");
                 deleteButton.getStyleClass().addAll("table-button", "delete");
 
-                // Set actions for buttons
                 editButton.setOnAction(event -> {
                     Pack pack = getTableView().getItems().get(getIndex());
                     handleEdit(pack);
@@ -134,10 +177,8 @@ public class AffichePack {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/ModifierPack.fxml"));
             AnchorPane modifRecLayout = loader.load();
-
             ModifierPack controller = loader.getController();
             controller.setPackToEdit(pack);
-
             Scene currentScene = tableView.getScene();
             currentScene.setRoot(modifRecLayout);
         } catch (IOException e) {
@@ -150,28 +191,22 @@ public class AffichePack {
         alert.setTitle("Confirmation de suppression");
         alert.setHeaderText("Suppression d'un pack");
         alert.setContentText("Voulez-vous vraiment supprimer le pack : " + pack.getNomPack() + " ?");
-
         ButtonType buttonTypeYes = new ButtonType("Oui", ButtonBar.ButtonData.OK_DONE);
         ButtonType buttonTypeNo = new ButtonType("Non", ButtonBar.ButtonData.CANCEL_CLOSE);
-
         alert.getButtonTypes().setAll(buttonTypeYes, buttonTypeNo);
-
         alert.showAndWait().ifPresent(response -> {
             if (response == buttonTypeYes) {
                 packService.supprimer(pack);
-                loadPacks(); // Refresh the list after deletion
+                loadPacks();
             }
         });
     }
 
-    private void searchPack(String motCle) {
-        List<Pack> resultatRecherche = packService.RechercherPackParMotCle(motCle.toLowerCase());
-        ObservableList<Pack> data = FXCollections.observableArrayList(resultatRecherche);
-        tableView.setItems(data);
-    }
-
     @FXML
     private void refreshList() {
+        searchField.clear();
+        sortByCombo.setValue("Nom Pack");
+        sortOrderToggle.setSelected(true);
         loadPacks();
     }
 
@@ -218,6 +253,7 @@ public class AffichePack {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
@@ -227,10 +263,10 @@ public class AffichePack {
         currentStage.setScene(reclamationScene);
         currentStage.show();
     }
+
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         try {
-            // Vérifier le chemin correct du fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
             AnchorPane reservationLayout = loader.load();
             Scene scene = new Scene(reservationLayout);
@@ -242,18 +278,19 @@ public class AffichePack {
             System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
     }
+
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
-
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
         Stage newStage = new Stage();
         newStage.setScene(newScene);
         newStage.show();
     }
+
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
