@@ -326,3 +326,139 @@
     -fx-border-radius: 10;
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 3);
 }
+
+/* Style pour la grille */
+.grid-list {
+    -fx-background-color: #f5f5f5; /* Fond gris clair pour la grille */
+    -fx-padding: 20;
+}
+
+/* Style pour chaque carte de réclamation avec dégradé */
+.reclamation-card {
+    -fx-background-color: linear-gradient(to bottom right, #e3f2fd, #bbdefb); /* Dégradé bleu pâle */
+    -fx-border-radius: 15; /* Coins arrondis */
+    -fx-background-radius: 15;
+    -fx-border-color: #e0e0e0; /* Bordure légère */
+    -fx-border-width: 1;
+    -fx-padding: 15; /* Espacement interne */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5); /* Ombre douce */
+    -fx-alignment: center;
+    -fx-pref-width: 300;
+    -fx-pref-height: 220;
+    -fx-transition: all 0.3s ease; /* Transition pour hover */
+}
+
+/* Effet au survol */
+.reclamation-card:hover {
+    -fx-scale-y: 1.05; /* Agrandissement léger */
+    -fx-scale-x: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 8); /* Ombre plus prononcée */
+}
+
+/* Style de base pour tous les labels dans les cartes */
+.reclamation-card .label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333; /* Texte gris foncé */
+    -fx-padding: 5; /* Espacement interne */
+    -fx-background-radius: 5; /* Coins arrondis pour les backgrounds */
+}
+
+/* Style pour l'ID */
+.reclamation-card .card-id {
+    -fx-background-color: #e8f0fe; /* Bleu très clair */
+    -fx-text-fill: #1a73e8; /* Bleu pour le texte */
+}
+
+/* Style pour le titre */
+.reclamation-card .card-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-background-color: #e3f2fd; /* Bleu pâle */
+    -fx-text-fill: #1976d2; /* Bleu plus foncé */
+}
+
+/* Style pour la description */
+.reclamation-card .card-description {
+    -fx-background-color: #f5f5f5; /* Gris très clair */
+    -fx-text-fill: #555555; /* Gris moyen */
+}
+
+/* Style pour le type */
+.reclamation-card .card-type {
+    -fx-background-color: #e0f7fa; /* Cyan pâle */
+    -fx-text-fill: #00695c; /* Cyan foncé */
+}
+
+/* Style pour le statut (base) */
+.reclamation-card .card-statut {
+    -fx-font-weight: bold;
+    -fx-padding: 5;
+    -fx-background-radius: 5;
+}
+
+/* Couleurs spécifiques pour chaque statut */
+.reclamation-card .statut-resolue {
+    -fx-background-color: #c8e6c9; /* Vert pâle pour Résolue */
+    -fx-text-fill: #2e7d32; /* Vert foncé */
+}
+
+.reclamation-card .statut-en-cours {
+    -fx-background-color: #ffe0b2; /* Orange pâle pour En cours */
+    -fx-text-fill: #f57c00; /* Orange foncé */
+}
+
+.reclamation-card .statut-en-attente {
+    -fx-background-color: #bbdefb; /* Bleu pâle pour En attente */
+    -fx-text-fill: #1976d2; /* Bleu foncé */
+}
+
+.reclamation-card .statut-rejetee {
+    -fx-background-color: #ffcdd2; /* Rouge pâle pour Rejetée */
+    -fx-text-fill: #c62828; /* Rouge foncé */
+}
+
+/* Style pour les boutons dans les cartes */
+.reclamation-card .button {
+    -fx-background-color: #f0f0f0; /* Fond gris clair */
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+
+.reclamation-card .button:hover {
+    -fx-background-color: #e0e0e0; /* Gris plus foncé au survol */
+}
+
+/* Style spécifique pour le bouton QR */
+.reclamation-card .qr-button {
+    -fx-background-color: #4CAF50; /* Vert pour le bouton QR */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.reclamation-card .qr-button:hover {
+    -fx-background-color: #45a049; /* Vert plus foncé au survol */
+}
+
+/* Style pour le panneau de statistiques */
+.stats-panel {
+    -fx-padding: 10;
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.stat-label {
+    -fx-padding: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 14px;
+}
+
+/* Style pour le filtre par statut */
+.filter-combo {
+    -fx-pref-width: 150;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+}

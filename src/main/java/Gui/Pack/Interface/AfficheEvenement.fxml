@@ -1,14 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import javafx.geometry.Pos?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Pack.Controllers.AfficheEvenement"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="764.0" prefWidth="1163.0"
+            stylesheets="/style.css">
 
+    <!-- Navbar horizontale (identique à AjouterRec) -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
+    </HBox>
+
+    <!-- Contenu principal (structure inspirée de AjouterRec) -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+
+        <!-- Titre principal -->
+        <Label text="Type des Événements" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Consultez, ajoutez ou gérez les types d'événements disponibles dans votre catalogue."/>
+
+        <!-- Champ de recherche -->
+        <TextField fx:id="searchField" promptText="Rechercher... 🔍" styleClass="input-field"/>
+
+        <!-- Boutons avec icônes -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button text="➕ Ajouter Événement" styleClass="card-button" onAction="#addEvenement"/>
+            <Button text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
+        </HBox>
+
+        <!-- Tableau des événements -->
+        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
+            <columns>
+                <TableColumn fx:id="colType" prefWidth="150.0" text="Événement"/>
+                <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
+            </columns>
+        </TableView>
+    </VBox>
 </AnchorPane>

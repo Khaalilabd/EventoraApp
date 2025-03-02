@@ -103,7 +103,7 @@ public class AffichePack {
         List<Pack> resultatRecherche = packService.RechercherPackParMotCle(motCle.toLowerCase());
         packList.clear();
         packList.addAll(resultatRecherche);
-        applySort(); // Reapply sorting after filtering
+        applySort();
     }
 
     private void applySort() {
@@ -175,12 +175,7 @@ public class AffichePack {
 
     private void handleEdit(Pack pack) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/ModifierPack.fxml"));
-            AnchorPane modifRecLayout = loader.load();
-            ModifierPack controller = loader.getController();
-            controller.setPackToEdit(pack);
-            Scene currentScene = tableView.getScene();
-            currentScene.setRoot(modifRecLayout);
+            switchScene("/Pack/ModifierPack.fxml", pack);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -222,82 +217,60 @@ public class AffichePack {
 
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        switchScene("/Pack/Packs.fxml", event);
     }
 
     @FXML
     private void addPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AjouterPack.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        switchScene("/Pack/AjouterPack.fxml", event);
     }
 
     @FXML
-    private void goToEvenement(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AfficheEvenement.fxml"));
-            AnchorPane packLayout = loader.load();
-            Scene scene = new Scene(packLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void goToEvenement(ActionEvent event) throws IOException {
+        switchScene("/Pack/AfficheEvenement.fxml", event);
     }
 
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene reclamationScene = new Scene(reclamationLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(reclamationScene);
-        currentStage.show();
+        switchScene("/Reclamation/Reclamation.fxml", event);
     }
 
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
-        }
+        switchScene("/Reservation/Reservation.fxml", event);
     }
 
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
+        switchScene("/Service/Service.fxml", event);
     }
 
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
+        switchScene("/Reclamation/Feedback.fxml", event);
+    }
+
+    // Méthode générique pour changer de scène avec un événement
+    private void switchScene(String fxmlFile, ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent layout = loader.load();
+        Scene newScene = new Scene(layout);
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
+        currentStage.setScene(newScene);
+        currentStage.show();
+    }
+
+    // Surcharge pour gérer le cas avec un Pack spécifique (pour l'édition)
+    private void switchScene(String fxmlFile, Pack pack) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent layout = loader.load();
+        if (fxmlFile.equals("/Pack/ModifierPack.fxml")) {
+            ModifierPack controller = loader.getController();
+            controller.setPackToEdit(pack);
+        }
+        Scene newScene = new Scene(layout);
+        Stage currentStage = (Stage) tableView.getScene().getWindow();
+        currentStage.setScene(newScene);
         currentStage.show();
     }
 }
