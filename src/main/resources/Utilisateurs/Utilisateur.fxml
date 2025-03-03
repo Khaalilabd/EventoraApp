@@ -1,124 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.animation.*?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.text.Text?>
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Gui.Utilisateurs.Controllers.Utilisateur"
-            prefHeight="600.0" prefWidth="900.0"
-            stylesheets="/style.css">
-
-    <VBox prefWidth="220" prefHeight="600"
-          style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
-
-
-        <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"
-               style="-fx-font-family: 'Arial'; -fx-font-size: 18px; -fx-text-fill: white; -fx-font-weight: bold;"/>
-
-        <VBox spacing="10">
-            <Button styleClass="menu-button" text="🏠 Accueil" />
-            <Button styleClass="menu-button" text="👨🏻‍💼 Utilisateur" />
-            <Button styleClass="menu-button" text="📲 Réservation" onAction="#goToReservation"/>
-            <Button onAction="#goToService" styleClass="menu-button" text="🎁 Services" />
-            <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
-            <Button styleClass="menu-button" text="⭐ FeedBack" onAction="#goToFeedback"/>
-            <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
-            <Button styleClass="menu-button" text="🔧 Paramètres" />
-            <Button styleClass="logout-button" text="🛑 Déconnexion" />
-        </VBox>
-    </VBox>
-
-    <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
-        <Text fx:id="welcomeText" text="Bienvenue sur la page Utilisateur !"
-              style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-fill: #2C3E50; -fx-effect: glow(0.2);"
-              fontSmoothingType="LCD"
-              textAlignment="CENTER">
-            <font>
-                <Font name="Arial Bold" size="24.0"/>
-            </font>
-        </Text>
-
-        <ImageView fitWidth="200" fitHeight="200" preserveRatio="true">
-            <image>
-                <Image url="/Images/users.jpg"/> </image>
-            <effect>
-                <DropShadow color="#2C3E50" height="20" radius="9.5" width="20"/>
-            </effect>
-        </ImageView>
-
-        <HBox spacing="20" alignment="CENTER">
-            <Button fx:id="ajouterButton"
-                    text="Ajouter un utilisateur"
-                    styleClass="add-button"
-                    onAction="#goToAjouterUser">
-                <effect>
-                    <DropShadow color="#2C3E50" height="10" radius="4.5" width="10"/>
-                </effect>
-            </Button>
-            <Button fx:id="viewButton"
-                    text="Voir les utilisateurs"
-                    styleClass="view-button"
-                    onAction="#goToAfficheListUSer">
-                <effect>
-                    <DropShadow color="#2C3E50" height="10" radius="4.5" width="10"/>
-                </effect>
-            </Button>
+<AnchorPane prefHeight="687.0" prefWidth="1022.0" styleClass="main-container"
+            stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Utilisateurs.Controllers.Utilisateur">
+    <!-- Barre de navigation -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Espace Utilisateur" styleClass="nav-title"/>
         </HBox>
-    </VBox>
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAcceuil"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button" onAction="#goToParametres"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button" onAction="#goToAuth"/>
+        </HBox>
+    </HBox>
 
-    <style>
-        .menu-button {
-        -fx-background-color: #34495E;
-        -fx-text-fill: white;
-        -fx-pref-width: 180;
-        -fx-pref-height: 40;
-        -fx-font-size: 16px;
-        -fx-background-radius: 5;
-        -fx-cursor: HAND; /* Ajout du curseur main */
-        -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 4, 0 , 2, 2 );
-        }
-        .menu-button:hover {
-        -fx-background-color: #4A6583; /* Couleur plus claire au survol */
-        -fx-scale-x: 1.05;
-        -fx-scale-y: 1.05;
-        }
+    <!-- Contenu principal -->
+    <ScrollPane fitToWidth="true" vbarPolicy="AS_NEEDED" pannable="true"
+                AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40px;">
+            <Label text="Mon Espace Utilisateur"
+                   styleClass="main-title"/>
+            <Label text="Gérez vos informations et réservations en toute simplicité."
+                   styleClass="main-description"/>
 
-        .menu-button:pressed {
-        -fx-background-color: #34495E; /* Retour à la couleur d'origine lors du clic */
-        -fx-scale-x: 1.0;
-        -fx-scale-y: 1.0;
-        }
-        .logout-button {
-        -fx-background-color: #E74C3C; /* Rouge pour le bouton de déconnexion */
-        -fx-text-fill: white;
-        -fx-pref-width: 180;
-        -fx-pref-height: 40;
-        -fx-font-size: 16px;
-        -fx-background-radius: 5;
-        -fx-cursor: HAND; /* Ajout du curseur main */
-        -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 4, 0 , 2, 2 );
+            <!-- Cartes disposées en grille 2x2 -->
+            <GridPane hgap="20" vgap="20" alignment="CENTER" styleClass="card-container">
+                <!-- Carte 1 : Réclamation (Ligne 1, Colonne 0) -->
+                <VBox fx:id="card1" styleClass="card" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <ImageView fitHeight="200" fitWidth="300">
+                        <image>
+                            <Image url="/Images/recrec.png"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Réclamation" styleClass="card-title"/>
+                    <Label text="Déposez une réclamation ou suivez vos demandes."
+                           styleClass="card-description" wrapText="true"/>
+                    <Button fx:id="reclamationButton" text="Consulter" onAction="#goToReclamation"
+                            styleClass="card-button"/>
+                </VBox>
 
-        }
-        .logout-button:hover {
-        -fx-background-color: #C0392B; /* Rouge plus foncé au survol */
-        -fx-scale-x: 1.05;
-        -fx-scale-y: 1.05;
-        }
+                <!-- Carte 2 : Informations (Ligne 1, Colonne 1) -->
+                <VBox fx:id="card2" styleClass="card" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <ImageView fitHeight="200" fitWidth="300">
+                        <image>
+                            <Image url="/Images/informations.jpg"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Informations" styleClass="card-title"/>
+                    <Label text="Consultez et modifiez vos informations personnelles."
+                           styleClass="card-description" wrapText="true"/>
+                    <Button fx:id="informationsButton" text="Consulter" onAction="#goToInformations"
+                            styleClass="card-button"/>
+                </VBox>
 
-        .logout-button:pressed {
-        -fx-background-color: #E74C3C; /* Retour à la couleur d'origine lors du clic */
-        -fx-scale-x: 1.0;
-        -fx-scale-y: 1.0;
-        }
-    </style>
+                <!-- Carte 3 : Réservation (Ligne 2, Colonne 0) -->
+                <VBox fx:id="card3" styleClass="card" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                    <ImageView fitHeight="200" fitWidth="300">
+                        <image>
+                            <Image url="/Images/reservation.jpg"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Réservation" styleClass="card-title"/>
+                    <Label text="Gérez vos réservations et planifiez vos événements."
+                           styleClass="card-description" wrapText="true"/>
+                    <Button fx:id="reservationButton" text="Consulter" onAction="#goToReservation"
+                            styleClass="card-button"/>
+                </VBox>
 
+                <!-- Carte 4 : Paramètres (Ligne 2, Colonne 1) -->
+                <VBox fx:id="card4" styleClass="card" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                    <ImageView fitHeight="200" fitWidth="300">
+                        <image>
+                            <Image url="/Images/parametres.jpg"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Paramètres" styleClass="card-title"/>
+                    <Label text="Ajustez vos préférences et paramètres de compte."
+                           styleClass="card-description" wrapText="true"/>
+                    <Button fx:id="parametresButton" text="Accéder" onAction="#goToParametres"
+                            styleClass="card-button"/>
+                </VBox>
+            </GridPane>
+        </VBox>
+    </ScrollPane>
 </AnchorPane>
