@@ -113,6 +113,8 @@ public class Chat {
                     "l’organisation d’événements devient intuitive, rapide et efficace, en \n" +
                     "garantissant une gestion optimisée aussi bien pour les clients que pour les\n" +
                     " organisateurs resumme et simplifie";
+        } else if (input.contains("gestion")) {
+            return "Gestion permet de suivre et organiser les services.";
         } else if (input.contains("evi")) {
             return "salut,comment je peux vous aider ?";
         } else if (input.contains("cv")) {

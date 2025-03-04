@@ -177,7 +177,6 @@ public class AfficheReservationPack {
             // Define the file path (e.g., save to the user's home directory)
             String homeDir = System.getProperty("user.home");
             String filePath = homeDir + File.separator + "ReservationPack_" + reservation.getIdReservationPack() + ".pdf";
-
             // Initialize PDF writer and document
             PdfWriter writer = new PdfWriter(filePath);
             PdfDocument pdf = new PdfDocument(writer);
