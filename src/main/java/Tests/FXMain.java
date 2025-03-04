@@ -10,7 +10,11 @@ import java.io.IOException;
 public class FXMain extends Application {
     @Override
     public void start(Stage stage)  {
+<<<<<<< HEAD
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/Acceuil.fxml"));
+=======
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Utilisateur.fxml"));
+>>>>>>> 9f5026f900f1fe374c19fd1dc7496dc819f174d4
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);
