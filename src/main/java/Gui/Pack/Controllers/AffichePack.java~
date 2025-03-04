@@ -12,14 +12,11 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import java.io.IOException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +24,6 @@ import Services.Pack.Crud.PackService;
 import Models.Pack.Pack;
 import Models.Pack.Evenement;
 import Models.Service.Service;
-import org.json.JSONObject;
 
 public class AffichePack {
 
@@ -55,12 +51,9 @@ public class AffichePack {
     private ComboBox<String> sortByCombo;
     @FXML
     private ToggleButton sortOrderToggle;
-    @FXML
-    private Button getPriceInCurrenciesButton; // New button for currency conversion
 
     private PackService packService = new PackService();
     private ObservableList<Pack> packList = FXCollections.observableArrayList();
-    private final HttpClient httpClient = HttpClient.newHttpClient(); // For HTTP requests to the exchange rate API
 
     @FXML
     public void initialize() {
@@ -84,7 +77,6 @@ public class AffichePack {
         sortByCombo.getItems().addAll("Nom Pack", "Prix", "Invités");
         sortByCombo.setValue("Nom Pack"); // Default sort by nomPack
         sortOrderToggle.setSelected(true); // Default to ascending
-        sortOrderToggle.setText("⬆ Ascendant");
 
         // Load packs into the table
         loadPacks();
@@ -99,9 +91,6 @@ public class AffichePack {
 
         // Row hover effect
         tableRowFactory(tableView);
-
-        // Set action for the new button
-        getPriceInCurrenciesButton.setOnAction(this::getPriceInCurrencies);
     }
 
     private void loadPacks() {
@@ -206,102 +195,6 @@ public class AffichePack {
                 loadPacks();
             }
         });
-    }
-
-    @FXML
-    private void getPriceInCurrencies(ActionEvent event) {
-        Pack selectedPack = tableView.getSelectionModel().getSelectedItem();
-        if (selectedPack == null) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("Veuillez sélectionner un pack pour voir le prix en différentes devises.");
-            alert.showAndWait();
-            return;
-        }
-
-        double priceTND = selectedPack.getPrix();
-        try {
-            String convertedPrices = convertPriceToCurrencies(priceTND);
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Prix en Devises");
-            alert.setHeaderText(null);
-            alert.setContentText(convertedPrices);
-            alert.showAndWait();
-        } catch (Exception e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur");
-            alert.setHeaderText(null);
-            alert.setContentText("Impossible de convertir le prix en devises : " + e.getMessage());
-            alert.showAndWait();
-            e.printStackTrace();
-        }
-    }
-
-    private String convertPriceToCurrencies(double priceTND) throws IOException, InterruptedException {
-        // Primary endpoint using fawazahmed0/currency-api via jsDelivr
-        String primaryUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/tnd.json";
-        // Fallback endpoint
-        String fallbackUrl = "https://latest.currency-api.pages.dev/v1/currencies/tnd.json";
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(primaryUrl))
-                .header("Accept", "application/json")
-                .GET()
-                .build();
-
-        try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == 200) {
-                return parseExchangeRates(response.body(), priceTND);
-            } else {
-                System.out.println("Échec de la requête principale, passage au fallback : " + response.statusCode());
-                return tryFallbackExchangeRates(fallbackUrl, priceTND);
-            }
-        } catch (Exception e) {
-            System.out.println("Erreur lors de la requête principale, passage au fallback : " + e.getMessage());
-            return tryFallbackExchangeRates(fallbackUrl, priceTND);
-        }
-    }
-
-    private String tryFallbackExchangeRates(String fallbackUrl, double priceTND) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(fallbackUrl))
-                .header("Accept", "application/json")
-                .GET()
-                .build();
-
-        try {
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == 200) {
-                return parseExchangeRates(response.body(), priceTND);
-            } else {
-                System.out.println("Échec de la requête fallback : " + response.body());
-                return "Erreur lors de la récupération des taux de change.";
-            }
-        } catch (Exception e) {
-            System.out.println("Exception lors de la récupération des taux de change via fallback : " + e.getMessage());
-            e.printStackTrace();
-            return "Erreur lors de la récupération des taux de change : " + e.getMessage();
-        }
-    }
-
-    private String parseExchangeRates(String responseBody, double priceTND) {
-        try {
-            JSONObject jsonResponse = new JSONObject(responseBody);
-            JSONObject rates = jsonResponse.getJSONObject("tnd");
-            double usdRate = rates.getDouble("usd");
-            double eurRate = rates.getDouble("eur");
-
-            double priceUSD = priceTND * usdRate;
-            double priceEUR = priceTND * eurRate;
-
-            return String.format("TND %.2f = USD %.2f, EUR %.2f", priceTND, priceUSD, priceEUR);
-        } catch (Exception e) {
-            System.out.println("Erreur lors de l'analyse des taux de change : " + e.getMessage());
-            e.printStackTrace();
-            return "Erreur lors de l'analyse des taux de change : " + e.getMessage();
-        }
     }
 
     @FXML

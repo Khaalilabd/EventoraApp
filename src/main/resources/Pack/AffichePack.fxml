@@ -70,5 +70,8 @@
                 <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
             </columns>
         </TableView>
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="getPriceInCurrenciesButton" text="Voir Prix en Devises" styleClass="card-button" />
+        </HBox>
     </VBox>
 </AnchorPane>
