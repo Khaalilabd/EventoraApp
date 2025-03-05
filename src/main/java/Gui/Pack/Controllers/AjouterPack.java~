@@ -16,8 +16,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -59,15 +57,13 @@ public class AjouterPack {
     @FXML
     private Button ReturnToListButton;
     @FXML
-    private Button uploadImageButton;
-    @FXML
-    private ImageView imagePreview; // New ImageView to display the uploaded image
+    private Button uploadImageButton; // New button for image upload
 
     private final PackService packService = new PackService();
     private final ServiceService serviceService = new ServiceService();
     private final MembresService membresService = new MembresService();
     private final HttpClient httpClient = HttpClient.newHttpClient();
-    private File selectedImageFile;
+    private File selectedImageFile; // To store the selected image file
 
     @FXML
     public void initialize() {
@@ -93,7 +89,7 @@ public class AjouterPack {
         submitButton.setOnAction(this::ajouterPack);
         cancelButton.setOnAction(this::annuler);
         ReturnToListButton.setOnAction(this::goToAffichePack);
-        uploadImageButton.setOnAction(this::uploadImage);
+        uploadImageButton.setOnAction(this::uploadImage); // Handler for image upload
     }
 
     @FXML
@@ -128,6 +124,7 @@ public class AjouterPack {
                 return;
             }
 
+            // Handle image upload
             String imagePath = null;
             if (selectedImageFile != null) {
                 imagePath = saveImage(selectedImageFile, nomPack);
@@ -176,9 +173,6 @@ public class AjouterPack {
         selectedImageFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
         if (selectedImageFile != null) {
             uploadImageButton.setText("Image sélectionnée : " + selectedImageFile.getName());
-            // Display the image in the ImageView
-            Image image = new Image(selectedImageFile.toURI().toString(), 100, 100, true, true);
-            imagePreview.setImage(image);
         }
     }
 
@@ -306,9 +300,8 @@ public class AjouterPack {
         TypeField.setValue(null);
         NbrGuestsField.clear();
         ServiceField.getCheckModel().clearChecks();
-        uploadImageButton.setText("Uploader une image");
+        uploadImageButton.setText("Uploader une image"); // Reset button text
         selectedImageFile = null;
-        imagePreview.setImage(null); // Clear the preview
     }
 
     private void showAlert(String title, String content) {

@@ -24,7 +24,7 @@ public class PackService implements IPack<Pack> {
             return;
         }
 
-        String req = "INSERT INTO `pack`(`nomPack`, `description`, `prix`, `location`, `type`, `nbrGuests`, `image_path`) VALUES (?,?,?,?,?,?,?)";
+        String req = "INSERT INTO `pack`(`nomPack`, `description`, `prix`, `location`, `type`, `nbrGuests`) VALUES (?,?,?,?,?,?)";
         try (PreparedStatement ps = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, pack.getNomPack());
             ps.setString(2, pack.getDescription());
@@ -32,7 +32,6 @@ public class PackService implements IPack<Pack> {
             ps.setString(4, pack.getLocation().getLabel());
             ps.setString(5, existingType.getTypeEvenement());
             ps.setInt(6, pack.getNbrGuests());
-            ps.setString(7, pack.getImagePath()); // Add image_path
 
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
@@ -80,7 +79,7 @@ public class PackService implements IPack<Pack> {
 
     @Override
     public void modifier(Pack pack) {
-        String req = "UPDATE `pack` SET `nomPack`= ?,`description`= ?,`prix`= ?,`location`= ?,`type`= ?,`nbrGuests`= ?,`image_path`= ? WHERE `id` = ?";
+        String req = "UPDATE `pack` SET `nomPack`= ?,`description`= ?,`prix`= ?,`location`= ?,`type`= ?,`nbrGuests`= ? WHERE `id` = ?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             System.out.println("Modifying pack with ID: " + pack.getId());
             System.out.println("New values: ");
@@ -90,7 +89,6 @@ public class PackService implements IPack<Pack> {
             System.out.println("Location: " + pack.getLocation());
             System.out.println("Type: " + pack.getType().getTypeEvenement());
             System.out.println("Guests: " + pack.getNbrGuests());
-            System.out.println("Image Path: " + pack.getImagePath()); // Log image_path
             System.out.println("Services: " + pack.getNomServices());
 
             ps.setString(1, pack.getNomPack());
@@ -99,11 +97,11 @@ public class PackService implements IPack<Pack> {
             ps.setString(4, pack.getLocation().getLabel());
             ps.setString(5, pack.getType().getTypeEvenement());
             ps.setInt(6, pack.getNbrGuests());
-            ps.setString(7, pack.getImagePath()); // Add image_path
-            ps.setInt(8, pack.getId());
+            ps.setInt(7, pack.getId());
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
+                // Update the services in the junction table
                 removeServicesFromPack(pack.getId());
                 addServicesToPack(pack.getId(), pack.getNomServices());
                 System.out.println("Pack " + pack.getNomPack() + " est mis à jour avec succès !");
@@ -142,8 +140,7 @@ public class PackService implements IPack<Pack> {
                             Location.valueOf(rs.getString("location")),
                             new Evenement(rs.getString("type")),
                             rs.getInt("nbrGuests"),
-                            new ArrayList<>(),
-                            rs.getString("image_path") // Add image_path
+                            new ArrayList<>()
                     );
                     packs.add(currentPack);
                 }
@@ -161,6 +158,7 @@ public class PackService implements IPack<Pack> {
         return packs;
     }
 
+    // Other methods remain unchanged (getAllEvenements, RechercherPackParMotCle, etc.)
     public List<Evenement> getAllEvenements() {
         List<Evenement> evenements = new ArrayList<>();
         String query = "SELECT * FROM typepack";
@@ -176,7 +174,7 @@ public class PackService implements IPack<Pack> {
     }
 
     public List<Pack> RechercherPackParMotCle(String motCle) {
-        String req = "SELECT p.id, p.nomPack, p.description, p.prix, p.location, p.type, p.nbrGuests, p.image_path, ps.service_titre " +
+        String req = "SELECT p.id, p.nomPack, p.description, p.prix, p.location, p.type, p.nbrGuests, ps.service_titre " +
                 "FROM pack p LEFT JOIN pack_service ps ON p.id = ps.pack_id " +
                 "WHERE p.nomPack LIKE ? OR p.description LIKE ? OR p.prix LIKE ? OR p.location LIKE ? OR " +
                 "p.type LIKE ? OR p.nbrGuests LIKE ? OR ps.service_titre LIKE ?";
@@ -198,7 +196,6 @@ public class PackService implements IPack<Pack> {
                         currentPack.setLocation(Location.valueOf(rs.getString("location")));
                         currentPack.setType(new Evenement(rs.getString("type")));
                         currentPack.setNbrGuests(rs.getInt("nbrGuests"));
-                        currentPack.setImagePath(rs.getString("image_path")); // Add image_path
                         currentPack.setNomServices(new ArrayList<>());
                         packs.add(currentPack);
                     }

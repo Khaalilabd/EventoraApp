@@ -60,7 +60,6 @@
         <!-- Tableau des packs -->
         <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
             <columns>
-                <TableColumn fx:id="colImage" text="Image" prefWidth="100.0"/>
                 <TableColumn fx:id="colNom" prefWidth="150.0" text="Nom"/>
                 <TableColumn fx:id="colDescription" prefWidth="250.0" text="Description"/>
                 <TableColumn fx:id="colPrix" prefWidth="100.0" text="Prix"/>

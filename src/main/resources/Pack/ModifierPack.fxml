@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import org.controlsfx.control.CheckComboBox?>
 
+<?import javafx.scene.image.ImageView?>
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Pack.Controllers.ModifierPack"
@@ -50,6 +51,8 @@
             <ComboBox fx:id="TypeField" promptText="Sélectionner le type du pack" styleClass="input-field"/>
             <TextField fx:id="NbrGuestsField" promptText="Le nombre max des invités" styleClass="input-field"/>
             <CheckComboBox fx:id="ServiceField" title="Sélectionner les services" styleClass="input-field" prefWidth="200.0"/>
+            <Button fx:id="uploadImageButton" text="Uploader une image" styleClass="card-button"/>
+            <ImageView fx:id="imagePreview" fitWidth="100.0" fitHeight="100.0" preserveRatio="true"/>
         </VBox>
 
         <!-- Boutons avec icônes (similaire à AjouterRec) -->

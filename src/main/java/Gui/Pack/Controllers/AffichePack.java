@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import java.io.File;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -48,6 +49,8 @@ public class AffichePack {
     @FXML
     private TableColumn<Pack, String> colServices;
     @FXML
+    private TableColumn<Pack, Image> colImage;
+    @FXML
     private TableColumn<Pack, String> colActions;
     @FXML
     private TextField searchField;
@@ -56,15 +59,14 @@ public class AffichePack {
     @FXML
     private ToggleButton sortOrderToggle;
     @FXML
-    private Button getPriceInCurrenciesButton; // New button for currency conversion
+    private Button getPriceInCurrenciesButton;
 
     private PackService packService = new PackService();
     private ObservableList<Pack> packList = FXCollections.observableArrayList();
-    private final HttpClient httpClient = HttpClient.newHttpClient(); // For HTTP requests to the exchange rate API
+    private final HttpClient httpClient = HttpClient.newHttpClient();
 
     @FXML
     public void initialize() {
-        // Initialize TableView columns
         colNom.setCellValueFactory(new PropertyValueFactory<>("nomPack"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
@@ -78,18 +80,48 @@ public class AffichePack {
                     .collect(Collectors.joining(", "));
             return new javafx.beans.property.SimpleStringProperty(servicesString);
         });
+
+        colImage.setCellValueFactory(cellData -> {
+            String imagePath = cellData.getValue().getImagePath();
+            if (imagePath != null && !imagePath.isEmpty()) {
+                try {
+                    File imageFile = new File("src/main/resources" + imagePath);
+                    if (!imageFile.exists()) {
+                        System.out.println("Image file does not exist: " + imageFile.getAbsolutePath());
+                        return new javafx.beans.property.SimpleObjectProperty<>(null);
+                    }
+                    Image image = new Image(imageFile.toURI().toString(), 50, 50, true, true);
+                    return new javafx.beans.property.SimpleObjectProperty<>(image);
+                } catch (Exception e) {
+                    System.out.println("Erreur lors du chargement de l'image pour " + cellData.getValue().getNomPack() + ": " + e.getMessage());
+                }
+            }
+            return new javafx.beans.property.SimpleObjectProperty<>(null);
+        });
+        colImage.setCellFactory(column -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            @Override
+            protected void updateItem(Image item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    imageView.setImage(item);
+                    setGraphic(imageView);
+                }
+            }
+        });
+
         colActions.setCellFactory(createActionButtons());
 
-        // Initialize sorting options
         sortByCombo.getItems().addAll("Nom Pack", "Prix", "Invités");
-        sortByCombo.setValue("Nom Pack"); // Default sort by nomPack
-        sortOrderToggle.setSelected(true); // Default to ascending
+        sortByCombo.setValue("Nom Pack");
+        sortOrderToggle.setSelected(true);
         sortOrderToggle.setText("⬆ Ascendant");
 
-        // Load packs into the table
         loadPacks();
 
-        // Listeners for dynamic search and sorting
         searchField.textProperty().addListener((observable, oldValue, newValue) -> searchPack(newValue));
         sortByCombo.valueProperty().addListener((obs, old, newVal) -> applySort());
         sortOrderToggle.selectedProperty().addListener((obs, old, newVal) -> {
@@ -97,10 +129,7 @@ public class AffichePack {
             applySort();
         });
 
-        // Row hover effect
         tableRowFactory(tableView);
-
-        // Set action for the new button
         getPriceInCurrenciesButton.setOnAction(this::getPriceInCurrencies);
     }
 
@@ -239,9 +268,7 @@ public class AffichePack {
     }
 
     private String convertPriceToCurrencies(double priceTND) throws IOException, InterruptedException {
-        // Primary endpoint using fawazahmed0/currency-api via jsDelivr
         String primaryUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/tnd.json";
-        // Fallback endpoint
         String fallbackUrl = "https://latest.currency-api.pages.dev/v1/currencies/tnd.json";
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -357,7 +384,6 @@ public class AffichePack {
         switchScene("/Reclamation/Feedback.fxml", event);
     }
 
-    // Méthode générique pour changer de scène avec un événement
     private void switchScene(String fxmlFile, ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent layout = loader.load();
@@ -367,7 +393,6 @@ public class AffichePack {
         currentStage.show();
     }
 
-    // Surcharge pour gérer le cas avec un Pack spécifique (pour l'édition)
     private void switchScene(String fxmlFile, Pack pack) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent layout = loader.load();

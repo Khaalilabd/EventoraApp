@@ -12,11 +12,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import java.io.File;
 import java.io.IOException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +28,7 @@ import Services.Pack.Crud.PackService;
 import Models.Pack.Pack;
 import Models.Pack.Evenement;
 import Models.Service.Service;
+import org.json.JSONObject;
 
 public class AffichePack {
 
@@ -44,6 +49,8 @@ public class AffichePack {
     @FXML
     private TableColumn<Pack, String> colServices;
     @FXML
+    private TableColumn<Pack, Image> colImage;
+    @FXML
     private TableColumn<Pack, String> colActions;
     @FXML
     private TextField searchField;
@@ -51,13 +58,15 @@ public class AffichePack {
     private ComboBox<String> sortByCombo;
     @FXML
     private ToggleButton sortOrderToggle;
+    @FXML
+    private Button getPriceInCurrenciesButton;
 
     private PackService packService = new PackService();
     private ObservableList<Pack> packList = FXCollections.observableArrayList();
+    private final HttpClient httpClient = HttpClient.newHttpClient();
 
     @FXML
     public void initialize() {
-        // Initialize TableView columns
         colNom.setCellValueFactory(new PropertyValueFactory<>("nomPack"));
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colPrix.setCellValueFactory(new PropertyValueFactory<>("prix"));
@@ -71,17 +80,45 @@ public class AffichePack {
                     .collect(Collectors.joining(", "));
             return new javafx.beans.property.SimpleStringProperty(servicesString);
         });
+
+        colImage.setCellValueFactory(cellData -> {
+            String imagePath = cellData.getValue().getImagePath();
+            if (imagePath != null && !imagePath.isEmpty()) {
+                try {
+                    // Use File URI instead of getResource since the image is saved to the filesystem
+                    File imageFile = new File("src/main/resources" + imagePath);
+                    Image image = new Image(imageFile.toURI().toString(), 50, 50, true, true);
+                    return new javafx.beans.property.SimpleObjectProperty<>(image);
+                } catch (Exception e) {
+                    System.out.println("Erreur lors du chargement de l'image pour " + cellData.getValue().getNomPack() + ": " + e.getMessage());
+                }
+            }
+            return new javafx.beans.property.SimpleObjectProperty<>(null);
+        });
+        colImage.setCellFactory(column -> new TableCell<>() {
+            private final ImageView imageView = new ImageView();
+
+            @Override
+            protected void updateItem(Image item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                } else {
+                    imageView.setImage(item);
+                    setGraphic(imageView);
+                }
+            }
+        });
+
         colActions.setCellFactory(createActionButtons());
 
-        // Initialize sorting options
         sortByCombo.getItems().addAll("Nom Pack", "Prix", "Invités");
-        sortByCombo.setValue("Nom Pack"); // Default sort by nomPack
-        sortOrderToggle.setSelected(true); // Default to ascending
+        sortByCombo.setValue("Nom Pack");
+        sortOrderToggle.setSelected(true);
+        sortOrderToggle.setText("⬆ Ascendant");
 
-        // Load packs into the table
         loadPacks();
 
-        // Listeners for dynamic search and sorting
         searchField.textProperty().addListener((observable, oldValue, newValue) -> searchPack(newValue));
         sortByCombo.valueProperty().addListener((obs, old, newVal) -> applySort());
         sortOrderToggle.selectedProperty().addListener((obs, old, newVal) -> {
@@ -89,8 +126,8 @@ public class AffichePack {
             applySort();
         });
 
-        // Row hover effect
         tableRowFactory(tableView);
+        getPriceInCurrenciesButton.setOnAction(this::getPriceInCurrencies);
     }
 
     private void loadPacks() {
@@ -198,6 +235,100 @@ public class AffichePack {
     }
 
     @FXML
+    private void getPriceInCurrencies(ActionEvent event) {
+        Pack selectedPack = tableView.getSelectionModel().getSelectedItem();
+        if (selectedPack == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Veuillez sélectionner un pack pour voir le prix en différentes devises.");
+            alert.showAndWait();
+            return;
+        }
+
+        double priceTND = selectedPack.getPrix();
+        try {
+            String convertedPrices = convertPriceToCurrencies(priceTND);
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Prix en Devises");
+            alert.setHeaderText(null);
+            alert.setContentText(convertedPrices);
+            alert.showAndWait();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Impossible de convertir le prix en devises : " + e.getMessage());
+            alert.showAndWait();
+            e.printStackTrace();
+        }
+    }
+
+    private String convertPriceToCurrencies(double priceTND) throws IOException, InterruptedException {
+        String primaryUrl = "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/tnd.json";
+        String fallbackUrl = "https://latest.currency-api.pages.dev/v1/currencies/tnd.json";
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(primaryUrl))
+                .header("Accept", "application/json")
+                .GET()
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                return parseExchangeRates(response.body(), priceTND);
+            } else {
+                System.out.println("Échec de la requête principale, passage au fallback : " + response.statusCode());
+                return tryFallbackExchangeRates(fallbackUrl, priceTND);
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la requête principale, passage au fallback : " + e.getMessage());
+            return tryFallbackExchangeRates(fallbackUrl, priceTND);
+        }
+    }
+
+    private String tryFallbackExchangeRates(String fallbackUrl, double priceTND) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(fallbackUrl))
+                .header("Accept", "application/json")
+                .GET()
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                return parseExchangeRates(response.body(), priceTND);
+            } else {
+                System.out.println("Échec de la requête fallback : " + response.body());
+                return "Erreur lors de la récupération des taux de change.";
+            }
+        } catch (Exception e) {
+            System.out.println("Exception lors de la récupération des taux de change via fallback : " + e.getMessage());
+            e.printStackTrace();
+            return "Erreur lors de la récupération des taux de change : " + e.getMessage();
+        }
+    }
+
+    private String parseExchangeRates(String responseBody, double priceTND) {
+        try {
+            JSONObject jsonResponse = new JSONObject(responseBody);
+            JSONObject rates = jsonResponse.getJSONObject("tnd");
+            double usdRate = rates.getDouble("usd");
+            double eurRate = rates.getDouble("eur");
+
+            double priceUSD = priceTND * usdRate;
+            double priceEUR = priceTND * eurRate;
+
+            return String.format("TND %.2f = USD %.2f, EUR %.2f", priceTND, priceUSD, priceEUR);
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'analyse des taux de change : " + e.getMessage());
+            e.printStackTrace();
+            return "Erreur lors de l'analyse des taux de change : " + e.getMessage();
+        }
+    }
+
+    @FXML
     private void refreshList() {
         searchField.clear();
         sortByCombo.setValue("Nom Pack");
@@ -250,7 +381,6 @@ public class AffichePack {
         switchScene("/Reclamation/Feedback.fxml", event);
     }
 
-    // Méthode générique pour changer de scène avec un événement
     private void switchScene(String fxmlFile, ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent layout = loader.load();
@@ -260,7 +390,6 @@ public class AffichePack {
         currentStage.show();
     }
 
-    // Surcharge pour gérer le cas avec un Pack spécifique (pour l'édition)
     private void switchScene(String fxmlFile, Pack pack) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent layout = loader.load();
