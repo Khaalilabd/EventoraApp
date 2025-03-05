@@ -8,10 +8,10 @@
              -fx-padding: 0;
              -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 12, 0, 0, 6);
              -fx-background-radius: 12;"
-      stylesheets="/Chatbot/chat.css"
+      stylesheets="/ChatAi/chat.css"
       xmlns="http://javafx.com/javafx/20.0.2"
       xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="Gui.Chatbot.Controllers.Chat">
+      fx:controller="Gui.ChatAi.Controllers.ChatAi">
 
     <!-- Header (Menu) -->
     <HBox fx:id="menu" alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="400.0" style="-fx-background-color: #ff0000; -fx-padding: 10 20 10 20; -fx-background-radius: 12 12 0 0;">

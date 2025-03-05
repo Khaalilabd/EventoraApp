@@ -127,7 +127,7 @@ public class EventoraAPP {
     @FXML
     private void goToChat(ActionEvent event) throws IOException {
         // Charger la nouvelle scène
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Chatbot/Chat.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ChatAi/ChatAi.fxml"));
         Parent chatLayout = loader.load();
         Scene feedbackScene = new Scene(chatLayout);
 
