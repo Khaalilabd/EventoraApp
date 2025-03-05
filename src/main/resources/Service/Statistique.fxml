@@ -9,8 +9,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="Gui.Service.Controllers.Statistique"
-            prefHeight="400.0" prefWidth="800.0">
+            fx:controller="Gui.Service.Controllers.Statistique">
 
     <children>
         <Label text="Statistiques des Services par Location" layoutX="20" layoutY="20" style="-fx-font-size: 18px;"/>

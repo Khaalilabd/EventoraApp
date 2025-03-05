@@ -30,7 +30,7 @@ public class AfficheEvenement {
     private TableColumn<Evenement, String> colType;
 
     @FXML
-    private TableColumn<Evenement, Void> colActions; // Use Void for non-editable columns
+    private TableColumn<Evenement, Void> colActions;
 
     @FXML
     private TextField searchField;
@@ -47,7 +47,6 @@ public class AfficheEvenement {
             final HBox hBox = new HBox(10);
 
             {
-                // Add icons and buttons for each action
                 Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
                 Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
                 ImageView editImageView = new ImageView(editIcon);
@@ -60,8 +59,6 @@ public class AfficheEvenement {
                 deleteButton.setGraphic(deleteImageView);
                 editButton.getStyleClass().add("table-button");
                 deleteButton.getStyleClass().addAll("table-button", "delete");
-
-                // Add buttons to HBox
                 hBox.getChildren().addAll(editButton, deleteButton);
             }
 
@@ -71,7 +68,6 @@ public class AfficheEvenement {
                 if (empty) {
                     setGraphic(null);
                 } else {
-                    // Add button actions for each row
                     editButton.setOnAction(event -> handleEdit(getTableRow().getItem()));
                     deleteButton.setOnAction(event -> handleDelete(getTableRow().getItem()));
                     setGraphic(hBox);
@@ -80,8 +76,6 @@ public class AfficheEvenement {
         });
 
         loadPacks();
-
-        // Dynamic search
         searchField.textProperty().addListener((observable, oldValue, newValue) -> searchEvenement(newValue));
     }
 
@@ -93,14 +87,7 @@ public class AfficheEvenement {
 
     private void handleEdit(Evenement evenement) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/ModifierEvenement.fxml"));
-            AnchorPane modifRecLayout = loader.load();
-
-            ModifierEvenement controller = loader.getController();
-            controller.setEvenementToEdit(evenement);
-
-            Scene currentScene = tableView.getScene();
-            currentScene.setRoot(modifRecLayout);
+            switchScene("/Pack/ModifierEvenement.fxml", evenement);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -120,15 +107,13 @@ public class AfficheEvenement {
         alert.showAndWait().ifPresent(response -> {
             if (response == buttonTypeYes) {
                 evenementService.supprimer(evenement);
-                loadPacks(); // Refresh list after deletion
+                loadPacks();
             }
         });
     }
 
-    // Dynamic search as user types
     private void searchEvenement(String motCle) {
         List<Evenement> resultatRecherche = evenementService.RechercherEvenementParMotCle(motCle.toLowerCase());
-
         ObservableList<Evenement> data = FXCollections.observableArrayList(resultatRecherche);
         tableView.setItems(data);
     }
@@ -150,69 +135,55 @@ public class AfficheEvenement {
 
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        switchScene("/Pack/Packs.fxml", event);
     }
 
     @FXML
     private void addEvenement(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AjouterEvenement.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        switchScene("/Pack/AjouterEvenement.fxml", event);
     }
 
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene reclamationScene = new Scene(reclamationLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(reclamationScene);
-        currentStage.show();
+        switchScene("/Reclamation/Reclamation.fxml", event);
     }
 
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
-        }
+        switchScene("/Reservation/Reservation.fxml", event);
     }
 
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
-
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
+        switchScene("/Service/Service.fxml", event);
     }
 
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
+        switchScene("/Reclamation/Feedback.fxml", event);
+    }
+
+    // Méthode générique pour changer de scène avec un événement
+    private void switchScene(String fxmlFile, ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent layout = loader.load();
+        Scene newScene = new Scene(layout);
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
+        currentStage.setScene(newScene);
+        currentStage.show();
+    }
+
+    // Surcharge pour gérer le cas avec un Evenement spécifique (pour l'édition)
+    private void switchScene(String fxmlFile, Evenement evenement) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent layout = loader.load();
+        if (fxmlFile.equals("/Pack/ModifierEvenement.fxml")) {
+            ModifierEvenement controller = loader.getController();
+            controller.setEvenementToEdit(evenement);
+        }
+        Scene newScene = new Scene(layout);
+        Stage currentStage = (Stage) tableView.getScene().getWindow();
+        currentStage.setScene(newScene);
         currentStage.show();
     }
 }

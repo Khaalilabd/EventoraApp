@@ -3,46 +3,31 @@ package Gui.Reclamation.Controllers;
 import Models.Reclamation.Statut;
 import Services.Reclamation.Crud.ReclamationService;
 import Models.Reclamation.Reclamation;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AfficheRec {
 
-    @FXML
-    private TableView<Reclamation> tableView;
-    @FXML
-    private TableColumn<Reclamation, Integer> colId;
-    @FXML
-    private TableColumn<Reclamation, String> colTitre;
-    @FXML
-    private TableColumn<Reclamation, String> colDescription;
-    @FXML
-    private TableColumn<Reclamation, String> colType;
-    @FXML
-    private TableColumn<Reclamation, String> colActions;
-    @FXML
-    private TableColumn<Reclamation, String> colStatut;
-
-    @FXML
-    private TextField searchField;
+    @FXML private GridPane reclamationGrid;
+    @FXML private TextField searchField;
+    @FXML private ComboBox<String> statusFilter;
+    @FXML private Label totalLabel, resolvedLabel, inProgressLabel, pendingLabel, rejectedLabel;
 
     private ReclamationService reclamationService;
 
@@ -52,82 +37,169 @@ public class AfficheRec {
 
     @FXML
     public void initialize() {
-        colId.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
-        colTitre.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTitre()));
-        colDescription.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDescription()));
-        colType.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getType().getLabel()));
-        colStatut.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getStatut().getLabel()));
-        addActionsColumn();
         loadReclamations();
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            searchReclamation(newValue);
-        });
+        searchField.textProperty().addListener((observable, oldValue, newValue) -> searchReclamation(newValue));
+        statusFilter.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterByStatus(newVal));
+        statusFilter.getSelectionModel().selectFirst(); // "Tous" par défaut
     }
 
     private void loadReclamations() {
-        List<Reclamation> reclamations = reclamationService.RechercherRec();
-        tableView.getItems().setAll(reclamations);
+        try {
+            reclamationGrid.getChildren().clear();
+            List<Reclamation> reclamations = reclamationService.RechercherRec();
+            populateGrid(reclamations);
+            updateStatistics(reclamations);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showErrorAlert("Impossible de charger les réclamations", e.getMessage());
+        }
     }
 
-    private void addActionsColumn() {
-        colActions.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
-        colActions.setCellFactory(new Callback<TableColumn<Reclamation, String>, TableCell<Reclamation, String>>() {
-            @Override
-            public TableCell<Reclamation, String> call(TableColumn<Reclamation, String> param) {
-                return new TableCell<Reclamation, String>() {
-                    final Button editButton = new Button();
-                    final Button deleteButton = new Button();
-                    final Button btnResolved = new Button("✅");
-                    final Button btnInProgress = new Button("⏳");
-                    final Button btnRejected = new Button("❌");
-                    final HBox hBox = new HBox(10);
-
-                    {
-                        Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
-                        Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
-                        ImageView editImageView = new ImageView(editIcon);
-                        ImageView deleteImageView = new ImageView(deleteIcon);
-                        editImageView.setFitHeight(20);
-                        editImageView.setFitWidth(20);
-                        deleteImageView.setFitHeight(20);
-                        deleteImageView.setFitWidth(20);
-                        editButton.setGraphic(editImageView);
-                        deleteButton.setGraphic(deleteImageView);
-                        editButton.getStyleClass().add("table-button");
-                        deleteButton.getStyleClass().addAll("table-button", "delete");
-                        btnResolved.setOnAction(event -> handleStatutChange(getTableRow().getItem(), Statut.RESOLUE));
-                        btnInProgress.setOnAction(event -> handleStatutChange(getTableRow().getItem(), Statut.EN_COURS));
-                        btnRejected.setOnAction(event -> handleStatutChange(getTableRow().getItem(), Statut.REJETEE));
-
-                        // Ajouter les boutons dans le HBox
-                        hBox.getChildren().addAll(editButton, deleteButton, btnResolved, btnRejected, btnInProgress);
-                    }
-
-                    @Override
-                    public void updateItem(String item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty) {
-                            setGraphic(null);
-                        } else {
-                            // Ajouter les actions des boutons pour chaque ligne
-                            editButton.setOnAction(event -> handleEdit(getTableRow().getItem()));
-                            deleteButton.setOnAction(event -> handleDelete(getTableRow().getItem()));
-                            setGraphic(hBox);
-                        }
-                    }
-
-                    // Gestion du changement de statut
-                    private void handleStatutChange(Reclamation reclamation, Statut newStatut) {
-                        if (reclamation != null) {
-                            reclamation.setStatut(newStatut);
-                            reclamationService.ModifierStatut(reclamation);
-                            loadReclamations(); // Recharger les réclamations après la modification
-                        }
-                    }
-
-                };
+    private void populateGrid(List<Reclamation> reclamations) {
+        reclamationGrid.getChildren().clear();
+        reclamationGrid.getColumnConstraints().clear();
+        int column = 0;
+        int row = 0;
+        for (Reclamation reclamation : reclamations) {
+            VBox card = createReclamationCard(reclamation);
+            reclamationGrid.add(card, column, row);
+            column++;
+            if (column >= 5) { // Limite à 3 cartes par ligne
+                column = 0;
+                row++;
             }
-        });
+        }
+        for (int i = 0; i < 5; i++) { // Définit 3 colonnes
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(33.33); // Chaque colonne prend 1/3 de la largeur
+            reclamationGrid.getColumnConstraints().add(colConst);
+        }
+    }
+
+    private void updateStatistics(List<Reclamation> reclamations) {
+        long total = reclamations.size();
+        long resolved = reclamations.stream().filter(r -> r.getStatut() == Statut.RESOLUE).count();
+        long inProgress = reclamations.stream().filter(r -> r.getStatut() == Statut.EN_COURS).count();
+        long pending = reclamations.stream().filter(r -> r.getStatut() == Statut.EN_ATTENTE).count();
+        long rejected = reclamations.stream().filter(r -> r.getStatut() == Statut.REJETEE).count();
+
+        totalLabel.setText("Total: " + total);
+        resolvedLabel.setText("Résolues: " + resolved);
+        inProgressLabel.setText("En cours: " + inProgress);
+        pendingLabel.setText("En attente: " + pending);
+        rejectedLabel.setText("Rejetées: " + rejected);
+    }
+
+    private VBox createReclamationCard(Reclamation reclamation) {
+        VBox card = new VBox(10);
+        card.getStyleClass().add("reclamation-card");
+        card.setAlignment(Pos.CENTER);
+        card.setPrefWidth(300);
+
+        Label idLabel = new Label("ID: " + reclamation.getId());
+        idLabel.getStyleClass().add("card-id");
+        Label titleLabel = new Label("Titre: " + reclamation.getTitre());
+        titleLabel.getStyleClass().add("card-title");
+        Label descLabel = new Label("Desc: " + reclamation.getDescription());
+        descLabel.getStyleClass().add("card-description");
+        descLabel.setWrapText(true);
+        descLabel.setMaxHeight(50);
+        Label typeLabel = new Label("Type: " + reclamation.getType().getLabel());
+        typeLabel.getStyleClass().add("card-type");
+        Label statutLabel = new Label("Statut: " + reclamation.getStatut().getLabel());
+        statutLabel.getStyleClass().add("card-statut");
+
+        switch (reclamation.getStatut()) {
+            case RESOLUE: statutLabel.getStyleClass().add("statut-resolue"); break;
+            case EN_COURS: statutLabel.getStyleClass().add("statut-en-cours"); break;
+            case EN_ATTENTE: statutLabel.getStyleClass().add("statut-en-attente"); break;
+            case REJETEE: statutLabel.getStyleClass().add("statut-rejetee"); break;
+        }
+
+        HBox actionButtons = new HBox(5);
+        actionButtons.setAlignment(Pos.CENTER);
+        Button editButton = createIconButton("/Images/modif.png", () -> handleEdit(reclamation));
+        Button deleteButton = createIconButton("/Images/supp.png", () -> handleDelete(reclamation));
+        Button btnResolved = new Button("✅");
+        Button btnInProgress = new Button("⏳");
+        Button btnRejected = new Button("❌");
+        btnResolved.setOnAction(e -> handleStatutChange(reclamation, Statut.RESOLUE));
+        btnInProgress.setOnAction(e -> handleStatutChange(reclamation, Statut.EN_COURS));
+        btnRejected.setOnAction(e -> handleStatutChange(reclamation, Statut.REJETEE));
+        actionButtons.getChildren().addAll(editButton, deleteButton, btnResolved, btnInProgress, btnRejected);
+
+        Button qrButton = new Button("Voir QR");
+        qrButton.getStyleClass().add("qr-button");
+        qrButton.setOnAction(e -> showQRCode(reclamation));
+
+        card.getChildren().addAll(idLabel, titleLabel, descLabel, typeLabel, statutLabel, actionButtons, qrButton);
+        return card;
+    }
+
+    private Button createIconButton(String iconPath, Runnable action) {
+        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream(iconPath)));
+        icon.setFitHeight(20);
+        icon.setFitWidth(20);
+        Button button = new Button();
+        button.setGraphic(icon);
+        button.getStyleClass().add("table-button");
+        button.setOnAction(e -> action.run());
+        return button;
+    }
+
+    private void handleStatutChange(Reclamation reclamation, Statut newStatut) {
+        if (reclamation != null) {
+            reclamation.setStatut(newStatut);
+            try {
+                reclamationService.ModifierStatut(reclamation);
+                loadReclamations();
+            } catch (Exception e) {
+                showErrorAlert("Impossible de modifier le statut", e.getMessage());
+            }
+        }
+    }
+
+    private void showQRCode(Reclamation reclamation) {
+        try {
+            File qrFile = new File("qr_reclamation_" + reclamation.getId() + ".png");
+            if (qrFile.exists()) {
+                Image qrImage = new Image(qrFile.toURI().toString());
+                ImageView imageView = new ImageView(qrImage);
+                imageView.setFitHeight(200);
+                imageView.setFitWidth(200);
+                Button scanButton = new Button("Simuler le scan");
+                scanButton.setOnAction(e -> showSuivi(reclamation));
+                scanButton.getStyleClass().add("card-button");
+                VBox content = new VBox(10, imageView, scanButton);
+                content.setAlignment(Pos.CENTER);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("QR Code de suivi");
+                alert.setHeaderText("Scannez ce QR code pour suivre la réclamation");
+                alert.getDialogPane().setContent(content);
+                alert.getDialogPane().getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+                alert.showAndWait();
+            } else {
+                System.out.println("Fichier QR non trouvé pour l'ID : " + reclamation.getId());
+            }
+        } catch (Exception e) {
+            showErrorAlert("Impossible d'afficher le QR Code", e.getMessage());
+        }
+    }
+
+    private void showSuivi(Reclamation reclamation) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/SuiviRec.fxml"));
+            AnchorPane suiviLayout = loader.load();
+            SuiviRec controller = loader.getController();
+            controller.setReclamation(reclamation);
+            Scene suiviScene = new Scene(suiviLayout, 500, 400);
+            Stage suiviStage = new Stage();
+            suiviStage.setTitle("Suivi de la réclamation");
+            suiviStage.setScene(suiviScene);
+            suiviStage.show();
+        } catch (IOException e) {
+            showErrorAlert("Impossible de charger la fenêtre de suivi", e.getMessage());
+        }
     }
 
     private void handleEdit(Reclamation reclamation) {
@@ -136,38 +208,80 @@ public class AfficheRec {
             AnchorPane modifRecLayout = loader.load();
             ModifierRec controller = loader.getController();
             controller.setReclamationToEdit(reclamation);
-            Scene currentScene = tableView.getScene();
+            Scene currentScene = reclamationGrid.getScene();
             currentScene.setRoot(modifRecLayout);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-
     private void handleDelete(Reclamation reclamation) {
         if (reclamation != null) {
-            // Créer une fenêtre de confirmation
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmation de suppression");
             alert.setHeaderText(null);
             alert.setContentText("Êtes-vous sûr de vouloir supprimer cette réclamation ?");
-
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    System.out.println("Supprimer la réclamation avec ID : " + reclamation.getId());
-                    reclamationService.SupprimerRec(reclamation);
-                    loadReclamations();
+                    try {
+                        reclamationService.SupprimerRec(reclamation);
+                        loadReclamations();
+                    } catch (Exception e) {
+                        showErrorAlert("Impossible de supprimer la réclamation", e.getMessage());
+                    }
                 }
             });
         }
     }
 
-
     private void searchReclamation(String motCle) {
-        List<Reclamation> resultatRecherche = reclamationService.RechercherRecParMotCle(motCle.toLowerCase());
+        try {
+            reclamationGrid.getChildren().clear();
+            List<Reclamation> resultatRecherche = reclamationService.RechercherRecParMotCle(motCle.toLowerCase());
+            String selectedStatus = statusFilter.getValue();
+            if (selectedStatus != null && !"Tous".equals(selectedStatus)) {
+                resultatRecherche = resultatRecherche.stream()
+                        .filter(r -> r.getStatut().getLabel().equals(selectedStatus))
+                        .collect(Collectors.toList());
+            }
+            populateGrid(resultatRecherche);
+            updateStatistics(resultatRecherche);
+        } catch (Exception e) {
+            showErrorAlert("Impossible de rechercher les réclamations", e.getMessage());
+        }
+    }
 
-        ObservableList<Reclamation> data = FXCollections.observableArrayList(resultatRecherche);
-        tableView.setItems(data);
+    private void filterByStatus(String status) {
+        try {
+            reclamationGrid.getChildren().clear();
+            List<Reclamation> reclamations;
+            if ("Tous".equals(status)) {
+                reclamations = reclamationService.RechercherRec();
+            } else {
+                reclamations = reclamationService.RechercherRec().stream()
+                        .filter(r -> r.getStatut().getLabel().equals(status))
+                        .collect(Collectors.toList());
+            }
+            String searchText = searchField.getText();
+            if (!searchText.isEmpty()) {
+                reclamations = reclamations.stream()
+                        .filter(r -> r.getTitre().toLowerCase().contains(searchText.toLowerCase()) ||
+                                r.getDescription().toLowerCase().contains(searchText.toLowerCase()))
+                        .collect(Collectors.toList());
+            }
+            populateGrid(reclamations);
+            updateStatistics(reclamations);
+        } catch (Exception e) {
+            showErrorAlert("Impossible de filtrer les réclamations", e.getMessage());
+        }
+    }
+
+    private void showErrorAlert(String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     @FXML
@@ -182,85 +296,47 @@ public class AfficheRec {
 
     @FXML
     private void refreshList() {
+        searchField.clear();
+        statusFilter.getSelectionModel().selectFirst(); // Reset à "Tous"
         loadReclamations();
     }
 
     @FXML
-    private void tableRowFactory(TableView<Reclamation> tableView) {
-        tableView.setRowFactory(tv -> {
-            TableRow<Reclamation> row = new TableRow<>();
-            row.setOnMouseEntered(event -> row.setStyle("-fx-background-color: #BDC3C7;"));
-            row.setOnMouseExited(event -> row.setStyle("-fx-background-color: transparent;"));
-            return row;
-        });
-    }
-
-    @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        switchScene("/Reclamation/Reclamation.fxml", event);
     }
 
     @FXML
-    private void goToFeedback(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-            AnchorPane feedbackLayout = loader.load();
-            Scene feedbackScene = new Scene(feedbackLayout);
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            currentStage.setScene(feedbackScene);
-            currentStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void goToFeedback(ActionEvent event) throws IOException {
+        switchScene("/Reclamation/Feedback.fxml", event);
     }
+
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
-        try {
-            // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
-        }
+        switchScene("/Reservation/Reservation.fxml", event);
     }
+
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
-
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
+        switchScene("/Service/Service.fxml", event);
     }
+
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        switchScene("/Pack/Packs.fxml", event);
     }
+
     @FXML
     private void goToAccueil(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/EventoraAPP.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        switchScene("/EventoraAPP/EventoraAPP.fxml", event);
+    }
+
+    private void switchScene(String fxmlFile, ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        Parent layout = loader.load();
+        Scene newScene = new Scene(layout);
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.setScene(newScene);
+        currentStage.show();
     }
 }

@@ -2,11 +2,12 @@
 <?import javafx.geometry.Pos?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.CheckComboBox?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Pack.Controllers.ModifierPack"
-            prefHeight="600.0" prefWidth="900.0"
+
             stylesheets="/style.css">
 
     <!-- Navbar horizontale (identique à AjouterRec) -->
@@ -48,7 +49,7 @@
             <ComboBox fx:id="LocationField" promptText="Sélectionner la localisation" styleClass="input-field"/>
             <ComboBox fx:id="TypeField" promptText="Sélectionner le type du pack" styleClass="input-field"/>
             <TextField fx:id="NbrGuestsField" promptText="Le nombre max des invités" styleClass="input-field"/>
-            <TextField fx:id="ServiceField" promptText="Les Services" styleClass="input-field"/>
+            <CheckComboBox fx:id="ServiceField" title="Sélectionner les services" styleClass="input-field" prefWidth="200.0"/>
         </VBox>
 
         <!-- Boutons avec icônes (similaire à AjouterRec) -->

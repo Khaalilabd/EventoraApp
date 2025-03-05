@@ -211,7 +211,7 @@
     -fx-background-color: #FFFFFF;
 }
 
- .add-button2 {
+.add-button2 {
     -fx-background-color: #11a791; /* Fond rouge */
     -fx-text-fill: #FFFFFF; /* Texte blanc */
     -fx-font-size: 16px; /* Taille de police */
@@ -220,7 +220,7 @@
     -fx-cursor: hand; /* Curseur main au survol */
     -fx-pref-width: 280px; /* Largeur préférée */
 
- }
+}
 .feedback-container {
     -fx-background-color: white;
     -fx-border-color: #ddd;
@@ -229,3 +229,450 @@
     -fx-padding: 20px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
 }
+.statut-resolue {
+    -fx-background-color: #2ecc71 !important; /* Vert */
+    -fx-text-fill: white !important;
+    -fx-padding: 5 !important;
+}
+
+.statut-rejetee {
+    -fx-background-color: #e74c3c !important; /* Rouge */
+    -fx-text-fill: white !important;
+    -fx-padding: 5 !important;
+}
+
+.statut-en-cours {
+    -fx-background-color: #f1c40f !important; /* Jaune */
+    -fx-text-fill: black !important;
+    -fx-padding: 5 !important;
+}
+
+.statut-en-attente {
+    -fx-background-color: #3498db !important; /* Bleu */
+    -fx-text-fill: white !important;
+    -fx-padding: 5 !important;
+}
+.weather-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #dcdcdc;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 3);
+    -fx-padding: 10;
+}
+
+/* Style pour le texte de la météo */
+.weather-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Style pour le titre de la section météo */
+.main-description {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555555;
+}
+/* Style pour la section météo (conteneur) */
+.weather-box {
+    -fx-background-color: #ffffff; /* Fond blanc */
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: #ffa500; /* Bordure orange pour rappeler le thème */
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 3); /* Ombre douce */
+    -fx-padding: 15;
+    -fx-transition: all 0.3s ease-in-out; /* Animation fluide */
+}
+
+/* Survol de la section météo */
+.weather-box:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 165, 0, 0.5), 15, 0.5, 0, 0); /* Ombre orange au survol */
+    -fx-border-color: #ff4500; /* Bordure rouge orangé au survol */
+}
+
+/* Style pour le texte de la météo */
+.weather-text {
+    -fx-font-size: 16px;
+    -fx-font-family: "Roboto", sans-serif; /* Typographie moderne */
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Texte gris foncé */
+}
+
+/* Style pour le titre de la section météo et localisation */
+.main-description {
+    -fx-font-size: 14px;
+    -fx-font-family: "Roboto", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555555; /* Gris moyen */
+}
+
+/* Style pour le label de localisation */
+#locationLabel {
+    -fx-font-size: 14px;
+    -fx-font-family: "Roboto", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff4500; /* Rouge orangé pour rappeler le thème */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
+}
+
+/* Style pour la carte */
+#mapView {
+    -fx-background-color: #f5f5f5; /* Fond gris très clair */
+    -fx-border-color: #ffa500; /* Bordure orange */
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 3);
+}
+
+/* Style pour la grille */
+.grid-list {
+    -fx-background-color: #f5f5f5; /* Fond gris clair pour la grille */
+    -fx-padding: 20;
+}
+
+/* Style pour chaque carte de réclamation avec dégradé */
+.reclamation-card {
+    -fx-background-color: linear-gradient(to bottom right, #e3f2fd, #bbdefb); /* Dégradé bleu pâle */
+    -fx-border-radius: 15; /* Coins arrondis */
+    -fx-background-radius: 15;
+    -fx-border-color: #e0e0e0; /* Bordure légère */
+    -fx-border-width: 1;
+    -fx-padding: 15; /* Espacement interne */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 5); /* Ombre douce */
+    -fx-alignment: center;
+    -fx-pref-width: 300;
+    -fx-pref-height: 220;
+    -fx-transition: all 0.3s ease; /* Transition pour hover */
+}
+
+/* Effet au survol */
+.reclamation-card:hover {
+    -fx-scale-y: 1.05; /* Agrandissement léger */
+    -fx-scale-x: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 8); /* Ombre plus prononcée */
+}
+
+/* Style de base pour tous les labels dans les cartes */
+.reclamation-card .label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333; /* Texte gris foncé */
+    -fx-padding: 5; /* Espacement interne */
+    -fx-background-radius: 5; /* Coins arrondis pour les backgrounds */
+}
+
+/* Style pour l'ID */
+.reclamation-card .card-id {
+    -fx-background-color: #e8f0fe; /* Bleu très clair */
+    -fx-text-fill: #1a73e8; /* Bleu pour le texte */
+}
+
+/* Style pour le titre */
+.reclamation-card .card-title {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-background-color: #e3f2fd; /* Bleu pâle */
+    -fx-text-fill: #1976d2; /* Bleu plus foncé */
+}
+
+/* Style pour la description */
+.reclamation-card .card-description {
+    -fx-background-color: #f5f5f5; /* Gris très clair */
+    -fx-text-fill: #555555; /* Gris moyen */
+}
+
+/* Style pour le type */
+.reclamation-card .card-type {
+    -fx-background-color: #e0f7fa; /* Cyan pâle */
+    -fx-text-fill: #00695c; /* Cyan foncé */
+}
+
+/* Style pour le statut (base) */
+.reclamation-card .card-statut {
+    -fx-font-weight: bold;
+    -fx-padding: 5;
+    -fx-background-radius: 5;
+}
+
+/* Couleurs spécifiques pour chaque statut */
+.reclamation-card .statut-resolue {
+    -fx-background-color: #c8e6c9; /* Vert pâle pour Résolue */
+    -fx-text-fill: #2e7d32; /* Vert foncé */
+}
+
+.reclamation-card .statut-en-cours {
+    -fx-background-color: #ffe0b2; /* Orange pâle pour En cours */
+    -fx-text-fill: #f57c00; /* Orange foncé */
+}
+
+.reclamation-card .statut-en-attente {
+    -fx-background-color: #bbdefb; /* Bleu pâle pour En attente */
+    -fx-text-fill: #1976d2; /* Bleu foncé */
+}
+
+.reclamation-card .statut-rejetee {
+    -fx-background-color: #ffcdd2; /* Rouge pâle pour Rejetée */
+    -fx-text-fill: #c62828; /* Rouge foncé */
+}
+
+/* Style pour les boutons dans les cartes */
+.reclamation-card .button {
+    -fx-background-color: #f0f0f0; /* Fond gris clair */
+    -fx-background-radius: 5;
+    -fx-padding: 5;
+    -fx-cursor: hand;
+}
+
+.reclamation-card .button:hover {
+    -fx-background-color: #e0e0e0; /* Gris plus foncé au survol */
+}
+
+/* Style spécifique pour le bouton QR */
+.reclamation-card .qr-button {
+    -fx-background-color: #4CAF50; /* Vert pour le bouton QR */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.reclamation-card .qr-button:hover {
+    -fx-background-color: #45a049; /* Vert plus foncé au survol */
+}
+
+/* Style pour le panneau de statistiques */
+.stats-panel {
+    -fx-padding: 10;
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.stat-label {
+    -fx-padding: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 14px;
+}
+
+/* Style pour le filtre par statut */
+.filter-combo {
+    -fx-pref-width: 150;
+    -fx-background-color: #ffffff;
+    -fx-border-color: #e0e0e0;
+    -fx-border-radius: 5;
+}
+/* style.css */
+.main-container {
+    -fx-background-color: linear-gradient(to bottom right, #C8102E, #333333, #F5E1C0);
+}
+
+.retour-button {
+    -fx-background-color: #C8102E;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-pref-width: 50;
+    -fx-pref-height: 50;
+    -fx-border-radius: 25px;
+    -fx-background-radius: 25px;
+    -fx-font-weight: bold;
+}
+
+.retour-button:hover {
+    -fx-background-color: #A1122A;
+}
+
+.title-label {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #C8102E;
+    -fx-padding: 10px;
+}
+
+.subtitle-label {
+    -fx-font-size: 16px;
+    -fx-text-fill: #333333;
+    -fx-padding: 0 0 20 0;
+}
+
+.form-container {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-padding: 30px;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 15, 0, 0, 5);
+}
+
+.form-label {
+    -fx-text-fill: #C8102E;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.form-field {
+    -fx-pref-width: 400px;
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #C8102E;
+    -fx-prompt-text-fill: #333333;
+    -fx-border-color: #F5E1C0;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 12px;
+    -fx-font-size: 14px;
+}
+
+.button-sinscrire {
+    -fx-background-color: #C8102E;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 250px;
+    -fx-pref-height: 50px;
+    -fx-border-radius: 25px;
+    -fx-background-radius: 25px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+.button-sinscrire:hover {
+    -fx-background-color: #A1122A;
+}
+
+.button-annuler {
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 250px;
+    -fx-pref-height: 50px;
+    -fx-border-color: #333333;
+    -fx-border-width: 2px;
+    -fx-border-radius: 25px;
+    -fx-background-radius: 25px;
+}
+
+.button-annuler:hover {
+    -fx-border-color: #C8102E;
+}
+
+.footer-label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 12px;
+    -fx-padding: 20 0 0 0;
+}
+.transparent-scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.transparent-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.transparent-grid {
+    -fx-background-color: transparent;
+}
+
+.reclamation-card {
+    -fx-background-color: #e3f2fd; /* Fond bleu clair pour les cartes */
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+    -fx-padding: 10;
+    -fx-alignment: top-left;
+    -fx-min-width: 200;
+    -fx-max-width: 200;
+}
+
+.reclamation-card:hover {
+    -fx-background-color: #bbdefb;
+    -fx-cursor: hand;
+}
+
+.card-selected {
+    -fx-background-color: #bbdefb;
+    -fx-border-color: #2196f3;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.card-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.status-admin {
+    -fx-background-color: #c8e6c9;
+    -fx-padding: 2 5 2 5;
+    -fx-background-radius: 3;
+}
+
+.status-client {
+    -fx-background-color: #ffe0b2;
+    -fx-padding: 2 5 2 5;
+    -fx-background-radius: 3;
+}
+
+.status-bloqué {
+    -fx-background-color: #ffcdd2;
+    -fx-padding: 2 5 2 5;
+    -fx-background-radius: 3;
+}
+
+.action-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2196f3;
+    -fx-font-size: 12px;
+    -fx-padding: 2 5 2 5;
+}
+
+.action-button:hover {
+    -fx-background-color: #e3f2fd;
+    -fx-cursor: hand;
+}
+.transparent-scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.transparent-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.transparent-grid {
+    -fx-background-color: transparent;
+}
+
+.user-card {
+    -fx-min-width: 200;
+    -fx-max-width: 200;
+    -fx-min-height: 200;
+    -fx-max-height: 200;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
+
+.card-selected {
+    -fx-border-color: #2196f3;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 2;
+}
+
+.card-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.action-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-padding: 2 5 2 5;
+}
+
+.action-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-cursor: hand;
+}
+

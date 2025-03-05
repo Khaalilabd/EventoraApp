@@ -39,7 +39,9 @@ public class ModifierUtilisateur {
         animateButton();
     }
 
-    // Animation du bouton "Rechercher" (inspirée de Reclamation)
+    /**
+     * Anime le bouton "Rechercher".
+     */
     private void animateButton() {
         TranslateTransition floating = new TranslateTransition(Duration.seconds(2), rechercherButton);
         floating.setByY(10);
@@ -48,7 +50,10 @@ public class ModifierUtilisateur {
         floating.play();
     }
 
-    // Charger un utilisateur depuis AfficherUtilisateur
+    /**
+     * Charge un utilisateur pour modification.
+     * @param utilisateur L'utilisateur à modifier.
+     */
     public void setUtilisateur(Utilisateurs utilisateur) {
         this.membreAModifier = utilisateur;
         if (membreAModifier != null) {
@@ -56,6 +61,10 @@ public class ModifierUtilisateur {
         }
     }
 
+    /**
+     * Recherche un membre par ID.
+     * @param event L'événement déclenché par l'utilisateur.
+     */
     @FXML
     private void rechercherMembre(ActionEvent event) {
         try {
@@ -70,9 +79,15 @@ public class ModifierUtilisateur {
             }
         } catch (NumberFormatException e) {
             showError("Erreur d'entrée", "ID invalide. Veuillez entrer un nombre entier.");
+        } catch (Exception e) {
+            showError("Erreur", "Une erreur s'est produite lors de la recherche : " + e.getMessage());
         }
     }
 
+    /**
+     * Modifie les informations d'un membre.
+     * @param event L'événement déclenché par l'utilisateur.
+     */
     @FXML
     private void modifierMembre(ActionEvent event) {
         if (membreAModifier == null) {
@@ -88,29 +103,7 @@ public class ModifierUtilisateur {
         String numTel = numTelField.getText();
         Role role = roleComboBox.getValue();
 
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() ||
-                adresse.isEmpty() || numTel.isEmpty() || role == null) {
-            showError("Erreur", "Tous les champs sont obligatoires.");
-            return;
-        }
-
-        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            showError("Erreur", "Format d'email invalide.");
-            return;
-        }
-
-        if (!numTel.matches("\\d+")) {
-            showError("Erreur", "Le numéro de téléphone doit contenir uniquement des chiffres.");
-            return;
-        }
-
-        if (!cin.matches("\\d{8}")) {
-            showError("Erreur", "Le CIN doit contenir exactement 8 chiffres.");
-            return;
-        }
-
-        if (!nom.matches("[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+") || !prenom.matches("[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+")) {
-            showError("Erreur", "Le nom et le prénom doivent contenir uniquement des lettres, espaces ou tirets.");
+        if (!validateFields(nom, prenom, email, cin, adresse, numTel, role)) {
             return;
         }
 
@@ -122,17 +115,26 @@ public class ModifierUtilisateur {
         membreAModifier.setNumTel(numTel);
         membreAModifier.setRole(role);
 
-        membresService.ModifierMem(membreAModifier);
-        showSuccess("Succès", "Membre modifié avec succès.");
-        switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
+        try {
+            membresService.ModifierMem(membreAModifier);
+            showSuccess("Succès", "Membre modifié avec succès.");
+            switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
+        } catch (Exception e) {
+            showError("Erreur", "Une erreur s'est produite lors de la modification : " + e.getMessage());
+        }
     }
 
+    /**
+     * Annule la modification et retourne à la liste des utilisateurs.
+     * @param event L'événement déclenché par l'utilisateur.
+     */
     @FXML
     private void cancel(ActionEvent event) {
         switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
     }
 
-    // Méthodes de navigation inspirées de Reclamation et du FXML fourni
+    // Méthodes de navigation
+
     @FXML
     private void goToAccueil(ActionEvent event) {
         switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
@@ -163,7 +165,11 @@ public class ModifierUtilisateur {
         switchScene(event, "/Reclamation/Reclamation.fxml");
     }
 
-    // Méthode de navigation générique
+    /**
+     * Change la scène actuelle.
+     * @param event L'événement déclenché par l'utilisateur.
+     * @param fxmlPath Le chemin du fichier FXML.
+     */
     private void switchScene(ActionEvent event, String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -180,6 +186,7 @@ public class ModifierUtilisateur {
     }
 
     // Méthodes utilitaires
+
     private void remplirChamps() {
         idField.setText(String.valueOf(membreAModifier.getId()));
         nomField.setText(membreAModifier.getNom());
@@ -202,7 +209,38 @@ public class ModifierUtilisateur {
         roleComboBox.setValue(null);
     }
 
-    // Gestion des erreurs et succès
+    private boolean validateFields(String nom, String prenom, String email, String cin, String adresse, String numTel, Role role) {
+        StringBuilder errors = new StringBuilder();
+
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() ||
+                adresse.isEmpty() || numTel.isEmpty() || role == null) {
+            errors.append("Tous les champs sont obligatoires.\n");
+        }
+
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            errors.append("Format d'email invalide.\n");
+        }
+
+        if (!numTel.matches("\\d+")) {
+            errors.append("Le numéro de téléphone doit contenir uniquement des chiffres.\n");
+        }
+
+        if (!cin.matches("\\d{8}")) {
+            errors.append("Le CIN doit contenir exactement 8 chiffres.\n");
+        }
+
+        if (!nom.matches("[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+") || !prenom.matches("[A-Za-zÀ-ÖØ-öø-ÿ\\s-]+")) {
+            errors.append("Le nom et le prénom doivent contenir uniquement des lettres, espaces ou tirets.\n");
+        }
+
+        if (errors.length() > 0) {
+            showError("Erreur", errors.toString());
+            return false;
+        }
+
+        return true;
+    }
+
     private void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

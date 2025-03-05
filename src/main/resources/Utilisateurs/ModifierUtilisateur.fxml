@@ -1,65 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.geometry.Pos?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+<AnchorPane styleClass="main-container"
+            stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Utilisateurs.Controllers.ModifierUtilisateur"
-            prefHeight="700.0" prefWidth="800.0"
-            stylesheets="/style.css">
+            fx:controller="Gui.Utilisateurs.Controllers.ModifierUtilisateur">
+    <!-- ScrollPane pour permettre le défilement -->
+    <ScrollPane fitToWidth="true" vbarPolicy="AS_NEEDED" pannable="true"
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0">
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40px;">
+            <!-- Header Section -->
+            <VBox alignment="CENTER" spacing="10">
+                <Button fx:id="retourButton" text="⬅"
+                        styleClass="retour-button"/>
+                <Label text="Modifier un Utilisateur"
+                       styleClass="title-label">
+                    <font>
+                        <Font size="36.0" />
+                    </font>
+                </Label>
+                <Label text="Modifiez les informations d’un utilisateur existant !"
+                       styleClass="subtitle-label"/>
+            </VBox>
 
-    <!-- Navbar horizontale (identique à AjouterRec) -->
-    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
-          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-        <HBox alignment="CENTER_LEFT">
-            <Label text="Eventora Menu" styleClass="nav-title"/>
-        </HBox>
-        <HBox spacing="20" alignment="CENTER_RIGHT">
-            <Button text="🏠 Accueil" styleClass="nav-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
-            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
-            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
-            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
-            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
-            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
-            <Button text="🔧 Paramètres" styleClass="nav-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
-        </HBox>
-    </HBox>
+            <!-- Form Section -->
+            <HBox alignment="CENTER" spacing="40" styleClass="form-container" style="-fx-pref-width: 100%;">
+                <!-- Partie 1 (Gauche) -->
+                <VBox spacing="15" style="-fx-max-width: 450px; -fx-min-width: 400px;">
+                    <Label text="ID" styleClass="form-label"/>
+                    <TextField fx:id="idField" promptText="Entrez l'ID du membre" styleClass="form-field"/>
 
-    <!-- Contenu principal (structure inspirée de AjouterRec) -->
-    <VBox alignment="CENTER" styleClass="main-content"
-          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+                    <Label text="Nom" styleClass="form-label"/>
+                    <TextField fx:id="nomField" promptText="Entrez le nom" styleClass="form-field"/>
 
-        <!-- Titre principal -->
-        <Label text="Modifier un Utilisateur" styleClass="main-title"/>
+                    <Label text="Prénom" styleClass="form-label"/>
+                    <TextField fx:id="prenomField" promptText="Entrez le prénom" styleClass="form-field"/>
 
-        <!-- Sous-titre descriptif -->
-        <Label wrapText="true" styleClass="main-description"
-               text="Recherchez un utilisateur par ID et modifiez ses informations ci-dessous."/>
+                    <Label text="Email" styleClass="form-label"/>
+                    <TextField fx:id="emailField" promptText="Entrez l'email" styleClass="form-field"/>
+                </VBox>
 
-        <!-- Formulaire -->
-        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
-            <!-- Champ ID et bouton Rechercher -->
-            <HBox spacing="10" alignment="CENTER">
-                <TextField fx:id="idField" promptText="Entrez l'ID du membre" styleClass="input-field"/>
-                <Button fx:id="rechercherButton" text="🔍 Rechercher" styleClass="card-button" onAction="#rechercherMembre"/>
+                <!-- Partie 2 (Droite) -->
+                <VBox spacing="15" style="-fx-max-width: 450px; -fx-min-width: 400px;">
+                    <Label text="CIN" styleClass="form-label"/>
+                    <TextField fx:id="cinField" promptText="Entrez le CIN" styleClass="form-field"/>
+
+                    <Label text="Numéro de téléphone" styleClass="form-label"/>
+                    <TextField fx:id="numTelField" promptText="Entrez le numéro de téléphone" styleClass="form-field"/>
+
+                    <Label text="Adresse" styleClass="form-label"/>
+                    <TextField fx:id="adresseField" promptText="Entrez l'adresse" styleClass="form-field"/>
+
+                    <Label text="Rôle" styleClass="form-label"/>
+                    <ComboBox fx:id="roleComboBox" promptText="Sélectionnez un rôle" styleClass="form-field"/>
+                </VBox>
             </HBox>
-            <TextField fx:id="nomField" promptText="Entrez le nom" styleClass="input-field"/>
-            <TextField fx:id="prenomField" promptText="Entrez le prénom" styleClass="input-field"/>
-            <TextField fx:id="emailField" promptText="Entrez l'email" styleClass="input-field"/>
-            <TextField fx:id="cinField" promptText="Entrez le CIN" styleClass="input-field"/>
-            <TextField fx:id="adresseField" promptText="Entrez l'adresse" styleClass="input-field"/>
-            <TextField fx:id="numTelField" promptText="Entrez le numéro de téléphone" styleClass="input-field"/>
-            <ComboBox fx:id="roleComboBox" promptText="Sélectionnez un rôle" styleClass="input-field"/>
-        </VBox>
 
-        <!-- Boutons avec icônes -->
-        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
-            <Button fx:id="modifierButton" text="✔ Enregistrer" styleClass="card-button" onAction="#modifierMembre"/>
-            <Button fx:id="annulerButton" text="❌ Annuler" styleClass="card-button" onAction="#cancel"/>
-        </HBox>
-    </VBox>
+            <!-- Boutons avec icônes -->
+            <VBox spacing="15" alignment="CENTER" style="-fx-padding: 20px 0 0 0;">
+                <Button fx:id="rechercherButton" text="🔍 Rechercher" styleClass="card-button" onAction="#rechercherMembre"/>
+                <Button fx:id="modifierButton" text="✔ Enregistrer" styleClass="card-button" onAction="#modifierMembre"/>
+                <Button fx:id="annulerButton" text="❌ Annuler" styleClass="card-button" onAction="#cancel"/>
+            </VBox>
+
+            <!-- Footer -->
+            <Label text="© Copyright 2025. Votre Entreprise"
+                   styleClass="footer-label"/>
+        </VBox>
+    </ScrollPane>
 </AnchorPane>

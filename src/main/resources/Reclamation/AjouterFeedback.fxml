@@ -10,7 +10,7 @@
             fx:controller="Gui.Reclamation.Controllers.AjouterFeedback"
             stylesheets="/style.css">
 
-    <!-- Barre de navigation moderne avec effets de survol -->
+
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
           AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <HBox alignment="CENTER_LEFT">
