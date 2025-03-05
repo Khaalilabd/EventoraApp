@@ -1,5 +1,6 @@
 package Services.Utilisateur.Crud;
 
+import Models.Utilisateur.Role;
 import Models.Utilisateur.Utilisateurs;
 import Services.Utilisateur.Interface.Imembres;
 import Utils.Mydatasource;
@@ -14,21 +15,29 @@ public class MembresService implements Imembres<Utilisateurs> {
 
     @Override
     public void AjouterMem(Utilisateurs membre) {
-        String req = "INSERT INTO membres (Nom, Prénom, Email, CIN, NumTel , Adresse,  MotDePasse  ) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO membres (Nom, Prénom, CIN, Email, Adresse, NumTel, Role, MotDePasse, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
-            PreparedStatement ps = connection.prepareStatement(req);
+            PreparedStatement ps = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, membre.getNom());
             ps.setString(2, membre.getPrenom());
-            ps.setString(3, membre.getCin());  // CIN
-            ps.setString(4, membre.getEmail()); // Email
+            ps.setString(3, membre.getCin());
+            ps.setString(4, membre.getEmail());
             ps.setString(5, membre.getAdresse());
             ps.setString(6, membre.getNumTel());
-            ps.setString(7, membre.getMotDePasse());
+            ps.setString(7, "MEMBRE");
+            ps.setString(8, membre.getMotDePasse());
+            ps.setString(9, membre.getImage()); // Ajout du champ image
 
             ps.executeUpdate();
             System.out.println("Membre ajouté avec succès !");
-        } catch (Exception e) {
+
+            // Récupérer l'ID généré
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                membre.setId(rs.getInt(1)); // Mettre à jour l'ID dans l'objet membre
+            }
+        } catch (SQLException e) {
             System.out.println("Erreur lors de l'ajout du membre : " + e.getMessage());
             e.printStackTrace();
         }
@@ -36,7 +45,7 @@ public class MembresService implements Imembres<Utilisateurs> {
 
     @Override
     public void ModifierMem(Utilisateurs membre) {
-        String req = "UPDATE membres SET Nom = ?, Prénom = ?, Email = ?, CIN = ?, Adresse = ?, NumTel = ?, MotDePasse = ? WHERE Id = ?";
+        String req = "UPDATE membres SET Nom = ?, Prénom = ?, Email = ?, CIN = ?, Adresse = ?, NumTel = ?, Role = ?, MotDePasse = ?, image = ? WHERE Id = ?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(req);
@@ -46,8 +55,10 @@ public class MembresService implements Imembres<Utilisateurs> {
             ps.setString(4, membre.getCin());
             ps.setString(5, membre.getAdresse());
             ps.setString(6, membre.getNumTel());
-            ps.setString(7, membre.getMotDePasse()); // Correction ici
-            ps.setInt(8, membre.getId()); // Correction ici
+            ps.setString(7, membre.getRole().toString()); // Utiliser le rôle fourni par l'utilisateur
+            ps.setString(8, membre.getMotDePasse());
+            ps.setString(9, membre.getImage()); // Ajout du champ image
+            ps.setInt(10, membre.getId());
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
@@ -55,12 +66,11 @@ public class MembresService implements Imembres<Utilisateurs> {
             } else {
                 System.out.println("Aucun membre trouvé avec cet ID !");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Erreur lors de la mise à jour du membre : " + e.getMessage());
             e.printStackTrace();
         }
     }
-
     @Override
     public void SupprimerMem(Utilisateurs membre) {
         String req = "DELETE FROM membres WHERE Id = ?";
@@ -75,7 +85,7 @@ public class MembresService implements Imembres<Utilisateurs> {
             } else {
                 System.out.println("Aucun membre trouvé avec cet ID !");
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Erreur lors de la suppression du membre : " + e.getMessage());
             e.printStackTrace();
         }
@@ -99,11 +109,12 @@ public class MembresService implements Imembres<Utilisateurs> {
                 m.setCin(rs.getString("CIN"));
                 m.setAdresse(rs.getString("Adresse"));
                 m.setNumTel(rs.getString("NumTel"));
+                m.setRole(parseRole(rs.getString("Role"))); // Convertir la chaîne en énumération Role
                 m.setMotDePasse(rs.getString("MotDePasse"));
-
+                m.setImage(rs.getString("image")); // Ajout du champ image
                 membres.add(m);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération des membres : " + e.getMessage());
             e.printStackTrace();
         }
@@ -129,9 +140,11 @@ public class MembresService implements Imembres<Utilisateurs> {
                 membre.setCin(rs.getString("CIN"));
                 membre.setAdresse(rs.getString("Adresse"));
                 membre.setNumTel(rs.getString("NumTel"));
+                membre.setRole(parseRole(rs.getString("Role"))); // Convertir la chaîne en énumération Role
                 membre.setMotDePasse(rs.getString("MotDePasse"));
+                membre.setImage(rs.getString("image")); // Ajout du champ image
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             System.out.println("Erreur lors de la recherche du membre par ID : " + e.getMessage());
             e.printStackTrace();
         }
@@ -153,7 +166,9 @@ public class MembresService implements Imembres<Utilisateurs> {
                     utilisateur.setCin(rs.getString("CIN"));
                     utilisateur.setAdresse(rs.getString("Adresse"));
                     utilisateur.setNumTel(rs.getString("NumTel"));
+                    utilisateur.setRole(parseRole(rs.getString("Role"))); // Convertir la chaîne en énumération Role
                     utilisateur.setMotDePasse(rs.getString("MotDePasse"));
+                    utilisateur.setImage(rs.getString("image")); // Ajout du champ image
                     return utilisateur;
                 }
             }
@@ -162,6 +177,7 @@ public class MembresService implements Imembres<Utilisateurs> {
         }
         return null;
     }
+
     @Override
     public int getIdByNomPrenom(String nomPrenom) {
         int id = -1;
@@ -169,7 +185,7 @@ public class MembresService implements Imembres<Utilisateurs> {
         if (parts.length == 2) { // Assurez-vous d'avoir les deux parties
             String nom = parts[0];
             String prenom = parts[1];
-            String query = "SELECT Id FROM membres WHERE Nom = ? AND Prénom = ?"; // Adaptez votre requête SQL
+            String query = "SELECT Id FROM membres WHERE Nom = ? AND Prénom = ?";
             try (PreparedStatement ps = connection.prepareStatement(query)) {
                 ps.setString(1, nom);
                 ps.setString(2, prenom);
@@ -184,6 +200,7 @@ public class MembresService implements Imembres<Utilisateurs> {
         }
         return id;
     }
+
     public List<String> getAllUserEmails() {
         List<String> emails = new ArrayList<>();
         String query = "SELECT Email FROM membres";
@@ -200,5 +217,17 @@ public class MembresService implements Imembres<Utilisateurs> {
             e.printStackTrace();
         }
         return emails;
+    }
+
+    // Méthode pour parser une chaîne en énumération Role
+    private Role parseRole(String roleStr) {
+        if (roleStr == null || roleStr.trim().isEmpty()) {
+            return Role.MEMBRE; // Valeur par défaut
+        }
+        try {
+            return Role.valueOf(roleStr.toUpperCase()); // Convertir en majuscules pour correspondre à l'énumération
+        } catch (IllegalArgumentException e) {
+            System.out.println("Rôle inconnu dans la base de données : " + roleStr + " - Utilisation de MEMBRE par défaut.");
+            return Role.MEMBRE;}
     }
 }

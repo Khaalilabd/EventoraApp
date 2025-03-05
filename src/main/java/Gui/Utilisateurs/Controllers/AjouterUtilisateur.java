@@ -1,19 +1,23 @@
 package Gui.Utilisateurs.Controllers;
 
 import Models.Utilisateur.Utilisateurs;
-import Models.Utilisateur.Role;
 import Services.Utilisateur.Crud.MembresService;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.regex.Pattern;
 
 public class AjouterUtilisateur {
@@ -24,19 +28,17 @@ public class AjouterUtilisateur {
     @FXML private TextField cinField;
     @FXML private TextField adresseField;
     @FXML private TextField numTelField;
-    @FXML private ComboBox<Role> roleComboBox;
     @FXML private Button ajouterButton;
     @FXML private Button annulerButton;
     @FXML private Button retourButton;
     @FXML private PasswordField motDePasseField;
+    @FXML private TextField imageField; // Nouveau champ
+    @FXML private Button chooseImageButton; // Nouveau bouton
 
     private final MembresService membresService = new MembresService();
 
     @FXML
     public void initialize() {
-        // Populate the role ComboBox with all available roles
-        roleComboBox.getItems().addAll(Role.values());
-
         // Add input validation listeners for real-time feedback
         addInputValidation();
     }
@@ -60,6 +62,36 @@ public class AjouterUtilisateur {
     }
 
     @FXML
+    public void chooseImage() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une image");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+        );
+        File selectedFile = fileChooser.showOpenDialog(chooseImageButton.getScene().getWindow());
+        if (selectedFile != null) {
+            try {
+                // Définir le dossier de destination
+                Path destinationDir = Paths.get("src/main/resources/Images/users/");
+                if (!Files.exists(destinationDir)) {
+                    Files.createDirectories(destinationDir);
+                }
+
+                // Copier l'image dans le dossier
+                String fileName = selectedFile.getName();
+                Path destinationPath = destinationDir.resolve(fileName);
+                Files.copy(selectedFile.toPath(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
+
+                // Mettre à jour le champ imageField avec le chemin relatif
+                imageField.setText("/Images/users/" + fileName);
+            } catch (Exception e) {
+                e.printStackTrace();
+                afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'upload de l'image : " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
     public void ajouterMembre(ActionEvent event) {
         String nom = nomField.getText().trim();
         String prenom = prenomField.getText().trim();
@@ -68,14 +100,14 @@ public class AjouterUtilisateur {
         String numTel = numTelField.getText().trim();
         String adresse = adresseField.getText().trim();
         String motDePasse = motDePasseField.getText();
-        Role role = roleComboBox.getValue();
+        String image = imageField.getText().trim();
 
         // Enhanced validation
-        if (!validateInputs(nom, prenom, email, cin, numTel, adresse, motDePasse, role)) {
+        if (!validateInputs(nom, prenom, email, cin, numTel, adresse, motDePasse, image)) {
             return;
         }
 
-        Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, email, cin, numTel, adresse, role, motDePasse);
+        Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, cin, email, adresse, numTel, motDePasse, image);
 
         // Disable buttons during processing to prevent multiple submissions
         toggleButtons(true);
@@ -90,7 +122,7 @@ public class AjouterUtilisateur {
             System.out.println("NumTel: " + numTel);
             System.out.println("Adresse: " + adresse);
             System.out.println("MotDePasse: " + motDePasse);
-            System.out.println("Role: " + role);
+            System.out.println("Image: " + image);
 
             // Add the member
             membresService.AjouterMem(nouveauMembre);
@@ -107,10 +139,10 @@ public class AjouterUtilisateur {
         }
     }
 
-    private boolean validateInputs(String nom, String prenom, String email, String cin, String numTel, String adresse, String motDePasse, Role role) {
+    private boolean validateInputs(String nom, String prenom, String email, String cin, String numTel, String adresse, String motDePasse, String image) {
         // Check for empty fields
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() || numTel.isEmpty() || adresse.isEmpty() || motDePasse.isEmpty() || role == null) {
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Tous les champs sont obligatoires.");
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() || numTel.isEmpty() || adresse.isEmpty() || motDePasse.isEmpty()) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Tous les champs sont obligatoires (sauf l'image).");
             return false;
         }
 
@@ -130,6 +162,12 @@ public class AjouterUtilisateur {
         // Password minimum length
         if (motDePasse.length() < 6) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le mot de passe doit contenir au moins 6 caractères.");
+            return false;
+        }
+
+        // Image validation (optional field, but if provided, check format)
+        if (!image.isEmpty() && !image.matches(".*\\.(png|jpg|jpeg)$")) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "L'image doit être au format PNG, JPG ou JPEG.");
             return false;
         }
 
@@ -192,7 +230,7 @@ public class AjouterUtilisateur {
         cinField.clear();
         adresseField.clear();
         numTelField.clear();
-        roleComboBox.setValue(null);
         motDePasseField.clear();
+        imageField.clear();
     }
 }

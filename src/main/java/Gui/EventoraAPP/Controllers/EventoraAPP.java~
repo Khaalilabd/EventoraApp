@@ -110,7 +110,7 @@ public class EventoraAPP {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.setTitle(title);
-
+        // Forcer la maximisation avec un léger délai pour éviter les problèmes de rendu
         Platform.runLater(() -> {
             stage.setMaximized(true);
             stage.show();

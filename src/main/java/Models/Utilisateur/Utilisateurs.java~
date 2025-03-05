@@ -9,43 +9,6 @@ public class Utilisateurs {
     private String adresse;
     private String numTel;
     private Role role;
-
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
-
-    public String getNumTel() {
-        return numTel;
-    }
-
-    public void setNumTel(String numTel) {
-        this.numTel = numTel;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getMotDePasse() {
-        return motDePasse;
-    }
-
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     private String motDePasse;
     private String image; // Nouveau champ
 

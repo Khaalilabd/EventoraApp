@@ -559,3 +559,120 @@
     -fx-font-size: 12px;
     -fx-padding: 20 0 0 0;
 }
+.transparent-scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.transparent-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.transparent-grid {
+    -fx-background-color: transparent;
+}
+
+.reclamation-card {
+    -fx-background-color: #e3f2fd; /* Fond bleu clair pour les cartes */
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+    -fx-padding: 10;
+    -fx-alignment: top-left;
+    -fx-min-width: 200;
+    -fx-max-width: 200;
+}
+
+.reclamation-card:hover {
+    -fx-background-color: #bbdefb;
+    -fx-cursor: hand;
+}
+
+.card-selected {
+    -fx-background-color: #bbdefb;
+    -fx-border-color: #2196f3;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+}
+
+.card-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #333333;
+}
+
+.status-admin {
+    -fx-background-color: #c8e6c9;
+    -fx-padding: 2 5 2 5;
+    -fx-background-radius: 3;
+}
+
+.status-client {
+    -fx-background-color: #ffe0b2;
+    -fx-padding: 2 5 2 5;
+    -fx-background-radius: 3;
+}
+
+.status-bloqué {
+    -fx-background-color: #ffcdd2;
+    -fx-padding: 2 5 2 5;
+    -fx-background-radius: 3;
+}
+
+.action-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2196f3;
+    -fx-font-size: 12px;
+    -fx-padding: 2 5 2 5;
+}
+
+.action-button:hover {
+    -fx-background-color: #e3f2fd;
+    -fx-cursor: hand;
+}
+.transparent-scroll-pane {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
+
+.transparent-scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+.transparent-grid {
+    -fx-background-color: transparent;
+}
+
+.user-card {
+    -fx-min-width: 200;
+    -fx-max-width: 200;
+    -fx-min-height: 200;
+    -fx-max-height: 200;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 5);
+}
+
+.card-selected {
+    -fx-border-color: #2196f3;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-border-width: 2;
+}
+
+.card-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.action-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 12px;
+    -fx-padding: 2 5 2 5;
+}
+
+.action-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-cursor: hand;
+}
+

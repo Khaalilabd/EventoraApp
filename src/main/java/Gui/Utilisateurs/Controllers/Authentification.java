@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 
 public class Authentification {
@@ -37,12 +36,20 @@ public class Authentification {
 
         Utilisateurs utilisateur = membresService.rechercherMemParNom(username);
         if (utilisateur != null && verifierMotDePasse(password, utilisateur.getMotDePasse())) {
-            Parent root = FXMLLoader.load(getClass().getResource("/EventoraAPP/EventoraAPP.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
-            stage.setScene(scene);
-            stage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/EventoraAPP.fxml"));
+            try {
+                Parent root = loader.load();
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
+                stage.setScene(scene);
+                stage.setTitle("Eventora - Dashboard");
+                stage.setMaximized(true);
+                stage.show();
+            } catch (RuntimeException | IOException r) {
+                System.out.println(r.getMessage());
+                r.printStackTrace();
+            }
         } else {
             afficherAlerte("Erreur", "Nom d'utilisateur ou mot de passe incorrect.");
         }
@@ -61,29 +68,27 @@ public class Authentification {
 
     @FXML
     public void goToinscription(ActionEvent event) {
-        changerScene(event, "/Utilisateurs/AjouterUtilisateur.fxml");
+        changerScene(event, "/Utilisateurs/AjouterUtilisateur.fxml", "Eventora - Inscription");
     }
 
     @FXML
     public void goBack(ActionEvent event) {
-        changerScene(event, "/EventoraAPP/Acceuil.fxml");
+        changerScene(event, "/EventoraAPP/Acceuil.fxml", "Eventora - Accueil");
     }
 
-    private void changerScene(ActionEvent event, String cheminFXML) {
+    private void changerScene(ActionEvent event, String cheminFXML, String titre) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(cheminFXML));
         try {
-            URL fxmlURL = getClass().getResource(cheminFXML);
-            if (fxmlURL == null) {
-                System.err.println("Error: Could not find " + cheminFXML);
-                return;
-            }
-            Parent root = FXMLLoader.load(fxmlURL);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 1022, 687);
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setTitle(titre);
+            stage.setMaximized(true);
             stage.show();
-        } catch (IOException e) {
-            System.err.println("Error loading FXML: " + e.getMessage());
-            e.printStackTrace();
+        } catch (RuntimeException | IOException r) {
+            System.out.println(r.getMessage());
+            r.printStackTrace();
         }
     }
 }

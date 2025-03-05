@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Pos?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.lang.String?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Utilisateurs.Controllers.AfficherUtilisateur"
-            prefHeight="600.0" prefWidth="800.0"
             stylesheets="/style.css">
 
-    <!-- Navbar horizontale (identique à AjouterRec) -->
+    <!-- Navbar horizontale -->
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
           AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <HBox alignment="CENTER_LEFT">
@@ -28,33 +29,49 @@
         </HBox>
     </HBox>
 
-    <!-- Contenu principal (structure inspirée de AjouterRec) -->
+    <!-- Contenu principal -->
     <VBox alignment="CENTER" styleClass="main-content"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
 
         <!-- Titre principal -->
-        <Label text="Liste des Utilisateurs" styleClass="main-title"/>
+        <Label text="👥 Liste des Utilisateurs 👥" styleClass="main-title"/>
 
         <!-- Sous-titre descriptif -->
         <Label wrapText="true" styleClass="main-description"
-               text="Consultez et gérez les utilisateurs enregistrés dans le système."/>
+               text="Consultez, ajoutez ou gérez les utilisateurs enregistrés dans le système."/>
 
-        <!-- Tableau des utilisateurs -->
-        <TableView fx:id="tableView" prefHeight="400.0" prefWidth="700.0">
-            <columns>
-                <TableColumn fx:id="colId" text="ID" prefWidth="50.0"/>
-                <TableColumn fx:id="colNom" text="Nom" prefWidth="100.0"/>
-                <TableColumn fx:id="colPrenom" text="Prénom" prefWidth="100.0"/>
-                <TableColumn fx:id="colEmail" text="Email" prefWidth="150.0"/>
-                <TableColumn fx:id="colCin" text="CIN" prefWidth="80.0"/>
-                <TableColumn fx:id="colAdresse" text="Adresse" prefWidth="120.0"/>
-                <TableColumn fx:id="colNumTel" text="Num Téléphone" prefWidth="100.0"/>
-                <TableColumn fx:id="colRole" text="Rôle" prefWidth="80.0"/>
-            </columns>
-        </TableView>
+        <!-- Panneau de statistiques -->
+        <HBox spacing="20" alignment="CENTER" styleClass="stats-panel">
+            <Label fx:id="totalLabel" text="Total: 0" styleClass="stat-label"/>
+            <Label fx:id="adminLabel" text="Admins: 0" styleClass="stat-label"/>
+            <Label fx:id="clientLabel" text="Clients: 0" styleClass="stat-label"/>
+            <Label fx:id="blockedLabel" text="Bloqués: 0" styleClass="stat-label"/>
+        </HBox>
 
-        <!-- Boutons avec icônes -->
+        <!-- Barre d'outils -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="addUtilisateur" text="➕ Ajouter" styleClass="card-button" onAction="#ajouterUtilisateur"/>
+            <Button fx:id="refreshList" text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
+            <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
+            <ComboBox fx:id="roleFilter" promptText="Filtrer par rôle" styleClass="filter-combo">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Tous"/>
+                        <String fx:value="Admin"/>
+                        <String fx:value="Client"/>
+                        <String fx:value="Bloqué"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </HBox>
+
+        <!-- Grille des cartes dans un ScrollPane -->
+        <ScrollPane prefHeight="575.0" prefWidth="999.0" styleClass="transparent-scroll-pane">
+            <GridPane fx:id="utilisateurGrid" hgap="20" vgap="20" alignment="CENTER" styleClass="transparent-grid"/>
+        </ScrollPane>
+
+        <!-- Boutons d’action -->
         <HBox spacing="10" alignment="CENTER" styleClass="card-container">
             <Button fx:id="supprimerButton" text="🗑️ Supprimer" styleClass="card-button" onAction="#supprimerUtilisateur"/>
             <Button fx:id="modifierButton" text="✏️ Modifier" styleClass="card-button" onAction="#modifierUtilisateur"/>
