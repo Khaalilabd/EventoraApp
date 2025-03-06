@@ -9,15 +9,22 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.SecureRandom;
 import java.util.regex.Pattern;
 
 public class AjouterUtilisateur {
@@ -32,19 +39,82 @@ public class AjouterUtilisateur {
     @FXML private Button annulerButton;
     @FXML private Button retourButton;
     @FXML private PasswordField motDePasseField;
-    @FXML private TextField imageField; // Nouveau champ
-    @FXML private Button chooseImageButton; // Nouveau bouton
+    @FXML private TextField textFieldPassword; // Champ pour afficher le mot de passe en clair
+    @FXML private TextField imageField;
+    @FXML private Button chooseImageButton;
+    @FXML private Button generatePasswordButton;
+    @FXML private Button togglePasswordButton; // Bouton pour révéler temporairement le mot de passe
+    @FXML private StackPane passwordContainer; // Conteneur du champ de mot de passe
 
     private final MembresService membresService = new MembresService();
+    private static final String API_KEY = "jdhXyNvADDDqUg9coiHcfQ==DyCXNx8yocrDHQSA";
 
     @FXML
     public void initialize() {
-        // Add input validation listeners for real-time feedback
         addInputValidation();
+        // Synchroniser les deux champs
+        textFieldPassword.textProperty().bindBidirectional(motDePasseField.textProperty());
+
+        // Ajouter un écouteur pour vérifier les clics sur le bouton
+        togglePasswordButton.setOnMousePressed(this::showPassword);
+        togglePasswordButton.setOnMouseReleased(this::hidePassword);
+
+        // Ajouter un écouteur sur le conteneur pour déboguer les événements
+        passwordContainer.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+            System.out.println("Mouse pressed on password container");
+        });
+        passwordContainer.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
+            System.out.println("Mouse released on password container");
+        });
+    }
+
+    // Révéler le mot de passe lorsqu'on appuie sur l'icône œil
+    @FXML
+    public void showPassword(MouseEvent event) {
+        System.out.println("showPassword called");
+        motDePasseField.setVisible(false);
+        textFieldPassword.setVisible(true);
+    }
+
+    // Masquer le mot de passe lorsqu'on relâche l'icône œil
+    @FXML
+    public void hidePassword(MouseEvent event) {
+        System.out.println("hidePassword called");
+        motDePasseField.setVisible(true);
+        textFieldPassword.setVisible(false);
+    }
+
+    @FXML
+    public void generatePassword() {
+        try {
+            String generatedPassword = fetchPasswordFromApi();
+            motDePasseField.setText(generatedPassword);
+            System.out.println("Generated password: " + generatedPassword);
+        } catch (Exception e) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Impossible de générer un mot de passe via l'API : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private String fetchPasswordFromApi() throws IOException, InterruptedException {
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.api-ninjas.com/v1/passwordgenerator?length=12"))
+                .header("X-Api-Key", API_KEY)
+                .GET()
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() == 200) {
+            String jsonResponse = response.body();
+            return jsonResponse.split("\"random_password\": \"")[1].split("\"")[0];
+        } else {
+            throw new IOException("Erreur API : " + response.statusCode());
+        }
     }
 
     private void addInputValidation() {
-        // CIN should not exceed 8 characters
         cinField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 8) {
                 cinField.setText(oldValue);
@@ -52,7 +122,6 @@ public class AjouterUtilisateur {
             }
         });
 
-        // Phone number should be numeric and reasonable length (e.g., 8-15 digits)
         numTelField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*") || newValue.length() > 15) {
                 numTelField.setText(oldValue);
@@ -71,18 +140,13 @@ public class AjouterUtilisateur {
         File selectedFile = fileChooser.showOpenDialog(chooseImageButton.getScene().getWindow());
         if (selectedFile != null) {
             try {
-                // Définir le dossier de destination
                 Path destinationDir = Paths.get("src/main/resources/Images/users/");
                 if (!Files.exists(destinationDir)) {
                     Files.createDirectories(destinationDir);
                 }
-
-                // Copier l'image dans le dossier
                 String fileName = selectedFile.getName();
                 Path destinationPath = destinationDir.resolve(fileName);
                 Files.copy(selectedFile.toPath(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
-
-                // Mettre à jour le champ imageField avec le chemin relatif
                 imageField.setText("/Images/users/" + fileName);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -99,21 +163,17 @@ public class AjouterUtilisateur {
         String cin = cinField.getText().trim();
         String numTel = numTelField.getText().trim();
         String adresse = adresseField.getText().trim();
-        String motDePasse = motDePasseField.getText();
+        String motDePasse = motDePasseField.getText(); // Utiliser directement le texte du champ
         String image = imageField.getText().trim();
 
-        // Enhanced validation
         if (!validateInputs(nom, prenom, email, cin, numTel, adresse, motDePasse, image)) {
             return;
         }
 
         Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, cin, email, adresse, numTel, motDePasse, image);
-
-        // Disable buttons during processing to prevent multiple submissions
         toggleButtons(true);
 
         try {
-            // Log the data for debugging
             System.out.println("Ajout d'un nouveau membre :");
             System.out.println("Nom: " + nom);
             System.out.println("Prénom: " + prenom);
@@ -124,11 +184,8 @@ public class AjouterUtilisateur {
             System.out.println("MotDePasse: " + motDePasse);
             System.out.println("Image: " + image);
 
-            // Add the member
             membresService.AjouterMem(nouveauMembre);
             afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Membre ajouté avec succès.");
-
-            // Clear fields and navigate to authentication
             viderChamps();
             goToAuth(event);
         } catch (Exception e) {
@@ -140,32 +197,27 @@ public class AjouterUtilisateur {
     }
 
     private boolean validateInputs(String nom, String prenom, String email, String cin, String numTel, String adresse, String motDePasse, String image) {
-        // Check for empty fields
         if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || cin.isEmpty() || numTel.isEmpty() || adresse.isEmpty() || motDePasse.isEmpty()) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Tous les champs sont obligatoires (sauf l'image).");
             return false;
         }
 
-        // Email format validation
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         if (!Pattern.matches(emailRegex, email)) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "L'email n'est pas valide.");
             return false;
         }
 
-        // Phone number minimum length
         if (numTel.length() < 8) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le numéro de téléphone doit contenir au moins 8 chiffres.");
             return false;
         }
 
-        // Password minimum length
         if (motDePasse.length() < 6) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le mot de passe doit contenir au moins 6 caractères.");
             return false;
         }
 
-        // Image validation (optional field, but if provided, check format)
         if (!image.isEmpty() && !image.matches(".*\\.(png|jpg|jpeg)$")) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "L'image doit être au format PNG, JPG ou JPEG.");
             return false;
@@ -209,14 +261,13 @@ public class AjouterUtilisateur {
             Stage stage = (Stage) retourButton.getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setMaximized(true); // Rend la fenêtre maximisée
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement de la page " + pageName + " : " + e.getMessage());
         }
     }
-
 
     private void afficherAlerte(Alert.AlertType type, String titre, String message) {
         Alert alert = new Alert(type);
@@ -233,6 +284,22 @@ public class AjouterUtilisateur {
         adresseField.clear();
         numTelField.clear();
         motDePasseField.clear();
+        textFieldPassword.clear();
         imageField.clear();
+    }
+
+    public class PasswordUtils {
+        private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
+        private static final int PASSWORD_LENGTH = 12;
+
+        public static String generatePassword() {
+            SecureRandom random = new SecureRandom();
+            StringBuilder password = new StringBuilder(PASSWORD_LENGTH);
+            for (int i = 0; i < PASSWORD_LENGTH; i++) {
+                int randomIndex = random.nextInt(CHARACTERS.length());
+                password.append(CHARACTERS.charAt(randomIndex));
+            }
+            return password.toString();
+        }
     }
 }
