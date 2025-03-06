@@ -1,5 +1,6 @@
 package Services.Utilisateur.Crud;
 
+import Models.Utilisateur.Role;
 import Models.Utilisateur.Utilisateurs;
 import Services.Utilisateur.Interface.Imembres;
 import Utils.Mydatasource;
@@ -7,6 +8,7 @@ import Utils.Mydatasource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MembresService implements Imembres<Utilisateurs> {
 
@@ -200,5 +202,82 @@ public class MembresService implements Imembres<Utilisateurs> {
             e.printStackTrace();
         }
         return emails;
+    }
+
+    //token
+    public Utilisateurs rechercherMemParEmail(String email) {
+        String req = "SELECT * FROM membres WHERE Email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Utilisateurs utilisateur = new Utilisateurs();
+                    utilisateur.setId(rs.getInt("id"));
+                    utilisateur.setNom(rs.getString("Nom"));
+                    utilisateur.setPrenom(rs.getString("Prénom"));
+                    utilisateur.setEmail(rs.getString("Email"));
+                    utilisateur.setCin(rs.getString("CIN"));
+                    utilisateur.setAdresse(rs.getString("Adresse"));
+                    utilisateur.setNumTel(rs.getString("NumTel"));
+                    utilisateur.setRole(Role.valueOf(rs.getString("Role")));
+                    utilisateur.setMotDePasse(rs.getString("motDePasse"));
+                    return utilisateur;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String generatePasswordResetToken(String email) {
+        String token = UUID.randomUUID().toString();
+        Utilisateurs utilisateur = rechercherMemParEmail(email);
+        if (utilisateur == null) return null;
+
+        String sql = "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, utilisateur.getId());
+            ps.setString(2, token);
+            ps.executeUpdate();
+            return token;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Utilisateurs validateResetToken(String token) {
+        String sql = "SELECT user_id FROM password_reset_tokens WHERE token = ? AND expires_at > NOW() AND used = FALSE";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, token);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    Utilisateurs utilisateur = rechercherMem(userId);
+                    if (utilisateur != null) {
+                        String updateSql = "UPDATE password_reset_tokens SET used = TRUE WHERE token = ?";
+                        try (PreparedStatement updatePs = connection.prepareStatement(updateSql)) {
+                            updatePs.setString(1, token);
+                            updatePs.executeUpdate();
+                        }
+                        return utilisateur;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void updatePassword(Utilisateurs utilisateur, String newPassword) {
+        String sql = "UPDATE membres SET MotDePasse = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newPassword); // Should be hashed in production
+            ps.setInt(2, utilisateur.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

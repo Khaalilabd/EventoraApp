@@ -43,11 +43,15 @@
 
         <!-- Formulaire -->
         <VBox spacing="15" alignment="CENTER" styleClass="form-container">
+            <Label text="Nom Pack" styleClass="form-label"/>
             <TextField fx:id="NomPackField" promptText="Titre du pack" styleClass="input-field"/>
+            <Label text="Pack Description" styleClass="form-label"/>
             <TextArea fx:id="DescriptionField" promptText="Donner la description du pack" styleClass="input-field"/>
+            <Label text="Prix" styleClass="form-label"/>
             <TextField fx:id="PrixField" promptText="Prix du pack" styleClass="input-field"/>
             <ComboBox fx:id="LocationField" promptText="Sélectionner la localisation" styleClass="input-field"/>
             <ComboBox fx:id="TypeField" promptText="Sélectionner le type du pack" styleClass="input-field"/>
+            <Label text="Nombre des Invités" styleClass="form-label"/>
             <TextField fx:id="NbrGuestsField" promptText="Le nombre max des invités" styleClass="input-field"/>
             <CheckComboBox fx:id="ServiceField" title="Sélectionner les services" styleClass="input-field" prefWidth="200.0"/>
             <Button fx:id="uploadImageButton" text="Uploader une image" styleClass="card-button"/>

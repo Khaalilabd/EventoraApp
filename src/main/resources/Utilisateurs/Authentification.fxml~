@@ -13,6 +13,15 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Utilisateurs.Controllers.Authentification">
 
+    <!-- Add the Success Banner here as the first child -->
+    <VBox fx:id="successBanner" alignment="CENTER" visible="false" managed="false"
+          style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 10; -fx-opacity: 0.9;"
+          AnchorPane.topAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+        <children>
+            <Label fx:id="bannerMessage" text="" style="-fx-font-size: 14px;"/>
+        </children>
+    </VBox>
+
     <HBox prefWidth="1022" prefHeight="687">
         <!-- Left side with logo only -->
         <VBox alignment="CENTER"
@@ -53,7 +62,8 @@
             <!-- Forgot Password / Help links -->
             <HBox spacing="10">
                 <Hyperlink text="Mot de passe oublié ?" onAction="#forgotPassword"
-                           style="-fx-text-fill: #C1272D; -fx-border-color: transparent; -fx-cursor: hand;"/>                <Label text="|" style="-fx-text-fill: gray;"/>
+                           style="-fx-text-fill: #C1272D; -fx-border-color: transparent; -fx-cursor: hand;"/>
+                <Label text="|" style="-fx-text-fill: gray;"/>
                 <Label text="Besoin d'aide ?" style="-fx-text-fill: #C1272D; -fx-underline: true; -fx-cursor: hand;"/>
             </HBox>
 

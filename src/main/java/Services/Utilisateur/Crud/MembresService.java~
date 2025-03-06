@@ -1,288 +1,283 @@
-package Gui.Pack.Controllers;
+package Services.Utilisateur.Crud;
 
-import Models.Pack.Location;
-import Models.Pack.Pack;
-import Models.Pack.Evenement;
-import Models.Service.Service;
-import Services.Pack.Crud.PackService;
-import Services.Service.Crud.ServiceService;
-import Services.Utilisateur.Crud.MembresService;
-import com.postmarkapp.postmark.client.AccountApiClient;
-import com.postmarkapp.postmark.Postmark;
-import com.postmarkapp.postmark.client.data.model.Message;
-import com.postmarkapp.postmark.client.exception.PostmarkException;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import org.controlsfx.control.CheckComboBox;
-import java.io.IOException;
-import java.sql.SQLException;
+import Models.Utilisateur.Role;
+import Models.Utilisateur.Utilisateurs;
+import Services.Utilisateur.Interface.Imembres;
+import Utils.Mydatasource;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class AjouterPack {
+public class MembresService implements Imembres<Utilisateurs> {
 
-    @FXML
-    private TextField NomPackField;
-    @FXML
-    private TextArea DescriptionField;
-    @FXML
-    private TextField PrixField;
-    @FXML
-    private ComboBox<Location> LocationField;
-    @FXML
-    private ComboBox<Evenement> TypeField;
-    @FXML
-    private TextField NbrGuestsField;
-    @FXML
-    private CheckComboBox<Service> ServiceField;
-    @FXML
-    private Button submitButton;
-    @FXML
-    private Button cancelButton;
-    @FXML
-    private Button ReturnToListButton;
+    Connection connection = Mydatasource.getInstance().getConnection();
 
-    private final PackService packService = new PackService();
-    private final ServiceService serviceService = new ServiceService();
-    private final MembresService membresService = new MembresService();
-    private final AccountApiClient postmarkClient = Postmark.getApiClient(System.getenv("POSTMARK_API_TOKEN"));
+    @Override
+    public void AjouterMem(Utilisateurs membre) {
+        String req = "INSERT INTO membres (Nom, Prénom, Email, CIN, NumTel , Adresse,  MotDePasse  ) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-    @FXML
-    public void initialize() {
-        LocationField.getItems().setAll(Location.values());
-        List<Evenement> evenements = packService.getAllEvenements();
-        ObservableList<Evenement> observableEvenements = FXCollections.observableArrayList(evenements);
-        TypeField.setItems(observableEvenements);
-        List<Service> services = serviceService.RechercherService();
-        ObservableList<Service> observableServices = FXCollections.observableArrayList(services);
-        ServiceField.getItems().addAll(observableServices);
-        ServiceField.setConverter(new javafx.util.StringConverter<Service>() {
-            @Override
-            public String toString(Service service) {
-                return service != null ? service.getTitre() : "";
-            }
-            @Override
-            public Service fromString(String string) {
-                return null;
-            }
-        });
-        ServiceField.setTitle("Sélectionner les services");
+        try {
+            PreparedStatement ps = connection.prepareStatement(req);
+            ps.setString(1, membre.getNom());
+            ps.setString(2, membre.getPrenom());
+            ps.setString(3, membre.getCin());  // CIN
+            ps.setString(4, membre.getEmail()); // Email
+            ps.setString(5, membre.getAdresse());
+            ps.setString(6, membre.getNumTel());
+            ps.setString(7, membre.getMotDePasse());
 
-        submitButton.setOnAction(this::ajouterPack);
-        cancelButton.setOnAction(this::annuler);
-        ReturnToListButton.setOnAction(this::goToAffichePack);
+            ps.executeUpdate();
+            System.out.println("Membre ajouté avec succès !");
+        } catch (Exception e) {
+            System.out.println("Erreur lors de l'ajout du membre : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    @FXML
-    private void ajouterPack(ActionEvent event) {
-        // Step 1: Validate input (no SQLException can be thrown here)
-        String nomPack = NomPackField.getText().trim();
-        String description = DescriptionField.getText();
-        String prixText = PrixField.getText();
-        Location location = LocationField.getValue();
-        Evenement type = TypeField.getValue();
-        String nbrGuestsText = NbrGuestsField.getText();
-        ObservableList<Service> selectedServices = ServiceField.getCheckModel().getCheckedItems();
+    @Override
+    public void ModifierMem(Utilisateurs membre) {
+        String req = "UPDATE membres SET Nom = ?, Prénom = ?, Email = ?, CIN = ?, Adresse = ?, NumTel = ?, MotDePasse = ? WHERE Id = ?";
 
-        // Validation: Check for empty fields
-        if (nomPack.isEmpty() || description.isEmpty() || prixText.isEmpty() || location == null || type == null || nbrGuestsText.isEmpty() || selectedServices.isEmpty()) {
-            showAlert("Erreur", "Tous les champs doivent être remplis, y compris au moins un service.");
-            return;
-        }
-
-        // Validation: Check if nomPack already exists (this does NOT throw SQLException)
-        int existingPackId = packService.getIdPackByNom(nomPack);
-        if (existingPackId == -1) {
-            showAlert("Erreur", "Erreur lors de la vérification de l'existence du pack. Veuillez vérifier les logs.");
-            return;
-        }
-        if (existingPackId != -1) {
-            showAlert("Erreur", "Un pack avec le nom '" + nomPack + "' existe déjà ! Veuillez choisir un autre nom.");
-            return;
-        }
-
-        // Validate numeric fields (can throw NumberFormatException)
-        double prix;
-        int nbrGuests;
         try {
-            prix = Double.parseDouble(prixText);
-            nbrGuests = Integer.parseInt(nbrGuestsText);
-        } catch (NumberFormatException e) {
-            showAlert("Erreur", "Veuillez entrer des valeurs numériques valides pour le prix et le nombre d'invités.");
-            return;
-        }
+            PreparedStatement ps = connection.prepareStatement(req);
+            ps.setString(1, membre.getNom());
+            ps.setString(2, membre.getPrenom());
+            ps.setString(3, membre.getEmail());
+            ps.setString(4, membre.getCin());
+            ps.setString(5, membre.getAdresse());
+            ps.setString(6, membre.getNumTel());
+            ps.setString(7, membre.getMotDePasse()); // Correction ici
+            ps.setInt(8, membre.getId()); // Correction ici
 
-        // Step 2: Create the pack (cannot throw SQLException)
-        Pack newPack = new Pack(nomPack, description, prix, location, type, nbrGuests, new ArrayList<>(selectedServices));
-
-        // Step 3: Save the pack (can throw SQLException)
-        try {
-            packService.ajouter(newPack);
-        } catch (SQLException e) {
-            if (e.getMessage().contains("Un pack avec le nom")) {
-                showAlert("Erreur", e.getMessage());
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Membre mis à jour avec succès !");
             } else {
-                showAlert("Erreur", "Une erreur est survenue lors de l'ajout du pack : " + e.getMessage());
-                e.printStackTrace();
-            }
-            return;
-        }
-
-        // Step 4: Send email notifications (can throw PostmarkException, IOException)
-        try {
-            boolean emailSentSuccessfully = sendEmailNotificationToUsers(nomPack);
-            if (!emailSentSuccessfully) {
-                showAlert("Avertissement", "Pack ajouté, mais une erreur est survenue lors de l'envoi des notifications par email. Veuillez vérifier les logs.");
+                System.out.println("Aucun membre trouvé avec cet ID !");
             }
         } catch (Exception e) {
-            showAlert("Avertissement", "Pack ajouté, mais une erreur est survenue lors de l'envoi des notifications par email : " + e.getMessage());
+            System.out.println("Erreur lors de la mise à jour du membre : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void SupprimerMem(Utilisateurs membre) {
+        String req = "DELETE FROM membres WHERE Id = ?";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(req);
+            ps.setInt(1, membre.getId());
+
+            int rowsDeleted = ps.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("Membre supprimé avec succès !");
+            } else {
+                System.out.println("Aucun membre trouvé avec cet ID !");
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la suppression du membre : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Utilisateurs> RechercherMem() {
+        String req = "SELECT * FROM membres";
+        List<Utilisateurs> membres = new ArrayList<>();
+
+        try {
+            Statement st = connection.createStatement();
+            ResultSet rs = st.executeQuery(req);
+
+            while (rs.next()) {
+                Utilisateurs m = new Utilisateurs();
+                m.setId(rs.getInt("Id"));
+                m.setNom(rs.getString("Nom"));
+                m.setPrenom(rs.getString("Prénom"));
+                m.setEmail(rs.getString("Email"));
+                m.setCin(rs.getString("CIN"));
+                m.setAdresse(rs.getString("Adresse"));
+                m.setNumTel(rs.getString("NumTel"));
+                m.setMotDePasse(rs.getString("MotDePasse"));
+
+                membres.add(m);
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la récupération des membres : " + e.getMessage());
             e.printStackTrace();
         }
 
-        showAlert("Succès", "Pack ajouté avec succès !");
-        goToAffichePack(event);
+        return membres;
     }
 
-    private boolean sendEmailNotificationToUsers(String nomPack) {
-        // Fetch all user emails
-        List<String> userEmails = membresService.getAllUserEmails();
-        if (userEmails.isEmpty()) {
-            System.out.println("Aucune utilisateur trouvé pour envoyer des notifications.");
-            return true;
+    public Utilisateurs rechercherMem(int id) {
+        String req = "SELECT * FROM membres WHERE Id = ?";
+        Utilisateurs membre = null;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(req);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                membre = new Utilisateurs();
+                membre.setId(rs.getInt("Id"));
+                membre.setNom(rs.getString("Nom"));
+                membre.setPrenom(rs.getString("Prénom"));
+                membre.setEmail(rs.getString("Email"));
+                membre.setCin(rs.getString("CIN"));
+                membre.setAdresse(rs.getString("Adresse"));
+                membre.setNumTel(rs.getString("NumTel"));
+                membre.setMotDePasse(rs.getString("MotDePasse"));
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors de la recherche du membre par ID : " + e.getMessage());
+            e.printStackTrace();
         }
 
-        // Configure Postmark email details
-        String fromEmail = "your-verified-email@example.com"; // Replace with your verified sender email
-        String subject = "Nouveau Pack Ajouté : " + nomPack;
-        String htmlContent = "<h1>Nouveau Pack Ajouté : " + nomPack + "</h1>" +
-                "<p>Un nouveau pack nommé '" + nomPack + "' a été ajouté à notre application.</p>" +
-                "<p>Allez le découvrir dès maintenant sur la plateforme Eventora !</p>" +
-                "<p>Cordialement,<br>L'équipe Eventora</p>";
-        String textContent = "Un nouveau pack nommé '" + nomPack + "' a été ajouté à notre application ! " +
-                "Allez le découvrir dès maintenant sur notre plateforme.\n\n" +
-                "Cordialement,\nL'équipe Eventora";
+        return membre;
+    }
 
-        // Send email to each user
-        boolean allEmailsSentSuccessfully = true;
-        for (String toEmail : userEmails) {
-            Message message = new Message();
-            message.setFrom(fromEmail);
-            message.setTo(toEmail);
-            message.setSubject(subject);
-            message.setText(textContent);
-            message.setHtml(htmlContent); // Set HTML content for better formatting
-            message.setMessageStream("outbound"); // Specify the message stream
-
-            try {
-                postmarkClient.sendEmail(message);
-                System.out.println("Email envoyé à " + toEmail);
-            } catch (PostmarkException | IOException ex) {
-                System.out.println("Erreur lors de l'envoi de l'email à " + toEmail + " : " + ex.getMessage());
-                allEmailsSentSuccessfully = false;
+    public Utilisateurs rechercherMemParNom(String username) {
+        String req = "SELECT * FROM membres WHERE Nom = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, username);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Utilisateurs utilisateur = new Utilisateurs();
+                    utilisateur.setId(rs.getInt("Id"));
+                    utilisateur.setNom(rs.getString("Nom"));
+                    utilisateur.setPrenom(rs.getString("Prénom"));
+                    utilisateur.setEmail(rs.getString("Email"));
+                    utilisateur.setCin(rs.getString("CIN"));
+                    utilisateur.setAdresse(rs.getString("Adresse"));
+                    utilisateur.setNumTel(rs.getString("NumTel"));
+                    utilisateur.setMotDePasse(rs.getString("MotDePasse"));
+                    return utilisateur;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    @Override
+    public int getIdByNomPrenom(String nomPrenom) {
+        int id = -1;
+        String[] parts = nomPrenom.split(" "); // Sépare nom et prénom
+        if (parts.length == 2) { // Assurez-vous d'avoir les deux parties
+            String nom = parts[0];
+            String prenom = parts[1];
+            String query = "SELECT Id FROM membres WHERE Nom = ? AND Prénom = ?"; // Adaptez votre requête SQL
+            try (PreparedStatement ps = connection.prepareStatement(query)) {
+                ps.setString(1, nom);
+                ps.setString(2, prenom);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        id = rs.getInt("Id");
+                    }
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
         }
-        return allEmailsSentSuccessfully;
+        return id;
     }
-
-    @FXML
-    private void annuler(ActionEvent event) {
-        clearFields();
-    }
-
-    private void clearFields() {
-        NomPackField.clear();
-        DescriptionField.clear();
-        PrixField.clear();
-        LocationField.setValue(null);
-        TypeField.setValue(null);
-        NbrGuestsField.clear();
-        ServiceField.getCheckModel().clearChecks();
-    }
-
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    private void goToAffichePack(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AffichePack.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            showAlert("Erreur", "Impossible de charger la page AffichePack.");
+    public List<String> getAllUserEmails() {
+        List<String> emails = new ArrayList<>();
+        String query = "SELECT Email FROM membres";
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                String email = rs.getString("Email");
+                if (email != null && !email.trim().isEmpty()) {
+                    emails.add(email);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des emails des utilisateurs : " + e.getMessage());
             e.printStackTrace();
+        }
+        return emails;
+    }
+
+    //token
+    public Utilisateurs rechercherMemParEmail(String email) {
+        String req = "SELECT * FROM membres WHERE Email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Utilisateurs utilisateur = new Utilisateurs();
+                    utilisateur.setId(rs.getInt("id"));
+                    utilisateur.setNom(rs.getString("Nom"));
+                    utilisateur.setPrenom(rs.getString("Prénom"));
+                    utilisateur.setEmail(rs.getString("Email"));
+                    utilisateur.setCin(rs.getString("CIN"));
+                    utilisateur.setAdresse(rs.getString("Adresse"));
+                    utilisateur.setNumTel(rs.getString("NumTel"));
+                    utilisateur.setRole(Role.valueOf(rs.getString("Role")));
+                    utilisateur.setMotDePasse(rs.getString("MotDePasse"));
+                    return utilisateur;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public String generatePasswordResetToken(String email) {
+        String token = UUID.randomUUID().toString();
+        Utilisateurs utilisateur = rechercherMemParEmail(email);
+        if (utilisateur == null) return null;
+
+        String sql = "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, utilisateur.getId());
+            ps.setString(2, token);
+            ps.executeUpdate();
+            return token;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    @FXML
-    private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    @FXML
-    private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
-        currentStage.show();
-    }
-
-    @FXML
-    private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    @FXML
-    private void goToReservation(ActionEvent event) throws IOException {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
+    public Utilisateurs validateResetToken(String token) {
+        String sql = "SELECT user_id FROM password_reset_tokens WHERE token = ? AND expires_at > NOW() AND used = FALSE";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, token);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    Utilisateurs utilisateur = rechercherMem(userId);
+                    if (utilisateur != null) {
+                        String updateSql = "UPDATE password_reset_tokens SET used = TRUE WHERE token = ?";
+                        try (PreparedStatement updatePs = connection.prepareStatement(updateSql)) {
+                            updatePs.setString(1, token);
+                            updatePs.executeUpdate();
+                        }
+                        return utilisateur;
+                    }
+                }
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
+        return null;
     }
 
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
+    public void updatePassword(Utilisateurs utilisateur, String newPassword) {
+        String sql = "UPDATE membres SET MotDePasse = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newPassword); // Should be hashed in production
+            ps.setInt(2, utilisateur.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
