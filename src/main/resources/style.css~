@@ -677,27 +677,25 @@
 /* Styles pour les bulles flottantes */
 .bubble {
     -fx-background-color: #4CAF50; /* Couleur de la bulle */
-    -fx-background-radius: 20; /* Coins arrondis pour une apparence ovale */
-    -fx-border-radius: 20;
+    -fx-background-radius: 50; /* Forme circulaire */
+    -fx-border-radius: 50;
     -fx-border-color: #388E3C;
     -fx-border-width: 2;
-    -fx-padding: 15; /* Plus d'espace pour le contenu */
+    -fx-padding: 10;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 5); /* Ombre pour effet flottant */
     -fx-alignment: center;
-    -fx-max-width: 250; /* Largeur maximale pour éviter une bulle trop large */
+    -fx-cursor: hand; /* Indique que la bulle est cliquable */
 }
 
 .bubble:hover {
     -fx-background-color: #45A049; /* Légère modification de couleur au survol */
-    -fx-scale-x: 1.05; /* Légère agrandissement au survol */
-    -fx-scale-y: 1.05;
+    -fx-scale-x: 1.1; /* Légère agrandissement au survol */
+    -fx-scale-y: 1.1;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 8); /* Ombre plus prononcée au survol */
 }
 
 .bubble-label {
-    -fx-font-size: 12px; /* Taille plus petite pour s'adapter à la bulle */
+    -fx-font-size: 14px;
     -fx-text-fill: white; /* Texte blanc pour contraste */
     -fx-font-weight: bold;
-    -fx-wrap-text: true; /* Permet le retour à la ligne pour les longs textes */
-    -fx-max-width: 200; /* Limite la largeur pour que le texte reste lisible */
 }
