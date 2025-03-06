@@ -24,6 +24,12 @@ public class EventoraAPP {
     private VBox card1, card2, card3;
 
     @FXML
+    private VBox chatContainer;
+
+    @FXML
+    private Button chatButton;
+
+    @FXML
     private void goToAccueil(ActionEvent event) {
         System.out.println("Accueil cliqué");
     }
@@ -72,15 +78,12 @@ public class EventoraAPP {
     @FXML
     private void goToChat(ActionEvent event) throws IOException {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Chatbot/Chat.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ChatAi/ChatAi.fxml"));
         Parent chatLayout = loader.load();
         Scene feedbackScene = new Scene(chatLayout);
-
-        // Ouvrir la nouvelle scène dans une nouvelle fenêtre
         Stage newStage = new Stage();
         newStage.setScene(feedbackScene);
         newStage.setTitle("Eventora - Chatbot");
-        // Forcer la maximisation avec un léger délai pour éviter les problèmes de rendu
         Platform.runLater(() -> {
             newStage.setMaximized(true);
             newStage.show();
@@ -115,5 +118,30 @@ public class EventoraAPP {
             stage.setMaximized(true);
             stage.show();
         });
+    }
+
+    public void toggleChat() {
+        if (chatContainer.getChildren().isEmpty()) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/ChatAi/ChatAi.fxml"));
+                Parent chatBox = loader.load();
+                chatContainer.getChildren().add(chatBox);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (!chatContainer.isVisible()) {
+            chatContainer.setTranslateX(350);
+            chatContainer.setVisible(true);
+            TranslateTransition slideIn = new TranslateTransition(Duration.millis(300), chatContainer);
+            slideIn.setToX(0);
+            slideIn.play();
+        } else {
+            TranslateTransition slideOut = new TranslateTransition(Duration.millis(300), chatContainer);
+            slideOut.setToX(350);
+            slideOut.setOnFinished(event -> chatContainer.setVisible(false));
+            slideOut.play();
+        }
     }
 }

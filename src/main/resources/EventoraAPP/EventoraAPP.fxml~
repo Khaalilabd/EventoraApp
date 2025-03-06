@@ -23,7 +23,7 @@
             <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil" />
             <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" />
             <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
-            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService" >
             <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
