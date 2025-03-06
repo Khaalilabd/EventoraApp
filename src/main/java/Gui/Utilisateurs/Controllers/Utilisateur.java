@@ -3,131 +3,92 @@ package Gui.Utilisateurs.Controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.net.URL;
 
 public class Utilisateur {
 
-
-
+    @FXML private Button reclamationButton;
+    @FXML private Button informationsButton;
+    @FXML private Button reservationButton;
+    @FXML private Button parametresButton;
 
     @FXML
-    private void goToReservation(ActionEvent event) throws IOException {
+    public void initialize() {
+        // Initialisation si nécessaire
+    }
+
+    @FXML
+    public void goToAcceuil(ActionEvent event) {
+        navigateTo("/Utilisateurs/Identification.fxml", "Accueil", event);
+    }
+
+    @FXML
+    public void goToReservation(ActionEvent event) {
+        navigateTo("/Reservation/Reservation.fxml", "Réservation", event);
+    }
+
+    @FXML
+    public void goToService(ActionEvent event) {
+        navigateTo("/Service/Services.fxml", "Services", event);
+    }
+
+    @FXML
+    public void goToPack(ActionEvent event) {
+        navigateTo("/Pack/Packs.fxml", "Packs", event);
+    }
+
+    @FXML
+    public void goToFeedback(ActionEvent event) {
+        navigateTo("/Reclamation/Feedback.fxml", "Feedback", event);
+    }
+
+    @FXML
+    public void goToReclamation(ActionEvent event) {
+        navigateTo("/Reclamation/Reclamation.fxml", "Réclamation", event);
+    }
+
+    @FXML
+    public void goToParametres(ActionEvent event) {
+        navigateTo("/Utilisateurs/Parametres.fxml", "Paramètres", event);
+    }
+
+    @FXML
+    public void goToAuth(ActionEvent event) {
+        navigateTo("/Utilisateurs/Authentification.fxml", "Authentification", event);
+    }
+
+    @FXML
+    public void goToInformations(ActionEvent event) {
+        navigateTo("/Utilisateurs/Informations.fxml", "Informations", event);
+    }
+
+    private void navigateTo(String fxmlPath, String pageName, ActionEvent event) {
         try {
-            // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
-        }
-    }
-    @FXML
-    private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-    @FXML
-    private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
-        currentStage.show();
-    }
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
-
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
-    }
-    @FXML
-    private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-    @FXML
-    private void goToAccueil(ActionEvent event) {
-        try {
-            // Get the FXML file URL.  More robust way to handle paths.
-            URL fxmlURL = getClass().getResource("/EventoraAPP/Acceuil.fxml");
-
-            if (fxmlURL == null) {
-                System.err.println("Error: Could not find AjouterUtilisateur.fxml");
-                return; // Important: Exit the method if the file isn't found.
+            java.net.URL fileUrl = getClass().getResource(fxmlPath);
+            if (fileUrl == null) {
+                System.err.println("Erreur : Impossible de trouver " + pageName + ".fxml dans " + fxmlPath);
+                showAlert("Erreur", "Impossible de charger la page " + pageName + ".");
+                return;
             }
-
-            FXMLLoader loader = new FXMLLoader(fxmlURL); // Use FXMLLoader directly
-            Parent root = loader.load();
-
-            // Get the Stage from the button's scene.  More reliable.
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            Scene scene = new Scene(root, 1022, 687); // Set your desired dimensions
-            stage.setScene(scene);
-            stage.show();
-
-        } catch (IOException e) {
-            System.err.println("Error loading FXML: " + e.getMessage()); // More informative error message
-            e.printStackTrace(); // Keep this for debugging
-        }
-    }
-    @FXML
-    private void goToAjouterUser(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/AjouterUtilisateur.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-    @FXML
-    private void goToAfficheListUSer(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/AfficherUtilisateur.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-    @FXML
-    private void gotoNavUSer(ActionEvent event) throws IOException {
-        try {
-            // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Utilisateur.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Parent root = FXMLLoader.load(fileUrl);
+            Stage stage = (Stage) ((Button) event.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root, 1022, 687);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
+            showAlert("Erreur", "Erreur lors du chargement de la page " + pageName + " : " + e.getMessage());
         }
+    }
+
+    private void showAlert(String title, String message) {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

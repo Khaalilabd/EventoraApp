@@ -7,6 +7,7 @@ import Utils.Mydatasource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReservationPersonaliseService implements IReservationPersonalise<ReservationPersonalise> {
 
@@ -14,7 +15,8 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void ajouterReservationPersonalise(ReservationPersonalise reservationPersonalise) {
-        String req = "INSERT INTO reservationpersonnalise (nom, prenom, email, numtel, description, date, service) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO reservationpersonnalise (nom, prenom, email, numtel, description, date, service_ids) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, reservationPersonalise.getNom());
             ps.setString(2, reservationPersonalise.getPrenom());
@@ -22,7 +24,11 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
             ps.setString(4, reservationPersonalise.getNumtel());
             ps.setString(5, reservationPersonalise.getDescription());
             ps.setDate(6, new java.sql.Date(reservationPersonalise.getDate().getTime()));
-            ps.setInt(7, reservationPersonalise.getIdService());
+            // Convertir la liste d'IDs en chaîne (ex: "1,2,3")
+            String serviceIdsString = reservationPersonalise.getServiceIds().stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(","));
+            ps.setString(7, serviceIdsString);
 
             ps.executeUpdate();
 
@@ -40,7 +46,8 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void modifierReservationPersonalise(ReservationPersonalise reservationPersonalise) {
-        String req = "UPDATE reservationpersonnalise SET nom=?, prenom=?, email=?, numtel=?, description=?, date=?, id_service=? WHERE idReservationPersonalise=?";
+        String req = "UPDATE reservationpersonnalise SET nom=?, prenom=?, email=?, numtel=?, description=?, date=?, service_ids=? " +
+                "WHERE idReservationPersonalise=?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setString(1, reservationPersonalise.getNom());
             ps.setString(2, reservationPersonalise.getPrenom());
@@ -48,7 +55,11 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
             ps.setString(4, reservationPersonalise.getNumtel());
             ps.setString(5, reservationPersonalise.getDescription());
             ps.setDate(6, new java.sql.Date(reservationPersonalise.getDate().getTime()));
-            ps.setInt(7, reservationPersonalise.getIdService());
+            // Convertir la liste d'IDs en chaîne (ex: "1,2,3")
+            String serviceIdsString = reservationPersonalise.getServiceIds().stream()
+                    .map(String::valueOf)
+                    .collect(Collectors.joining(","));
+            ps.setString(7, serviceIdsString);
             ps.setInt(8, reservationPersonalise.getIdReservationPersonalise());
 
             int rowsUpdated = ps.executeUpdate();
@@ -82,7 +93,6 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
              ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {
-                // Utiliser le constructeur avec tous les paramètres
                 ReservationPersonalise reservationPersonalise = new ReservationPersonalise(
                         rs.getInt("idReservationPersonalise"),
                         rs.getString("nom"),
@@ -91,7 +101,7 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
                         rs.getString("numtel"),
                         rs.getString("description"),
                         rs.getDate("date"),
-                        rs.getInt("service")
+                        parseServiceIds(rs.getString("service_ids")) // Convertir la chaîne en List<Integer>
                 );
                 reservationPersonalises.add(reservationPersonalise);
             }
@@ -99,5 +109,21 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
             System.err.println("Erreur lors de la récupération des réservations personnalisées : " + e.getMessage());
         }
         return reservationPersonalises;
+    }
+
+    // Méthode utilitaire pour parser une chaîne d'IDs (ex: "1,2,3") en List<Integer>
+    private List<Integer> parseServiceIds(String serviceIdsString) {
+        List<Integer> serviceIds = new ArrayList<>();
+        if (serviceIdsString != null && !serviceIdsString.trim().isEmpty()) {
+            String[] ids = serviceIdsString.split(",");
+            for (String id : ids) {
+                try {
+                    serviceIds.add(Integer.parseInt(id.trim()));
+                } catch (NumberFormatException e) {
+                    System.err.println("Erreur de parsing pour l'ID de service : " + id + " - " + e.getMessage());
+                }
+            }
+        }
+        return serviceIds;
     }
 }

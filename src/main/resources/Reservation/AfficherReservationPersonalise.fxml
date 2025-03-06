@@ -10,10 +10,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="764.0" prefWidth="1163.0"
+<AnchorPane
             stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Reservation.Controllers.AfficheReservationPersonalise">
+            fx:controller="Gui.Reservation.Controllers.AfficheReservationPersonalise"
+            prefWidth="1920.0"
+            prefHeight="1080.0">
 
     <!-- Navbar (inspirée du premier fichier, mais adaptée en haut) -->
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
@@ -63,6 +65,7 @@
                 <TableColumn fx:id="colnumTel" prefWidth="113.0" text="Num. Téléphone"/>
                 <TableColumn fx:id="colDescription" minWidth="0.0" prefWidth="178.0" text="Description"/>
                 <TableColumn fx:id="colDate" minWidth="0.0" prefWidth="116.0" text="Date"/>
+                <TableColumn fx:id="colServices" minWidth="0.0" prefWidth="150.0" text="Services"/> <!-- Nouvelle colonne -->
                 <TableColumn fx:id="colActions" prefWidth="88.0" text="Actions"/>
             </columns>
         </TableView>

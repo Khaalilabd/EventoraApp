@@ -1,5 +1,10 @@
 package Models.Pack;
 
+import Models.Service.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Pack {
     private int id;
     private String nomPack;
@@ -8,13 +13,15 @@ public class Pack {
     private Location location;
     private Evenement type;
     private int nbrGuests;
-    private String nomService;
+    private List<Service> nomServices; // Changed to List<Service>
 
-
+    // Default constructor
     public Pack() {
+        this.nomServices = new ArrayList<>();
     }
 
-    public Pack(int id, String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, String nomService) {
+    // Constructor with id
+    public Pack(int id, String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, List<Service> nomServices) {
         this.id = id;
         this.nomPack = nomPack;
         this.description = description;
@@ -22,25 +29,21 @@ public class Pack {
         this.location = location;
         this.type = type;
         this.nbrGuests = nbrGuests;
-        this.nomService = nomService;
+        this.nomServices = nomServices != null ? nomServices : new ArrayList<>();
     }
 
-    public Pack(String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, String nomService) {
+    // Constructor without id
+    public Pack(String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, List<Service> nomServices) {
         this.nomPack = nomPack;
         this.description = description;
         this.prix = prix;
         this.location = location;
         this.type = type;
         this.nbrGuests = nbrGuests;
-        this.nomService = nomService;
-
-
+        this.nomServices = nomServices != null ? nomServices : new ArrayList<>();
     }
 
-    public Pack(String nomPack) {
-        this.nomPack = nomPack;
-    }
-
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -97,12 +100,12 @@ public class Pack {
         this.nbrGuests = nbrGuests;
     }
 
-    public String getNomService() {
-        return nomService;
+    public List<Service> getNomServices() { // Updated getter
+        return nomServices;
     }
 
-    public void setNomService(String nomService) {
-        this.nomService = nomService;
+    public void setNomServices(List<Service> nomServices) { // Updated setter
+        this.nomServices = nomServices != null ? nomServices : new ArrayList<>();
     }
 
     @Override
@@ -115,7 +118,7 @@ public class Pack {
                 ", location=" + location +
                 ", type=" + type +
                 ", nbrGuests=" + nbrGuests +
-                ", nomService='" + nomService + '\'' +
+                ", nomServices=" + nomServices +
                 '}';
     }
 }

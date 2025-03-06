@@ -7,6 +7,8 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             fx:controller="Gui.EventoraAPP.Controllers.EventoraAPP"
             stylesheets="/style.css">
 
@@ -70,6 +72,8 @@
                 <Label text="Profitez de nos offres groupées avantageuses !" styleClass="card-description"/>
                 <Button text="Voir les packs" styleClass="card-button" onAction="#goToPack"/>
             </VBox>
+            <Button text="Besoin D'un AI ?" styleClass="card-button" onAction="#goToChat"/>
+
         </HBox>
     </VBox>
 </AnchorPane>

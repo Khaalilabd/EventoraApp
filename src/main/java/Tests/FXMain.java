@@ -10,21 +10,20 @@ import java.io.IOException;
 
 public class FXMain extends Application {
     @Override
-    public void start(Stage stage)  {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AfficherService.fxml"));
+    public void start(Stage stage) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/Acceuil.fxml"));
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.setTitle("EventoraAP");
+            stage.setTitle("Eventora - Accueil");
             stage.setMaximized(true);
             stage.show();
-        } catch (RuntimeException | IOException r){
+        } catch (RuntimeException | IOException r) {
             System.out.println(r.getMessage());
             r.printStackTrace();
         }
     }
-
     public static void main(String[] args) {
         launch();
     }

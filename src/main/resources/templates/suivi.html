@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Suivi de la Réclamation</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        .statut-resolue { background-color: #2ecc71; color: white; padding: 5px; }
+        .statut-rejetee { background-color: #e74c3c; color: white; padding: 5px; }
+        .statut-en-cours { background-color: #f1c40f; color: black; padding: 5px; }
+        .statut-en-attente { background-color: #3498db; color: white; padding: 5px; }
+    </style>
+</head>
+<body>
+<h1>Suivi de la Réclamation</h1>
+<p th:if="${error != null}" th:text="${error}"></p>
+<div th:if="${reclamation != null}">
+    <h2>Réclamation #<span th:text="${reclamation.id}"></span></h2>
+    <p>Titre : <span th:text="${reclamation.titre}"></span></p>
+    <p>Description : <span th:text="${reclamation.description}"></span></p>
+    <p th:classappend="${reclamation.statut == 'RESOLUE'} ? 'statut-resolue' :
+                            (${reclamation.statut == 'REJETEE'} ? 'statut-rejetee' :
+                            (${reclamation.statut == 'EN_COURS'} ? 'statut-en-cours' :
+                            (${reclamation.statut == 'EN_ATTENTE'} ? 'statut-en-attente' : '')))">
+        Statut : <span th:text="${reclamation.statut}"></span>
+    </p>
+</div>
+</body>
+</html>

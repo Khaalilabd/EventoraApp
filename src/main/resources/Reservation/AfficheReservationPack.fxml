@@ -4,9 +4,11 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="764.0" prefWidth="1163.0" stylesheets="/style.css"
+<AnchorPane  stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Reservation.Controllers.AfficheReservationPack">
+            fx:controller="Gui.Reservation.Controllers.AfficheReservationPack"
+             prefWidth="1920.0"
+             prefHeight="1080.0">
 
     <!-- Navbar horizontale en haut -->
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"

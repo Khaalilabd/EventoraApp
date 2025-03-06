@@ -3,6 +3,7 @@ package Gui.Reservation.Controllers;
 import Models.Reservation.ReservationPersonalise;
 import Models.Service.Service;
 import Services.Reservation.Crud.ReservationPersonaliseService;
+import Services.Service.Crud.ServiceService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,20 +12,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import Services.Service.Crud.ServiceService;
-
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class ModifierReservationPersonalise {
     @FXML
-    private ComboBox idServicefield;
+    private VBox serviceCheckboxes;
     @FXML
     private TextField nomfield;
     @FXML
@@ -41,87 +41,130 @@ public class ModifierReservationPersonalise {
     private Button submitButton;
     @FXML
     private Button cancelButton;
-    private ReservationPersonaliseService reservationservice = new ReservationPersonaliseService();
-    private ServiceService serviceService = new ServiceService();
+
+    private final ReservationPersonaliseService reservationService = new ReservationPersonaliseService();
+    private final ServiceService serviceService = new ServiceService();
     private ReservationPersonalise reservationToEdit;
 
     @FXML
     public void initialize() {
-        // Ajoute tous les types de réclamation à la liste du ComboBox
-
         submitButton.setOnAction(this::modifierReservationPersonalise);
         cancelButton.setOnAction(event -> annuler());
-        loadServices();
+        loadServicesAsCheckboxes();
 
+        // Désactiver les dates passées dans le DatePicker
+        datefield.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                setDisable(empty || date.isBefore(LocalDate.now()));
+            }
+        });
     }
-    private void loadServices() {
+
+    private void loadServicesAsCheckboxes() {
         List<Service> services = serviceService.RechercherService();
-        idServicefield.getItems().addAll(services);
+        for (Service service : services) {
+            CheckBox checkBox = new CheckBox(service.getTitre());
+            checkBox.setUserData(service.getId());
+            serviceCheckboxes.getChildren().add(checkBox);
+        }
     }
-    // Méthode pour pré-remplir les champs avec les données de la réclamation à modifier
+
     public void setReservationToEdit(ReservationPersonalise reservation) {
         this.reservationToEdit = reservation;
 
-        // Pré-remplir les champs avec les données de la réclamation existante
+        // Pré-remplir les champs avec les données existantes
         nomfield.setText(reservation.getNom());
         prenomfield.setText(reservation.getPrenom());
         emailfield.setText(reservation.getEmail());
         numtelfield.setText(reservation.getNumtel());
         descriptionfield.setText(reservation.getDescription());
-        datefield.setValue(LocalDate.ofInstant(Instant.ofEpochMilli(reservation.getDate().getTime()), ZoneId.systemDefault()));
 
+        // Convertir java.util.Date ou java.sql.Date en LocalDate pour le DatePicker
+        Date date = reservation.getDate();
+        if (date != null) {
+            LocalDate localDate;
+            if (date instanceof java.sql.Date) {
+                localDate = ((java.sql.Date) date).toLocalDate();
+            } else {
+                localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            }
+            datefield.setValue(localDate);
+        } else {
+            datefield.setValue(null);
+        }
+
+        // Pré-cocher les services associés à la réservation
+        List<Integer> selectedServiceIds = reservation.getServiceIds();
+        for (Node node : serviceCheckboxes.getChildren()) {
+            if (node instanceof CheckBox checkBox) {
+                int serviceId = (Integer) checkBox.getUserData();
+                checkBox.setSelected(selectedServiceIds.contains(serviceId));
+            }
+        }
     }
+
+    @FXML
     private void modifierReservationPersonalise(ActionEvent event) {
-        String nom = nomfield.getText().trim();
-        String prenom = prenomfield.getText().trim();
-        String email = emailfield.getText().trim();
-        String numTel = numtelfield.getText().trim();
-        String description = descriptionfield.getText().trim();
-        LocalDate date = datefield.getValue();
+        if (!validateFields()) return;
 
-        // Vérification des champs vides
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || numTel.isEmpty() || description.isEmpty() || date == null) {
-            showAlert("Erreur", "Veuillez remplir tous les champs !");
+        // Récupérer les services sélectionnés
+        List<Integer> selectedServiceIds = new ArrayList<>();
+        for (Node node : serviceCheckboxes.getChildren()) {
+            if (node instanceof CheckBox checkBox && checkBox.isSelected()) {
+                selectedServiceIds.add((Integer) checkBox.getUserData());
+            }
+        }
+
+        if (selectedServiceIds.isEmpty()) {
+            showAlert("Erreur", "Veuillez sélectionner au moins un service !");
             return;
         }
 
-        // Vérification du format de l'email
-        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-            showAlert("Erreur", "Veuillez entrer une adresse email valide !");
-            return;
-        }
+        // Mettre à jour l'objet reservationToEdit avec les nouvelles valeurs
+        reservationToEdit.setNom(nomfield.getText().trim());
+        reservationToEdit.setPrenom(prenomfield.getText().trim());
+        reservationToEdit.setEmail(emailfield.getText().trim());
+        reservationToEdit.setNumtel(numtelfield.getText().trim());
+        reservationToEdit.setDescription(descriptionfield.getText().trim());
+        reservationToEdit.setDate(Date.from(datefield.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        reservationToEdit.setServiceIds(selectedServiceIds);
 
-        // Vérification du numéro de téléphone (doit contenir exactement 8 chiffres)
-        if (!numTel.matches("^\\d{8}$")) {
-            showAlert("Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
-            return;
-        }
-
-        // Vérification que la date n'est pas dans le passé
-        if (date.isBefore(LocalDate.now())) {
-            showAlert("Erreur", "La date ne peut pas être dans le passé !");
-            return;
-        }
-
-        // Mise à jour de la réservation avec les nouvelles valeurs
-        reservationToEdit.setNom(nom);
-        reservationToEdit.setPrenom(prenom);
-        reservationToEdit.setEmail(email);
-        reservationToEdit.setNumtel(numTel);
-        reservationToEdit.setDescription(description);
-        reservationToEdit.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
-
-        // Appel à la méthode ModifierRec du service
-        reservationservice.modifierReservationPersonalise(reservationToEdit);
+        // Appeler la méthode du service pour modifier la réservation
+        reservationService.modifierReservationPersonalise(reservationToEdit);
 
         showAlert("Succès", "Réservation modifiée avec succès !");
         clearFields();
         goToReservationListePersonalise();
     }
 
+    private boolean validateFields() {
+        if (nomfield.getText().trim().isEmpty() || prenomfield.getText().trim().isEmpty() ||
+                emailfield.getText().trim().isEmpty() || numtelfield.getText().trim().isEmpty() ||
+                descriptionfield.getText().trim().isEmpty() || datefield.getValue() == null) {
+            showAlert("Erreur", "Tous les champs doivent être remplis !");
+            return false;
+        }
+        if (!emailfield.getText().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            showAlert("Erreur", "Adresse email invalide !");
+            return false;
+        }
+        if (!numtelfield.getText().matches("\\d{8}")) {
+            showAlert("Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
+            return false;
+        }
+        if (datefield.getValue().isBefore(LocalDate.now())) {
+            showAlert("Erreur", "La date ne peut pas être dans le passé !");
+            return false;
+        }
+        return true;
+    }
+
     private void annuler() {
         clearFields();
     }
+
     private void clearFields() {
         nomfield.clear();
         prenomfield.clear();
@@ -129,19 +172,20 @@ public class ModifierReservationPersonalise {
         numtelfield.clear();
         descriptionfield.clear();
         datefield.setValue(null);
+        serviceCheckboxes.getChildren().forEach(node -> {
+            if (node instanceof CheckBox checkBox) checkBox.setSelected(false);
+        });
     }
 
     private void showAlert(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
         alert.getDialogPane().getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
-
         alert.setTitle(title);
-        alert.setHeaderText(null);  // On peut personnaliser ou laisser vide
+        alert.setHeaderText(null);
         alert.setContentText(content);
-
         alert.showAndWait();
     }
+
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
@@ -151,19 +195,21 @@ public class ModifierReservationPersonalise {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     private void goToReservationListePersonalise() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AfficherReservationPersonalise.fxml"));
-            AnchorPane ReservationLayout = loader.load();
-            Scene scene = new Scene(ReservationLayout);
-            Stage stage = (Stage) submitButton.getScene().getWindow(); // Récupère la fenêtre actuelle
+            AnchorPane reservationLayout = loader.load();
+            Scene scene = new Scene(reservationLayout);
+            Stage stage = (Stage) submitButton.getScene().getWindow();
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
@@ -173,6 +219,7 @@ public class ModifierReservationPersonalise {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
@@ -182,18 +229,19 @@ public class ModifierReservationPersonalise {
         currentStage.setScene(feedbackScene);
         currentStage.show();
     }
+
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
-
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
         Stage newStage = new Stage();
         newStage.setScene(newScene);
         newStage.show();
     }
+
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));

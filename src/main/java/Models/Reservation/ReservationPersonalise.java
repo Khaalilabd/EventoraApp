@@ -1,6 +1,8 @@
 package Models.Reservation;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ReservationPersonalise {
     private int idReservationPersonalise;
@@ -10,10 +12,10 @@ public class ReservationPersonalise {
     private String numtel;
     private String description;
     private Date date;
-    private int idService; // Clé étrangère vers la table g_service
+    private List<Integer> serviceIds; // Nouvelle liste pour stocker plusieurs IDs de services
 
-    // Constructeurs (incluant idService)
-    public ReservationPersonalise(int idReservationPersonalise, String nom, String prenom, String email, String numtel, String description, Date date, int idService) {
+    // Constructeurs (incluant serviceIds)
+    public ReservationPersonalise(int idReservationPersonalise, String nom, String prenom, String email, String numtel, String description, Date date, List<Integer> serviceIds) {
         this.idReservationPersonalise = idReservationPersonalise;
         this.nom = nom;
         this.prenom = prenom;
@@ -21,31 +23,40 @@ public class ReservationPersonalise {
         this.numtel = numtel;
         this.description = description;
         this.date = date;
-        this.idService = idService;
+        this.serviceIds = serviceIds != null ? new ArrayList<>(serviceIds) : new ArrayList<>(); // Copie défensive
     }
 
-    public ReservationPersonalise(String nom, String prenom, String email, String numtel, String description, Date date, int idService) {
+    public ReservationPersonalise(String nom, String prenom, String email, String numtel, String description, Date date, List<Integer> serviceIds) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.numtel = numtel;
         this.description = description;
         this.date = date;
-        this.idService = idService;
+        this.serviceIds = serviceIds != null ? new ArrayList<>(serviceIds) : new ArrayList<>(); // Copie défensive
     }
 
     // Constructeur pour la récupération depuis la base de données (incluant idReservationPersonalise)
     public ReservationPersonalise(int idReservationPersonalise) {
         this.idReservationPersonalise = idReservationPersonalise;
+        this.serviceIds = new ArrayList<>(); // Initialisation par défaut
     }
 
     public ReservationPersonalise() {
+        this.serviceIds = new ArrayList<>(); // Initialisation par défaut
     }
 
-    public ReservationPersonalise(String nom, String prenom, String email, String numTel, String description, Date from) {
+    public ReservationPersonalise(String nom, String prenom, String email, String numTel, String description, Date date) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.numtel = numTel;
+        this.description = description;
+        this.date = date;
+        this.serviceIds = new ArrayList<>(); // Initialisation par défaut
     }
 
-    // Getters et setters (incluant idService)
+    // Getters et setters (incluant serviceIds)
     public int getIdReservationPersonalise() {
         return idReservationPersonalise;
     }
@@ -102,12 +113,19 @@ public class ReservationPersonalise {
         this.date = date;
     }
 
-    public int getIdService() {
-        return idService;
+    public List<Integer> getServiceIds() {
+        return serviceIds != null ? new ArrayList<>(serviceIds) : new ArrayList<>(); // Retourner une copie défensive
     }
 
-    public void setIdService(int idService) {
-        this.idService = idService;
+    public void setServiceIds(List<Integer> serviceIds) {
+        this.serviceIds = serviceIds != null ? new ArrayList<>(serviceIds) : new ArrayList<>(); // Copie défensive
+    }
+
+    public void addServiceId(int serviceId) {
+        if (this.serviceIds == null) {
+            this.serviceIds = new ArrayList<>();
+        }
+        this.serviceIds.add(serviceId);
     }
 
     @Override
@@ -120,7 +138,7 @@ public class ReservationPersonalise {
                 ", numtel='" + numtel + '\'' +
                 ", description='" + description + '\'' +
                 ", date=" + date +
-                ", idService=" + idService +  // Ajout de l'idService dans le toString
+                ", serviceIds=" + serviceIds + // Mise à jour pour afficher la liste des IDs
                 '}';
     }
 }

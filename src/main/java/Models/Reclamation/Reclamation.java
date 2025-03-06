@@ -8,6 +8,7 @@ public class Reclamation {
     private String description;
     private TypeReclamation type;
     private Statut statut;
+    private String qrCodeUrl;
 
     public Reclamation() {
         this.statut = Statut.EN_ATTENTE;
@@ -84,6 +85,9 @@ public class Reclamation {
     public void setStatut(Statut statut) {
         this.statut = statut;
     }
+
+    public String getQrCodeUrl() { return qrCodeUrl; }
+    public void setQrCodeUrl(String qrCodeUrl) { this.qrCodeUrl = qrCodeUrl; }
 
 
     // Méthode toString pour afficher les détails de la réclamation

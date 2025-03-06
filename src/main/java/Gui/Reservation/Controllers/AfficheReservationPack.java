@@ -2,6 +2,10 @@ package Gui.Reservation.Controllers;
 
 import Models.Reservation.ReservationPack;
 import Services.Reservation.Crud.ReservationPackService;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
@@ -77,6 +82,7 @@ public class AfficheReservationPack {
         // Ajout du filtre de recherche
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterReservations(newValue));
     }
+
     private void filterReservations(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
             loadReservations(); // Recharge toutes les réservations si la recherche est vide
@@ -98,31 +104,39 @@ public class AfficheReservationPack {
         colActions.setCellFactory(param -> new TableCell<ReservationPack, String>() {
             final Button editButton = new Button();
             final Button deleteButton = new Button();
+            final Button exportReservationButton = new Button();
             final HBox hBox = new HBox(10);
 
             {
                 // Chargement des icônes dans les boutons
                 Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
                 Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
+                Image exportReservationIcon = new Image(getClass().getResourceAsStream("/Images/pdf.png"));
 
                 // Icônes pour les boutons
                 ImageView editImageView = new ImageView(editIcon);
                 ImageView deleteImageView = new ImageView(deleteIcon);
+                ImageView exportReservationImageView = new ImageView(exportReservationIcon);
 
                 editImageView.setFitHeight(20);
                 editImageView.setFitWidth(20);
                 deleteImageView.setFitHeight(20);
                 deleteImageView.setFitWidth(20);
+                exportReservationImageView.setFitHeight(20);
+                exportReservationImageView.setFitWidth(20);
 
                 // Ajout des icônes dans les boutons
                 editButton.setGraphic(editImageView);
                 deleteButton.setGraphic(deleteImageView);
+                exportReservationButton.setGraphic(exportReservationImageView);
 
                 // Style des boutons
                 editButton.getStyleClass().add("table-button");
                 deleteButton.getStyleClass().addAll("table-button", "delete");
+                exportReservationButton.getStyleClass().add("table-button");
 
-                hBox.getChildren().addAll(editButton, deleteButton);
+                // Add all buttons to the HBox
+                hBox.getChildren().addAll(editButton, deleteButton, exportReservationButton);
             }
 
             @Override
@@ -133,6 +147,7 @@ public class AfficheReservationPack {
                 } else {
                     editButton.setOnAction(event -> handleEdit(getTableRow().getItem()));
                     deleteButton.setOnAction(event -> handleDelete(getTableRow().getItem()));
+                    exportReservationButton.setOnAction(event -> handleExport(getTableRow().getItem()));
                     setGraphic(hBox);
                 }
             }
@@ -157,6 +172,51 @@ public class AfficheReservationPack {
         }
     }
 
+    private void handleExport(ReservationPack reservation) {
+        try {
+            // Define the file path (e.g., save to the user's home directory)
+            String homeDir = System.getProperty("user.home");
+            String filePath = homeDir + File.separator + "ReservationPack_" + reservation.getIdReservationPack() + ".pdf";
+            // Initialize PDF writer and document
+            PdfWriter writer = new PdfWriter(filePath);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Add title
+            document.add(new Paragraph("Reservation Pack Details")
+                    .setFontSize(18)
+                    .setBold());
+
+            // Add reservation details
+            document.add(new Paragraph("ID: " + reservation.getIdReservationPack()));
+            document.add(new Paragraph("Pack ID: " + reservation.getIdPack()));
+            document.add(new Paragraph("Name: " + reservation.getNom() + " " + reservation.getPrenom()));
+            document.add(new Paragraph("Email: " + reservation.getEmail()));
+            document.add(new Paragraph("Phone Number: " + reservation.getNumtel()));
+            document.add(new Paragraph("Description: " + reservation.getDescription()));
+            document.add(new Paragraph("Date: " + reservation.getDate().toString()));
+
+            // Close the document
+            document.close();
+
+            // Show success message
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Export Successful");
+            alert.setHeaderText(null);
+            alert.setContentText("Reservation details exported to " + filePath);
+            alert.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+            // Show error message if something goes wrong
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Export Failed");
+            alert.setHeaderText(null);
+            alert.setContentText("An error occurred while exporting the reservation: " + e.getMessage());
+            alert.showAndWait();
+        }
+    }
 
     private void handleDelete(ReservationPack reservation) {
         System.out.println("Supprimer la réclamation avec ID : " + reservation.getIdReservationPack());
@@ -216,6 +276,7 @@ public class AfficheReservationPack {
             System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
     }
+
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
@@ -225,6 +286,7 @@ public class AfficheReservationPack {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
@@ -234,6 +296,7 @@ public class AfficheReservationPack {
         currentStage.setScene(feedbackScene);
         currentStage.show();
     }
+
     @FXML
     private void goToService(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
@@ -246,6 +309,7 @@ public class AfficheReservationPack {
         newStage.setScene(newScene);
         newStage.show();
     }
+
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));

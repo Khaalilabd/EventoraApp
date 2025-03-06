@@ -7,6 +7,8 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             fx:controller="Gui.Reclamation.Controllers.ModifierFeedback"
             stylesheets="/style.css">
 

@@ -41,8 +41,15 @@
                text="Consultez, ajoutez ou gérez les packs disponibles dans votre catalogue."/>
 
         <!-- Champ de recherche -->
-        <TextField fx:id="searchField" promptText="Rechercher... 🔍" styleClass="input-field"/>
-
+        <VBox spacing="10" alignment="CENTER" styleClass="form-container">
+            <HBox spacing="10" alignment="CENTER">
+                <!-- Basic Search -->
+                <TextField fx:id="searchField" promptText="Rechercher..." styleClass="input-field" prefWidth="200.0"/>
+                <!-- Sorting Options -->
+                <ComboBox fx:id="sortByCombo" promptText="Trier par..." styleClass="input-field" prefWidth="150.0"/>
+                <ToggleButton fx:id="sortOrderToggle" text="⬆ Ascendant" styleClass="card-button"/>
+            </HBox>
+        </VBox>
         <!-- Boutons avec icônes -->
         <HBox spacing="10" alignment="CENTER" styleClass="card-container">
             <Button text="➕ Ajouter Pack" styleClass="card-button" onAction="#addPack"/>

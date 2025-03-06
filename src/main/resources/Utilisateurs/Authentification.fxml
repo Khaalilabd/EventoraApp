@@ -7,17 +7,23 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="687" prefWidth="1022"
-            style="-fx-background-color: #F5E1C0;"
+<AnchorPane style="-fx-background-color: #F5E1C0;"
             xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             fx:controller="Gui.Utilisateurs.Controllers.Authentification">
 
-    <HBox prefWidth="1022" prefHeight="687">
+    <HBox alignment="CENTER"
+          AnchorPane.topAnchor="0.0"
+          AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0">
+
         <!-- Left side with logo only -->
         <VBox alignment="CENTER"
               spacing="20"
-              prefWidth="511" prefHeight="687"
+              HBox.hgrow="ALWAYS"
               style="-fx-background-color: #F5E1C0;">
 
             <ImageView fx:id="logo"
@@ -35,7 +41,7 @@
         <!-- Right side for authentication and navigation -->
         <VBox alignment="CENTER"
               spacing="20"
-              prefWidth="511" prefHeight="687"
+              HBox.hgrow="ALWAYS"
               style="-fx-background-color: white; -fx-padding: 40;">
 
             <!-- Back Button for navigation -->
