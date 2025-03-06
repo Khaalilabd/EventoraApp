@@ -266,11 +266,4 @@ public class AjouterReservationPack {
         stage.setScene(scene);
         stage.show();
     }
-    public void setSelectedPack(String packName) {
-        if (packNames.contains(packName)) {
-            idPackfield.setValue(packName);
-        } else {
-            System.out.println("Pack not found: " + packName);
-        }
-    }
 }

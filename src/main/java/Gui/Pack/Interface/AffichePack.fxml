@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Pos?>
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -28,7 +29,7 @@
         </HBox>
     </HBox>
 
-    <!-- Contenu principal (structure inspirée de AjouterRec) -->
+    <!-- Contenu principal -->
     <VBox alignment="CENTER" styleClass="main-content"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
@@ -45,11 +46,14 @@
             <HBox spacing="10" alignment="CENTER">
                 <!-- Basic Search -->
                 <TextField fx:id="searchField" promptText="Rechercher..." styleClass="input-field" prefWidth="200.0"/>
+                <!-- Event Filter -->
+                <ComboBox fx:id="EventFilter" promptText="Filtrer par événement..." styleClass="input-field" prefWidth="150.0"/>
                 <!-- Sorting Options -->
                 <ComboBox fx:id="sortByCombo" promptText="Trier par..." styleClass="input-field" prefWidth="150.0"/>
                 <ToggleButton fx:id="sortOrderToggle" text="⬆ Ascendant" styleClass="card-button"/>
             </HBox>
         </VBox>
+
         <!-- Boutons avec icônes -->
         <HBox spacing="10" alignment="CENTER" styleClass="card-container">
             <Button text="➕ Ajouter Pack" styleClass="card-button" onAction="#addPack"/>
@@ -57,18 +61,9 @@
             <Button text="🎉 Événements" styleClass="card-button" onAction="#goToEvenement"/>
         </HBox>
 
-        <!-- Tableau des packs -->
-        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
-            <columns>
-                <TableColumn fx:id="colNom" prefWidth="150.0" text="Nom"/>
-                <TableColumn fx:id="colDescription" prefWidth="250.0" text="Description"/>
-                <TableColumn fx:id="colPrix" prefWidth="100.0" text="Prix"/>
-                <TableColumn fx:id="colLocation" prefWidth="150.0" text="Localisation"/>
-                <TableColumn fx:id="colType" prefWidth="120.0" text="Type"/>
-                <TableColumn fx:id="colNbrGuests" prefWidth="100.0" text="Invités"/>
-                <TableColumn fx:id="colServices" prefWidth="200.0" text="Services inclus"/>
-                <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
-            </columns>
-        </TableView>
+        <!-- TilePane for Bubbles -->
+        <ScrollPane fitToWidth="true" prefHeight="575.0" prefWidth="999.0">
+            <TilePane fx:id="packTilePane" hgap="15" vgap="15" alignment="CENTER" styleClass="bubble-container" prefColumns="3"/>
+        </ScrollPane>
     </VBox>
 </AnchorPane>

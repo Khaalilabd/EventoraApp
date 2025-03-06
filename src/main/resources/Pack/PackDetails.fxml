@@ -2,11 +2,12 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Pack.Controllers.AffichePack"
+            fx:controller="Gui.Pack.Controllers.PackDetails"
             prefHeight="600.0" prefWidth="900.0"
             stylesheets="/style.css">
 
@@ -33,30 +34,33 @@
     <VBox alignment="CENTER" styleClass="main-content" spacing="10"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
-        <Label text="Liste des Packs" styleClass="main-title"/>
+        <Label text="Détails du Pack" styleClass="main-title"/>
         <Label wrapText="true" styleClass="main-description"
-               text="Visualisez, modifiez ou supprimez les packs existants."/>
+               text="Consultez les détails complets du pack sélectionné ci-dessous."/>
 
-        <!-- Filter and Sort Section -->
-        <VBox spacing="10" alignment="CENTER" styleClass="form-container">
-            <HBox spacing="10" alignment="CENTER">
-                <TextField fx:id="searchField" promptText="Rechercher..." styleClass="input-field" prefWidth="200.0"/>
-                <ComboBox fx:id="EventFilter" promptText="Filtrer par événement..." styleClass="input-field" prefWidth="150.0"/>
-                <ComboBox fx:id="sortByCombo" promptText="Trier par..." styleClass="input-field" prefWidth="150.0"/>
-                <ToggleButton fx:id="sortOrderToggle" text="⬆ Ascendant" styleClass="card-button"/>
+        <!-- Pack Details Card -->
+        <VBox spacing="20" alignment="CENTER" styleClass="pack-card-details" maxWidth="700.0">
+            <HBox spacing="20" alignment="CENTER">
+                <!-- Left: Image -->
+                <ImageView fx:id="packImage" fitWidth="300.0" fitHeight="300.0" preserveRatio="true"/>
+
+                <!-- Right: Details -->
+                <VBox spacing="10" alignment="CENTER_LEFT">
+                    <Label fx:id="nomLabel" styleClass="detail-label" style="-fx-font-weight: bold; -fx-font-size: 16;"/>
+                    <Label fx:id="descriptionLabel" styleClass="detail-label" wrapText="true" maxWidth="350.0"/>
+                    <Label fx:id="prixLabel" styleClass="detail-label"/>
+                    <Label fx:id="locationLabel" styleClass="detail-label"/>
+                    <Label fx:id="typeLabel" styleClass="detail-label"/>
+                    <Label fx:id="guestsLabel" styleClass="detail-label"/>
+                    <Label fx:id="servicesLabel" styleClass="detail-label" wrapText="true" maxWidth="350.0"/>
+                </VBox>
             </HBox>
         </VBox>
 
-        <!-- TilePane for Bubbles -->
-        <ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="900.0">
-            <TilePane fx:id="packTilePane" hgap="15" vgap="15" alignment="CENTER" styleClass="bubble-container" prefColumns="3"/>
-        </ScrollPane>
-
+        <!-- Buttons -->
         <HBox spacing="10" alignment="CENTER">
-            <Button text="Ajouter un Pack" onAction="#addPack" styleClass="card-button"/>
-            <Button text=" Rafraîchir" onAction="#refreshList" styleClass="card-button"/>
-            <Button text="Événements" onAction="#goToEvenement" styleClass="card-button"/>
-            <Button fx:id="getPriceInCurrenciesButton" text="Prix en Devises" styleClass="card-button"/>
-        </HBox>
+            <Button fx:id="returnButton" text="Retour" styleClass="card-button" onAction="#goToAffichePack"/>
+            <Button fx:id="exchangeRateButton" text="Prix en Devises" styleClass="card-button" onAction="#getPriceInCurrencies"/>
+            <Button fx:id="reserveButton" text="Réserver" styleClass="card-button" onAction="#handleReserver" />        </HBox>
     </VBox>
 </AnchorPane>

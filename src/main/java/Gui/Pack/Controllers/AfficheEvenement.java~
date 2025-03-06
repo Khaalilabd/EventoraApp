@@ -93,7 +93,7 @@ public class AfficheEvenement {
         card.setOnMouseExited(e -> card.getStyleClass().remove("event-card-hover"));
 
         // Event details (mirroring colType)
-        Label typeLabel = new Label( event.getTypeEvenement());
+        Label typeLabel = new Label("Événement: " + event.getTypeEvenement());
         typeLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 14;");
         typeLabel.setWrapText(true);
         typeLabel.setMaxWidth(200);
