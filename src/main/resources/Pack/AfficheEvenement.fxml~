@@ -54,8 +54,6 @@
             <Button text="➕ Ajouter Événement" styleClass="card-button" onAction="#addEvenement"/>
             <Button text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
             <Button text="⬅ Retour à Packs" styleClass="card-button" onAction="#goToAffichePack"/>
-            <!-- New Generate Image Button -->
-            <Button text="🖼️ Generate Image" styleClass="card-button" onAction="#generateImageForSelectedEvent"/>
         </HBox>
     </VBox>
 </AnchorPane>
