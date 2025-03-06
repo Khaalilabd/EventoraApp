@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 public class BrevoEmailSender {
 
-    private static final String API_KEY = "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";
+    private static final String API_KEY = System.getenv("SENDINBLUE_API_KEY");
     private static final String API_URL = "https://api.brevo.com/v3/smtp/email";
     private static final String SENDER_EMAIL = "khalilabdelmoumen7@gmail.com"; // Vérifié dans Brevo
 
