@@ -25,7 +25,7 @@ public class FeedBackService implements IfeedBack<Feedback> {
             ps.setInt(1, feedback.getIdUser());
             ps.setInt(2, feedback.getVote());
             ps.setString(3, feedback.getDescription());
-            ps.setString(4, feedback.getRecommend().name());  // Enregistrer la valeur de l'énum
+            ps.setString(4, feedback.getRecommend().name());
 
             ps.executeUpdate();
             System.out.println("Feedback ajouté avec succès !");
@@ -42,11 +42,8 @@ public class FeedBackService implements IfeedBack<Feedback> {
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, feedback.getVote());
             ps.setString(2, feedback.getDescription());
-
-            // Vérifier si la recommandation est nulle et définir une valeur par défaut si nécessaire
             String recommendValue = (feedback.getRecommend() != null) ? feedback.getRecommend().name() : Recommend.Non.name();
             ps.setString(3, recommendValue);
-
             ps.setInt(4, feedback.getId());
 
             int rowsUpdated = ps.executeUpdate();
@@ -61,14 +58,12 @@ public class FeedBackService implements IfeedBack<Feedback> {
         }
     }
 
-
-
     @Override
     public void SupprimerFeedBack(Feedback feedback) {
         String req = "DELETE FROM feedback WHERE id = ?";
 
         try (PreparedStatement ps = connection.prepareStatement(req)) {
-            ps.setInt(1, feedback.getId()); // L'ID pour identifier le feedback à supprimer
+            ps.setInt(1, feedback.getId());
 
             int rowsDeleted = ps.executeUpdate();
             if (rowsDeleted > 0) {
@@ -101,7 +96,7 @@ public class FeedBackService implements IfeedBack<Feedback> {
                     feedback.setRecommend(Recommend.fromLabel(recommendLabel));
                 } catch (IllegalArgumentException e) {
                     System.out.println("Valeur invalide pour Recommend : " + recommendLabel + ". Valeur par défaut utilisée.");
-                    feedback.setRecommend(Recommend.Non); // Valeur par défaut
+                    feedback.setRecommend(Recommend.Non);
                 }
 
                 feedbacks.add(feedback);
@@ -113,7 +108,6 @@ public class FeedBackService implements IfeedBack<Feedback> {
 
         return feedbacks;
     }
-
 
     @Override
     public List<Feedback> rechercherParUser(int idUser) {
@@ -134,7 +128,7 @@ public class FeedBackService implements IfeedBack<Feedback> {
                     feedback.setIdUser(rs.getInt("idUser"));
                     feedback.setVote(rs.getInt("Vote"));
                     feedback.setDescription(rs.getString("Description"));
-                    feedback.setRecommend(Recommend.valueOf(rs.getString("Recommend"))); // Conversion du String en enum
+                    feedback.setRecommend(Recommend.valueOf(rs.getString("Recommend")));
 
                     feedbacks.add(feedback);
                 }
@@ -146,6 +140,7 @@ public class FeedBackService implements IfeedBack<Feedback> {
 
         return feedbacks;
     }
+
     @Override
     public List<Feedback> rechercherParMotCle(String motCle) {
         String req = "SELECT * FROM Feedback WHERE description LIKE ?";
@@ -170,5 +165,23 @@ public class FeedBackService implements IfeedBack<Feedback> {
         }
 
         return feedbacks;
+    }
+
+    // Nouvelle méthode pour récupérer le nom de l'utilisateur
+    public String getUserNameById(int userId) {
+        String req = "SELECT nom FROM users WHERE id = ?"; // Ajustez selon votre structure (par exemple, "username" au lieu de "nom")
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nom");
+            } else {
+                return "Utilisateur inconnu"; // Valeur par défaut si l'utilisateur n'est pas trouvé
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du nom de l'utilisateur : " + e.getMessage());
+            e.printStackTrace();
+            return "Erreur utilisateur";
+        }
     }
 }

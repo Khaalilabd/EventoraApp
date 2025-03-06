@@ -78,8 +78,8 @@
         </HBox>
 
         <!-- Conteneur des cartes en grille -->
-        <ScrollPane prefHeight="575.0" prefWidth="999.0">
-            <GridPane fx:id="reclamationGrid" hgap="20" vgap="20" alignment="CENTER" styleClass="grid-list"/>
+        <ScrollPane prefHeight="575.0" prefWidth="999.0" styleClass="transparent-scroll-pane">
+            <GridPane fx:id="reclamationGrid" hgap="20" vgap="20" alignment="CENTER" styleClass="grid-list,transparent-grid"/>
         </ScrollPane>
     </VBox>
 </AnchorPane>

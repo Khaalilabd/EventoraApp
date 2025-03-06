@@ -467,21 +467,12 @@
 }
 /* Étoiles pour les feedbacks */
 .feedback-star {
-    -fx-shape: "M 40,8 48,32 72,32 56,48 64,72 40,60 16,72 24,48 8,32 32,32 Z"; /* Forme d'étoile agrandie */
+    -fx-shape: "M 25,5 30,20 45,20 32,28 37,43 25,35 13,43 18,28 5,20 20,20 Z"; /* Forme d'étoile */
     -fx-background-color: gold;
-    -fx-pref-width: 80px; /* Augmenter la taille */
-    -fx-pref-height: 80px; /* Augmenter la taille */
+    -fx-pref-width: 50px;
+    -fx-pref-height: 50px;
     -fx-cursor: hand;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
-    -fx-scale-x: 1.0;
-    -fx-scale-y: 1.0;
-    -fx-transition: -fx-scale-x 0.3s ease-in-out, -fx-scale-y 0.3s ease-in-out;
-}
-
-.feedback-star:hover {
-    -fx-scale-x: 1.2; /* Agrandissement au survol */
-    -fx-scale-y: 1.2;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 0, 4);
 }
 
 .star-recommended {
@@ -494,36 +485,8 @@
     -fx-opacity: 0.5;
 }
 
-/* Cadre pour chaque étoile */
-.feedback-card {
-    -fx-background-color: rgba(255, 255, 255, 0.8); /* Fond semi-transparent */
-    -fx-border-color: #333333; /* Bordure grise */
-    -fx-border-width: 2px;
-    -fx-border-radius: 10px; /* Coins plus arrondis */
-    -fx-background-radius: 10px;
-    -fx-padding: 10px;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
-    -fx-pref-width: 120px; /* Augmenter la largeur du cadre */
-    -fx-pref-height: 160px; /* Augmenter la hauteur du cadre */
-    -fx-alignment: center;
-}
-
-.feedback-card:hover {
-    -fx-background-color: #e0f7fa; /* Changement de couleur au survol */
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 4);
-}
-
-/* Style pour le titre dans le cadre */
-.card-title {
-    -fx-font-size: 14px; /* Augmenter la taille du texte */
-    -fx-font-weight: bold;
-    -fx-text-fill: #C8102E;
-    -fx-alignment: center;
-    -fx-padding: 5px;
-}
-
 /* Style pour la boîte de dialogue */
-.card-description, .card-statut {
+.card-title, .card-description, .card-statut {
     -fx-font-size: 14px;
     -fx-text-fill: #333333;
 }

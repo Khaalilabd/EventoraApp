@@ -1,0 +1,46 @@
+package Services.Utilisateur.Crud;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+public class BrevoEmailSender {
+
+    private static final String API_KEY = "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";
+    private static final String API_URL = "https://api.brevo.com/v3/smtp/email";
+    private static final String SENDER_EMAIL = "khalilabdelmoumen7@gmail.com"; // Vérifié dans Brevo
+
+    public void sendEmail(String toEmail, String subject, String htmlContent) throws Exception {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpPost httpPost = new HttpPost(API_URL);
+            httpPost.setHeader("api-key", API_KEY);
+            httpPost.setHeader("Content-Type", "application/json");
+
+            String jsonBody = "{"
+                    + "\"sender\": {\"email\": \"" + SENDER_EMAIL + "\"},"
+                    + "\"to\": [{\"email\": \"" + toEmail + "\"}],"
+                    + "\"subject\": \"" + subject + "\","
+                    + "\"htmlContent\": \"" + htmlContent.replace("\n", "<br>") + "\""
+                    + "}";
+
+            StringEntity entity = new StringEntity(jsonBody, "UTF-8");
+            httpPost.setEntity(entity);
+
+            try (CloseableHttpResponse response = httpClient.execute(httpPost)) {
+                int statusCode = response.getStatusLine().getStatusCode();
+                HttpEntity responseEntity = response.getEntity();
+                String responseString = EntityUtils.toString(responseEntity);
+
+                if (statusCode >= 200 && statusCode < 300) {
+                    System.out.println("Email envoyé avec succès. Réponse : " + responseString);
+                } else {
+                    throw new Exception("Échec de l'envoi de l'email. Code : " + statusCode + ", Réponse : " + responseString);
+                }
+            }
+        }
+    }
+}

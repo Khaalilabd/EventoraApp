@@ -16,7 +16,7 @@ public class MembresService implements Imembres<Utilisateurs> {
 
     @Override
     public void AjouterMem(Utilisateurs utilisateurs) {
-        String req = "INSERT INTO membres (Nom, Prénom, Email, CIN, Adresse, NumTel, Role, MotDePasse, Image, token, isConfirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO membres (Nom, Prenom, Email, CIN, Adresse, NumTel, Role, MotDePasse, Image, token, isConfirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement ps = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, utilisateurs.getNom());

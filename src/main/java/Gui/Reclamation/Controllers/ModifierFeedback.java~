@@ -59,7 +59,7 @@ public class ModifierFeedback {
         this.feedback = feedback;
         feedbackIdLabel.setText("Feedback ID: " + feedback.getId());
         // Pré-remplir le nom de l'utilisateur (non modifiable)
-        String userName = utilisateurService.getUserNameById(feedback.getIdUser());
+        String userName = utilisateurService.getIdByNomPrenom(feedback.getIdUser());
         userField.setValue(userName);
         userField.setDisable(true); // Désactiver la modification de l'utilisateur
 

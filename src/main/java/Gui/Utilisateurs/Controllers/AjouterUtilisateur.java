@@ -13,7 +13,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -42,30 +41,30 @@ public class AjouterUtilisateur {
     @FXML private TextField textFieldPassword; // Champ pour afficher le mot de passe en clair
     @FXML private TextField imageField;
     @FXML private Button chooseImageButton;
-    @FXML private Button generatePasswordButton;
+    @FXML private Button generatePasswordButton; // Bouton pour générer un mot de passe
     @FXML private Button togglePasswordButton; // Bouton pour révéler temporairement le mot de passe
     @FXML private StackPane passwordContainer; // Conteneur du champ de mot de passe
 
     private final MembresService membresService = new MembresService();
-    private static final String API_KEY = "jdhXyNvADDDqUg9coiHcfQ==DyCXNx8yocrDHQSA";
+    private static final String IMAGE_DIR = System.getProperty("user.image.dir", "src/main/resources/Images/users/");
+    private static final String API_KEY = "jdhXyNvADDDqUg9coiHcfQ==DyCXNx8yocrDHQSA"; // Clé API pour générer le mot de passe
 
     @FXML
     public void initialize() {
         addInputValidation();
-        // Synchroniser les deux champs
+        // Synchroniser les deux champs de mot de passe
         textFieldPassword.textProperty().bindBidirectional(motDePasseField.textProperty());
+        // Par défaut, masquer le champ texte et afficher le champ mot de passe
+        textFieldPassword.setVisible(false);
+        motDePasseField.setVisible(true);
 
-        // Ajouter un écouteur pour vérifier les clics sur le bouton
+        // Gestion de la révélation temporaire du mot de passe
         togglePasswordButton.setOnMousePressed(this::showPassword);
         togglePasswordButton.setOnMouseReleased(this::hidePassword);
 
-        // Ajouter un écouteur sur le conteneur pour déboguer les événements
-        passwordContainer.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-            System.out.println("Mouse pressed on password container");
-        });
-        passwordContainer.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
-            System.out.println("Mouse released on password container");
-        });
+        // Débogage des événements sur le conteneur
+        passwordContainer.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> System.out.println("Mouse pressed on password container"));
+        passwordContainer.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> System.out.println("Mouse released on password container"));
     }
 
     // Révéler le mot de passe lorsqu'on appuie sur l'icône œil
@@ -116,9 +115,9 @@ public class AjouterUtilisateur {
 
     private void addInputValidation() {
         cinField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 8) {
+            if (!newValue.matches("\\d*") || newValue.length() > 8) {
                 cinField.setText(oldValue);
-                afficherAlerte(Alert.AlertType.WARNING, "Attention", "Le CIN ne peut pas dépasser 8 caractères.");
+                afficherAlerte(Alert.AlertType.WARNING, "Attention", "Le CIN doit contenir 8 chiffres maximum.");
             }
         });
 
@@ -140,7 +139,7 @@ public class AjouterUtilisateur {
         File selectedFile = fileChooser.showOpenDialog(chooseImageButton.getScene().getWindow());
         if (selectedFile != null) {
             try {
-                Path destinationDir = Paths.get("src/main/resources/Images/users/");
+                Path destinationDir = Paths.get(IMAGE_DIR);
                 if (!Files.exists(destinationDir)) {
                     Files.createDirectories(destinationDir);
                 }
@@ -148,9 +147,8 @@ public class AjouterUtilisateur {
                 Path destinationPath = destinationDir.resolve(fileName);
                 Files.copy(selectedFile.toPath(), destinationPath, StandardCopyOption.REPLACE_EXISTING);
                 imageField.setText("/Images/users/" + fileName);
-            } catch (Exception e) {
-                e.printStackTrace();
-                afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'upload de l'image : " + e.getMessage());
+            } catch (IOException e) {
+                afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Échec de la copie de l'image : " + e.getMessage());
             }
         }
     }
@@ -163,7 +161,7 @@ public class AjouterUtilisateur {
         String cin = cinField.getText().trim();
         String numTel = numTelField.getText().trim();
         String adresse = adresseField.getText().trim();
-        String motDePasse = motDePasseField.getText(); // Utiliser directement le texte du champ
+        String motDePasse = motDePasseField.getText().trim(); // Utiliser directement le champ mot de passe
         String image = imageField.getText().trim();
 
         if (!validateInputs(nom, prenom, email, cin, numTel, adresse, motDePasse, image)) {
@@ -171,8 +169,8 @@ public class AjouterUtilisateur {
         }
 
         Utilisateurs nouveauMembre = new Utilisateurs(nom, prenom, cin, email, adresse, numTel, motDePasse, image);
-        toggleButtons(true);
 
+        toggleButtons(true);
         try {
             System.out.println("Ajout d'un nouveau membre :");
             System.out.println("Nom: " + nom);
@@ -183,14 +181,14 @@ public class AjouterUtilisateur {
             System.out.println("Adresse: " + adresse);
             System.out.println("MotDePasse: " + motDePasse);
             System.out.println("Image: " + image);
+            System.out.println("Token: " + nouveauMembre.getToken());
 
             membresService.AjouterMem(nouveauMembre);
-            afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Membre ajouté avec succès.");
+            afficherAlerte(Alert.AlertType.INFORMATION, "Succès", "Membre ajouté avec succès. Un email d'activation a été envoyé à " + email + ".");
             viderChamps();
             goToAuth(event);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors de l'ajout du membre : " + e.getMessage());
-            e.printStackTrace();
         } finally {
             toggleButtons(false);
         }
@@ -202,14 +200,18 @@ public class AjouterUtilisateur {
             return false;
         }
 
-        String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
-        if (!Pattern.matches(emailRegex, email)) {
+        if (!Pattern.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$", email)) {
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "L'email n'est pas valide.");
             return false;
         }
 
-        if (numTel.length() < 8) {
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le numéro de téléphone doit contenir au moins 8 chiffres.");
+        if (!cin.matches("\\d{8}")) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le CIN doit contenir exactement 8 chiffres.");
+            return false;
+        }
+
+        if (!numTel.matches("[259]\\d{7}")) {
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Le numéro de téléphone doit commencer par 2, 5 ou 9 et contenir 8 chiffres.");
             return false;
         }
 
@@ -235,45 +237,45 @@ public class AjouterUtilisateur {
     }
 
     @FXML
-    public void goToAcceuil() {
-        navigateTo("/Utilisateurs/Identification.fxml", "Accueil");
+    public void goToAcceuil(ActionEvent event) {
+        navigateTo("/Utilisateurs/Identification.fxml", "Accueil", event);
     }
 
     @FXML
     public void goToAuth(ActionEvent event) {
-        navigateTo("/Utilisateurs/Authentification.fxml", "Authentification");
+        navigateTo("/Utilisateurs/Authentification.fxml", "Authentification", event);
     }
 
     @FXML
     public void goToUSer(ActionEvent event) {
-        navigateTo("/Utilisateurs/Utilisateur.fxml", "Utilisateur");
+        navigateTo("/Utilisateurs/Utilisateur.fxml", "Utilisateur", event);
     }
 
-    private void navigateTo(String fxmlPath, String pageName) {
+    private void navigateTo(String fxmlPath, String pageName, ActionEvent event) {
         try {
             java.net.URL fileUrl = getClass().getResource(fxmlPath);
             if (fileUrl == null) {
-                System.err.println("Erreur : Impossible de trouver " + pageName + ".fxml dans " + fxmlPath);
-                afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Impossible de charger la page " + pageName + ".");
-                return;
+                System.err.println("Fichier FXML introuvable : " + fxmlPath);
+                throw new IOException("Fichier FXML introuvable : " + fxmlPath);
             }
             Parent root = FXMLLoader.load(fileUrl);
-            Stage stage = (Stage) retourButton.getScene().getWindow();
+            Stage stage = (Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement de la page " + pageName + " : " + e.getMessage());
+            afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement de " + pageName + " : " + e.getMessage());
         }
     }
 
     private void afficherAlerte(Alert.AlertType type, String titre, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(titre);
-        alert.setContentText(message);
-        alert.showAndWait();
+        Platform.runLater(() -> {
+            Alert alert = new Alert(type);
+            alert.setTitle(titre);
+            alert.setContentText(message);
+            alert.showAndWait();
+        });
     }
 
     private void viderChamps() {
@@ -288,7 +290,8 @@ public class AjouterUtilisateur {
         imageField.clear();
     }
 
-    public class PasswordUtils {
+    // Classe interne pour générer un mot de passe localement (option alternative)
+    public static class PasswordUtils {
         private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+";
         private static final int PASSWORD_LENGTH = 12;
 

@@ -1,5 +1,7 @@
 package Models.Utilisateur;
 
+import java.util.UUID;
+
 public class Utilisateurs {
     private int id;
     private String nom;
@@ -9,47 +11,12 @@ public class Utilisateurs {
     private String adresse;
     private String numTel;
     private Role role;
-
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
-
-    public String getNumTel() {
-        return numTel;
-    }
-
-    public void setNumTel(String numTel) {
-        this.numTel = numTel;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public String getMotDePasse() {
-        return motDePasse;
-    }
-
-    public void setMotDePasse(String motDePasse) {
-        this.motDePasse = motDePasse;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     private String motDePasse;
-    private String image; // Nouveau champ
+    private String image;
+    private String token; // Token pour confirmation email ou reset password
+    private boolean isConfirmed; // Indique si l'utilisateur a confirmé son email
 
-    // Constructeur avec tous les paramètres sauf l'ID
+    // Constructeur avec tous les paramètres sauf l'ID et le token
     public Utilisateurs(String nom, String prenom, String cin, String email, String adresse, String numTel, String motDePasse, String image) {
         this.nom = nom;
         this.prenom = prenom;
@@ -57,13 +24,15 @@ public class Utilisateurs {
         this.email = email;
         this.adresse = adresse;
         this.numTel = numTel;
-        this.role = Role.MEMBRE; // Définir le rôle par défaut comme MEMBRE
+        this.role = Role.MEMBRE; // Rôle par défaut
         this.motDePasse = motDePasse;
-        this.image = image; // Ajout du champ image
+        this.image = image;
+        this.token = UUID.randomUUID().toString(); // Génération d'un token unique
+        this.isConfirmed = false; // L'utilisateur n'est pas confirmé au départ
     }
 
-    // Constructeur avec tous les paramètres, y compris l'ID
-    public Utilisateurs(int id, String nom, String prenom, String cin, String email, String adresse, String numTel, Role role, String motDePasse, String image) {
+    // Constructeur avec ID
+    public Utilisateurs(int id, String nom, String prenom, String cin, String email, String adresse, String numTel, Role role, String motDePasse, String image, String token, boolean isConfirmed) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -71,15 +40,17 @@ public class Utilisateurs {
         this.email = email;
         this.adresse = adresse;
         this.numTel = numTel;
-        this.role = role != null ? role : Role.MEMBRE; // Définir le rôle par défaut comme MEMBRE si non spécifié
+        this.role = (role != null) ? role : Role.MEMBRE;
         this.motDePasse = motDePasse;
-        this.image = image; // Ajout du champ image
+        this.image = image;
+        this.token = token;
+        this.isConfirmed = isConfirmed;
     }
 
-    // Constructeur sans paramètres (optionnel)
+    // Constructeur sans paramètres
     public Utilisateurs() {}
 
-    // Getters et setters
+    // Getters et Setters
     public int getId() {
         return id;
     }
@@ -124,4 +95,55 @@ public class Utilisateurs {
         return adresse;
     }
 
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public String getNumTel() {
+        return numTel;
+    }
+
+    public void setNumTel(String numTel) {
+        this.numTel = numTel;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public boolean isConfirmed() {
+        return isConfirmed;
+    }
+
+    public void setConfirmed(boolean isConfirmed) {
+        this.isConfirmed = isConfirmed;
+    }
 }
