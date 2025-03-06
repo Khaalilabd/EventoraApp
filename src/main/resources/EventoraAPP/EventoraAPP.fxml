@@ -11,6 +11,8 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.EventoraAPP.Controllers.EventoraAPP"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             stylesheets="/style.css">
 
     <!-- Navbar -->

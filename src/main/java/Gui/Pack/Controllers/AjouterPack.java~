@@ -324,10 +324,6 @@ public class AjouterPack {
     private void goToReclamation(ActionEvent event) {
         switchScene(event, "/Reclamation/Reclamation.fxml");
     }
-    @FXML
-    private void goToAccueil(ActionEvent event) {
-        switchScene(event, "/Reclamation/Reclamation.fxml");
-    }
 
     @FXML
     private void goToReservation(ActionEvent event) {

@@ -56,9 +56,8 @@ public class Pack {
             Scene scene = new Scene(layout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
-            stage.setMaximized(true);  // Maximiser la fenêtre
+            stage.setMaximized(true);
             stage.show();
-
         } catch (IOException e) {
             showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
             e.printStackTrace();

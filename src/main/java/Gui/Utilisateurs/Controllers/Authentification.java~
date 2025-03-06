@@ -19,6 +19,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.SQLException;
 
+import static jdk.internal.org.jline.utils.Colors.s;
+
 public class Authentification {
 
     @FXML
@@ -94,7 +96,7 @@ public class Authentification {
                 "Best regards,\nThe Eventora Team";
 
         String json = String.format(
-                "{\"From\":\"%s\",\"To\":\"%s\",\"Subject\":\"%s\",\"TextBody\":\"%s\",\"HtmlBody\":\"%s\"}",
+                "{"From":"%s","To":"%s","Subject":"%s","TextBody":"%s","HtmlBody":"%s"}",
                 escapeJsonString(fromEmail), escapeJsonString(normalizedEmail), escapeJsonString(subject),
                 escapeJsonString(textContent), escapeJsonString(htmlContent)
         );

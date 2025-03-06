@@ -5,9 +5,8 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            prefWidth="1920.0"
-            prefHeight="1080.0"
-            fx:controller="Gui.Pack.Controllers.AjouterEvenement"
+            fx:controller="Gui.Pack.Controllers.AfficheEvenement"
+            prefHeight="764.0" prefWidth="1163.0"
             stylesheets="/style.css">
 
     <!-- Navbar horizontale (identique à AjouterRec) -->
@@ -29,28 +28,33 @@
         </HBox>
     </HBox>
 
-    <!-- Contenu principal (structure identique à AjouterRec) -->
+    <!-- Contenu principal (structure inspirée de AjouterRec) -->
     <VBox alignment="CENTER" styleClass="main-content"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
 
         <!-- Titre principal -->
-        <Label text="Ajouter un Événement" styleClass="main-title"/>
+        <Label text="Type des Événements" styleClass="main-title"/>
 
         <!-- Sous-titre descriptif -->
         <Label wrapText="true" styleClass="main-description"
-               text="Remplissez le formulaire pour ajouter un nouvel événement à votre catalogue."/>
+               text="Consultez, ajoutez ou gérez les types d'événements disponibles dans votre catalogue."/>
 
-        <!-- Formulaire -->
-        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
-            <TextField fx:id="NomTypeField" promptText="Nom de l'événement" styleClass="input-field"/>
-        </VBox>
+        <!-- Champ de recherche -->
+        <TextField fx:id="searchField" promptText="Rechercher... 🔍" styleClass="input-field"/>
 
-        <!-- Boutons avec icônes (similaire à AjouterRec) -->
+        <!-- Boutons avec icônes -->
         <HBox spacing="10" alignment="CENTER" styleClass="card-container">
-            <Button fx:id="submitButton" text="✔ Soumettre" styleClass="card-button"/>
-            <Button fx:id="cancelButton" text="❌ Annuler" styleClass="card-button"/>
-            <Button fx:id="ReturnToListButton" text="↩ Retour" styleClass="card-button"/>
+            <Button text="➕ Ajouter Événement" styleClass="card-button" onAction="#addEvenement"/>
+            <Button text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
         </HBox>
+
+        <!-- Tableau des événements -->
+        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
+            <columns>
+                <TableColumn fx:id="colType" prefWidth="150.0" text="Événement"/>
+                <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
+            </columns>
+        </TableView>
     </VBox>
 </AnchorPane>

@@ -58,8 +58,8 @@
 
             <!-- Forgot Password / Help links -->
             <HBox spacing="10">
-                <Label text="Mot de passe oublié ?" style="-fx-text-fill: #C1272D; -fx-underline: true; -fx-cursor: hand;"/>
-                <Label text="|" style="-fx-text-fill: gray;"/>
+                <Hyperlink text="Mot de passe oublié ?" onAction="#forgotPassword"
+                           style="-fx-text-fill: #C1272D; -fx-border-color: transparent; -fx-cursor: hand;"/>                <Label text="|" style="-fx-text-fill: gray;"/>
                 <Label text="Besoin d'aide ?" style="-fx-text-fill: #C1272D; -fx-underline: true; -fx-cursor: hand;"/>
             </HBox>
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Pos?>
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -29,7 +30,7 @@
         </HBox>
     </HBox>
 
-    <!-- Contenu principal (structure inspirée de AjouterRec) -->
+    <!-- Contenu principal -->
     <VBox alignment="CENTER" styleClass="main-content"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
@@ -42,20 +43,20 @@
                text="Consultez, ajoutez ou gérez les types d'événements disponibles dans votre catalogue."/>
 
         <!-- Champ de recherche -->
-        <TextField fx:id="searchField" promptText="Rechercher... 🔍" styleClass="input-field"/>
+        <TextField fx:id="searchField" promptText="Rechercher... 🔍" styleClass="input-field" prefWidth="300.0"/>
+
+        <!-- TilePane for Bubbles -->
+        <ScrollPane fitToWidth="true" prefHeight="575.0" prefWidth="999.0">
+            <TilePane fx:id="eventTilePane" hgap="15" vgap="15" alignment="CENTER" styleClass="bubble-container" prefColumns="3"/>
+        </ScrollPane>
 
         <!-- Boutons avec icônes -->
         <HBox spacing="10" alignment="CENTER" styleClass="card-container">
             <Button text="➕ Ajouter Événement" styleClass="card-button" onAction="#addEvenement"/>
             <Button text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
+            <Button text="⬅ Retour à Packs" styleClass="card-button" onAction="#goToAffichePack"/>
+            <!-- New Generate Image Button -->
+            <Button text="🖼️ Generate Image" styleClass="card-button" onAction="#generateImageForSelectedEvent"/>
         </HBox>
-
-        <!-- Tableau des événements -->
-        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
-            <columns>
-                <TableColumn fx:id="colType" prefWidth="150.0" text="Événement"/>
-                <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
-            </columns>
-        </TableView>
     </VBox>
 </AnchorPane>

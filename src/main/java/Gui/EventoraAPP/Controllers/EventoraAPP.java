@@ -30,8 +30,8 @@ public class EventoraAPP {
     private Button chatButton;
 
     @FXML
-    private void goToAccueil(ActionEvent event) {
-        System.out.println("Accueil cliqué");
+    private void goToAccueil(ActionEvent event) throws IOException {
+        changeScene(event, "/Reservation/Reservation.fxml", "Eventora - Réservations");
     }
 
     @FXML
