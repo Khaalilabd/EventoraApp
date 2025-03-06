@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane  style="-fx-background-color: #F2F2F2;"
+            stylesheets="style.css" xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Utilisateurs.Controllers.Authentification">
+    <HBox prefHeight="687.0" prefWidth="1022.0" spacing="0">
+        <VBox prefHeight="687.0" prefWidth="220" styleClass="menu-vbox" alignment="TOP_CENTER">
+            <ImageView fitHeight="100" fitWidth="100" preserveRatio="true">
+                <image>
+                    <Image url="@/Images/EVENTORA.png"/>
+                </image>
+            </ImageView>
+
+            <Label alignment="CENTER" styleClass="menu-title" text="Eventora Menu"/>
+
+            <VBox spacing="10">
+                <Button text="🏠 Accueil" styleClass="menu-button"/>
+                <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
+                <Button text="📲 Réservation" styleClass="menu-button"/>
+                <Button text="🎁 Services" styleClass="menu-button"/>
+                <Button text="⭐ FeedBack" styleClass="menu-button"/>
+                <Button styleClass="menu-button" text="🚨 Réclamations"/>
+                <Button text="🔧 Paramètres" styleClass="menu-button"/>
+                <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+            </VBox>
+        </VBox>
+
+
+        <VBox alignment="CENTER" prefHeight="687.0" prefWidth="802.0" spacing="20" styleClass="main-content">
+            <Label text="Authentification" styleClass="title-label"/>
+
+            <VBox spacing="10" alignment="CENTER">
+                <TextField fx:id="usernameField" promptText="Nom d'utilisateur" styleClass="text-field"/>
+                <PasswordField fx:id="passwordField" promptText="Mot de passe" styleClass="text-field"/>
+
+                <HBox spacing="20" alignment="CENTER">
+                    <Button text="Se connecter" onAction="#seConnecter" styleClass="action-button modify-button"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </HBox>
+</AnchorPane>

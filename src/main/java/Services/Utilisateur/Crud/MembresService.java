@@ -189,7 +189,7 @@ public class MembresService implements Imembres<Utilisateurs> {
         if (parts.length == 2) {
             String nom = parts[0];
             String prenom = parts[1];
-            String query = "SELECT Id FROM membres WHERE Nom = ? AND Prenom = ?";
+            String query = "SELECT Id FROM membres WHERE Nom = ? AND Prénom = ?";
             try (PreparedStatement ps = connection.prepareStatement(query)) {
                 ps.setString(1, nom);
                 ps.setString(2, prenom);
@@ -229,7 +229,7 @@ public class MembresService implements Imembres<Utilisateurs> {
         return new Utilisateurs(
                 rs.getInt("Id"),
                 rs.getString("Nom"),
-                rs.getString("Prenom"),
+                rs.getString("Prénom"),
                 rs.getString("CIN"),
                 rs.getString("Email"),
                 rs.getString("Adresse"),
