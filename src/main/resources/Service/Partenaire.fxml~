@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="600.0" prefWidth="900.0" stylesheets="/style.css"
+<AnchorPane  stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Service.Controllers.Service">
+            fx:controller="Gui.Service.Controllers.Partenaire">
 
     <!-- Navbar horizontale en haut -->
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
@@ -38,38 +38,27 @@
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
 
         <!-- Titre principal -->
-        <Label text="Nos Services" styleClass="main-title"/>
+        <Label text="Nos Partenaires" styleClass="main-title"/>
 
         <!-- Sous-titre descriptif -->
         <Label wrapText="true" styleClass="main-description"
-               text="Vous avez besoin d’un service ? Eventora est là pour vous aider avec des solutions adaptées à vos besoins."/>
+               text="Collaborez avec Eventora en ajoutant ou consultant nos partenaires pour enrichir vos événements."/>
 
         <!-- Image d'illustration -->
-        <ImageView fitWidth="500.0" fitHeight="300.0" preserveRatio="true">
+        <ImageView fitWidth="200.0" fitHeight="200.0" preserveRatio="true">
             <image>
-                <Image url="/Images/service.gif"/>
+                <Image url="/Images/rec..jpg"/>
             </image>
         </ImageView>
 
-        <!-- Cartes pour les options -->
+        <!-- Carte pour les options -->
         <HBox spacing="20" alignment="CENTER" styleClass="card-container">
-            <!-- Carte pour Services -->
-            <VBox styleClass="card">
-                <Label text="Services" styleClass="card-title"/>
-                <Label text="Ajoutez ou consultez nos services disponibles." styleClass="card-description"/>
-                <HBox spacing="10" alignment="CENTER">
-                    <Button fx:id="ajouterButton" text="➕ Ajouter" styleClass="card-button" onAction="#handleAddAction"/>
-                    <Button fx:id="viewButton" text="📋 Consulter" styleClass="card-button" onAction="#handleViewAction"/>
-                </HBox>
-            </VBox>
-
-            <!-- Carte pour Partenaires -->
             <VBox styleClass="card">
                 <Label text="Partenaires" styleClass="card-title"/>
                 <Label text="Ajoutez ou consultez nos partenaires." styleClass="card-description"/>
                 <HBox spacing="10" alignment="CENTER">
-                    <Button fx:id="ajouterButton_partenaire" text="➕ Ajouter" styleClass="card-button" onAction="#handleAddAction_partenaire"/>
-                    <Button fx:id="viewButton_partenaire" text="📋 Consulter" styleClass="card-button" onAction="#handleViewAction_partenaire"/>
+                    <Button fx:id="ajouterButton" text="➕ Ajouter" styleClass="card-button" onAction="#handleAddAction"/>
+                    <Button fx:id="viewButton" text="📋 Consulter" styleClass="card-button" onAction="#handleViewAction"/>
                 </HBox>
             </VBox>
         </HBox>

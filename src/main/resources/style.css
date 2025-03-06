@@ -36,7 +36,9 @@
     -fx-background-color: linear-gradient(to bottom, #C8102E, #F5DEB3);
     -fx-padding: 20px;
 }
-
+.transparent-grid {
+    -fx-background-color: transparent;
+}
 .page-title {
     -fx-text-fill: #FFFFFF;
     -fx-font-size: 24px;
@@ -335,7 +337,7 @@
 
 /* Style pour chaque carte de réclamation avec dégradé */
 .reclamation-card {
-    -fx-background-color: linear-gradient(to bottom right, #e3f2fd, #bbdefb); /* Dégradé bleu pâle */
+    -fx-background-color: transparent; /* Fond transparent */
     -fx-border-radius: 15; /* Coins arrondis */
     -fx-background-radius: 15;
     -fx-border-color: #e0e0e0; /* Bordure légère */

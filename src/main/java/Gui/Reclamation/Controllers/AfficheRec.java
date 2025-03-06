@@ -37,10 +37,11 @@ public class AfficheRec {
 
     @FXML
     public void initialize() {
+        reclamationGrid.getStyleClass().add("transparent-grid");
         loadReclamations();
         searchField.textProperty().addListener((observable, oldValue, newValue) -> searchReclamation(newValue));
         statusFilter.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterByStatus(newVal));
-        statusFilter.getSelectionModel().selectFirst(); // "Tous" par défaut
+        statusFilter.getSelectionModel().selectFirst();
     }
 
     private void loadReclamations() {
@@ -64,12 +65,12 @@ public class AfficheRec {
             VBox card = createReclamationCard(reclamation);
             reclamationGrid.add(card, column, row);
             column++;
-            if (column >= 5) { // Limite à 3 cartes par ligne
+            if (column >= 8) { // Limite à 3 cartes par ligne
                 column = 0;
                 row++;
             }
         }
-        for (int i = 0; i < 5; i++) { // Définit 3 colonnes
+        for (int i = 0; i < 8; i++) { // Définit 3 colonnes
             ColumnConstraints colConst = new ColumnConstraints();
             colConst.setPercentWidth(33.33); // Chaque colonne prend 1/3 de la largeur
             reclamationGrid.getColumnConstraints().add(colConst);

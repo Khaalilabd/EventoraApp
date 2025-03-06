@@ -13,7 +13,9 @@
 <AnchorPane
             stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Reservation.Controllers.AfficheReservationPersonalise">
+            fx:controller="Gui.Reservation.Controllers.AfficheReservationPersonalise"
+            prefWidth="1920.0"
+            prefHeight="1080.0">
 
     <!-- Navbar (inspirée du premier fichier, mais adaptée en haut) -->
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"

@@ -55,9 +55,9 @@ public class MembresService implements Imembres<Utilisateurs> {
             ps.setString(4, membre.getCin());
             ps.setString(5, membre.getAdresse());
             ps.setString(6, membre.getNumTel());
-            ps.setString(7, membre.getRole().toString()); // Utiliser le rôle fourni par l'utilisateur
+            ps.setString(7, membre.getRole().toString());
             ps.setString(8, membre.getMotDePasse());
-            ps.setString(9, membre.getImage()); // Ajout du champ image
+            ps.setString(9, membre.getImage()); 
             ps.setInt(10, membre.getId());
 
             int rowsUpdated = ps.executeUpdate();

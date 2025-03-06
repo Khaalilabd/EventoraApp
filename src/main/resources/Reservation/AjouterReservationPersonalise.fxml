@@ -18,6 +18,8 @@
 <AnchorPane style="-fx-background-color: #F4F1F1;"
             stylesheets="style.css" xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             fx:controller="Gui.Reservation.Controllers.AjouterReservationPersonalise">
 
     <!-- Barre de navigation latérale -->

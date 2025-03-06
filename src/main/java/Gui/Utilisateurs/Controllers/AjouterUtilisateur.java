@@ -207,14 +207,16 @@ public class AjouterUtilisateur {
             }
             Parent root = FXMLLoader.load(fileUrl);
             Stage stage = (Stage) retourButton.getScene().getWindow();
-            Scene scene = new Scene(root, 1022, 687);
+            Scene scene = new Scene(root);
             stage.setScene(scene);
+            stage.setMaximized(true); // Rend la fenêtre maximisée
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
             afficherAlerte(Alert.AlertType.ERROR, "Erreur", "Erreur lors du chargement de la page " + pageName + " : " + e.getMessage());
         }
     }
+
 
     private void afficherAlerte(Alert.AlertType type, String titre, String message) {
         Alert alert = new Alert(type);
