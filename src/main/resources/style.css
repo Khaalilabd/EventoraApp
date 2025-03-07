@@ -625,3 +625,40 @@
     -fx-border-width: 3;
 }
 
+/* Transition pour nav-button /
+.nav-button {
+    -fx-transition: background-color 0.3s;
+}
+
+/ Transition pour card /
+.card {
+    -fx-transition: transform 0.3s, effect 0.3s;
+}
+
+/ Styles pour les bulles flottantes */
+.bubble {
+    -fx-background-color: #4CAF50;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #388E3C;
+    -fx-border-width: 2px;
+    -fx-padding: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 5);
+    -fx-alignment: center;
+    -fx-max-width: 250px;
+}
+
+.bubble:hover {
+    -fx-background-color: #45A049;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 8);
+}
+
+.bubble-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+    -fx-max-width: 200px;
+}

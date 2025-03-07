@@ -88,7 +88,13 @@ public class AjouterReservationPack {
             packNames.add(pack.getNomPack());
         }
     }
-
+    public void setSelectedPack(String packName) {
+        if (packNames.contains(packName)) {
+            idPackfield.setValue(packName);
+        } else {
+            System.out.println("Pack not found: " + packName);
+        }
+    }
 
     public void ajouterReservationPack(ActionEvent event) {
         String nom = nomfield.getText().trim();
@@ -266,12 +272,5 @@ public class AjouterReservationPack {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
-    }
-    public void setSelectedPack(String packName) {
-        if (packNames.contains(packName)) {
-            idPackfield.setValue(packName);
-        } else {
-            System.out.println("Pack not found: " + packName);
-        }
     }
 }
