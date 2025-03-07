@@ -9,10 +9,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.MenuButton?>
-
-<AnchorPane prefHeight="764.0" prefWidth="1163.0" stylesheets="/style.css"
+<AnchorPane prefHeight="569.0" prefWidth="1005.0" stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Service.Controllers.AfficherService">
 
@@ -23,16 +23,16 @@
             <Label text="Eventora Menu" styleClass="nav-title"/>
         </HBox>
         <HBox spacing="20" alignment="CENTER_RIGHT">
-            <Button text="🏠 Accueil" styleClass="nav-button" />
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
             <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
             <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
-            <MenuButton text="🎁 Services" styleClass="nav-button">
+            <MenuButton text="🎁 Services" styleClass="nav-button" >
                 <items>
-                    <MenuItem text="Services" onAction="#goToService"/>
-                    <MenuItem text="Partenaires" onAction="#goToPartenaire"/>
+                    <MenuItem text="Services" onAction="#goToService" />
+                    <MenuItem text="Partenaires" onAction="#goToPartenaire" />
+
                 </items>
-            </MenuButton>
-            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            </MenuButton>            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
             <Button text="🔧 Paramètres" styleClass="nav-button"/>
@@ -52,24 +52,26 @@
         <Label wrapText="true" styleClass="main-description"
                text="Consultez, ajoutez ou gérez vos services en toute simplicité."/>
 
-        <!-- Barre d'outils (Ajout, Actualisation, Recherche) -->
+        <!-- Barre d'outils (Ajout, Actualisation, Recherche, Navigation) -->
         <HBox spacing="10" alignment="CENTER" styleClass="card-container">
             <Button fx:id="addService" text="➕ Ajouter" styleClass="card-button" onAction="#addService"/>
             <Button fx:id="refreshList" text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
             <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
+            <Button fx:id="goToPartenaire" text="👥 Partenaires" styleClass="card-button" onAction="#goToPartenaire"/>
+            <Button fx:id="goToStatistiques" text="📉 Statistiques" styleClass="card-button" onAction="#goToStatistiques"/>
         </HBox>
 
         <!-- Tableau des services -->
-        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0" styleClass="custom-table">
+        <TableView fx:id="tableView" prefHeight="323.0" prefWidth="743.0" styleClass="custom-table">
             <columns>
-                <TableColumn fx:id="idColumn" prefWidth="56.0" text="ID"/>
-                <TableColumn fx:id="id_partenaireColumn" prefWidth="123.0" text="Nom Partenaire"/>
-                <TableColumn fx:id="titleColumn" prefWidth="123.0" text="Titre"/>
-                <TableColumn fx:id="locationColumn" prefWidth="123.0" text="Lieu"/>
-                <TableColumn fx:id="sponsorColumn" prefWidth="123.0" text="Type de Service"/>
-                <TableColumn fx:id="descriptionColumn" prefWidth="247.0" text="Description"/>
-                <TableColumn fx:id="prixColumn" prefWidth="123.0" text="Prix"/>
-                <TableColumn fx:id="colActions" prefWidth="282.0" text="Actions"/>
+                <TableColumn fx:id="idColumn" prefWidth="43.2" text="ID"/>
+                <TableColumn fx:id="id_partenaireColumn" prefWidth="116.4" text="Nom Partenaire"/>
+                <TableColumn fx:id="titleColumn" prefWidth="92.2" text="Titre"/>
+                <TableColumn fx:id="locationColumn" prefWidth="84.4" text="Lieu"/>
+                <TableColumn fx:id="sponsorColumn" prefWidth="101.6" text="Type de Service"/>
+                <TableColumn fx:id="descriptionColumn" prefWidth="136.2" text="Description"/>
+                <TableColumn fx:id="prixColumn" prefWidth="81.4" text="Prix"/>
+                <TableColumn fx:id="colActions" prefWidth="95.2" text="Actions"/>
             </columns>
         </TableView>
     </VBox>

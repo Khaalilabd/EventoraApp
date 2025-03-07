@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Gui.Acces.Controllers.Acces"
+            prefHeight="1080.0" prefWidth="1920.0"
+            style="-fx-background-color: #f4f4f4;">
+
+    <!-- Conteneur pour les boutons -->
+    <VBox layoutX="20.0" layoutY="50.0" spacing="15"
+          style="-fx-background-color: #ffffff; -fx-padding: 20; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 2, 2)">
+
+        <Button fx:id="btnUser" text="User" onAction="#goToUser"
+                style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 200px; -fx-pref-height: 50px; -fx-background-radius: 10;"/>
+
+        <Button fx:id="btnEvenement" text="Événement"
+                style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 200px; -fx-pref-height: 50px; -fx-background-radius: 10;"/>
+
+        <Button fx:id="btnPack" text="Pack"
+                style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 200px; -fx-pref-height: 50px; -fx-background-radius: 10;"/>
+
+        <Button fx:id="btnService" text="Service"
+                style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 200px; -fx-pref-height: 50px; -fx-background-radius: 10;"/>
+
+        <Button fx:id="btnReclamation" text="Réclamation"
+                style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 200px; -fx-pref-height: 50px; -fx-background-radius: 10;"/>
+
+        <Button fx:id="btnFeedback" text="Feedback"
+                style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 200px; -fx-pref-height: 50px; -fx-background-radius: 10;"/>
+
+        <Button fx:id="btnPartenaire" text="Partenaire"
+                style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 200px; -fx-pref-height: 50px; -fx-background-radius: 10;"/>
+
+        <Button fx:id="btnReservation" text="Réservation" onAction="#goToReservation"
+                style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 16px; -fx-pref-width: 200px; -fx-pref-height: 50px; -fx-background-radius: 10;"/>
+    </VBox>
+
+</AnchorPane>

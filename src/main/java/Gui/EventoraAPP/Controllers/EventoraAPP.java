@@ -39,7 +39,15 @@ public class EventoraAPP {
         changeScene(event, "/Reservation/Reservation.fxml");
     }
 
-
+    @FXML
+    private void goToAcces(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Acces/Acces.fxml"));
+        AnchorPane reclamationLayout = loader.load();
+        Scene scene = new Scene(reclamationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
 
 
     @FXML

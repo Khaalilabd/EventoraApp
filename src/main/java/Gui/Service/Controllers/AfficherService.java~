@@ -68,10 +68,7 @@ public class AfficherService {
         this.serviceService = new ServiceService();
         this.partenaireService = new PartenaireService();
     }
-    @FXML
-    private void refreshList() {
-        loadServices();
-    }
+
     @FXML
     public void initialize() {
         idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());

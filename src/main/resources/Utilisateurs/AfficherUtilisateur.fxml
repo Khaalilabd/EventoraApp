@@ -18,16 +18,16 @@
         <HBox spacing="20" alignment="CENTER_RIGHT">
             <Button text="🏠 Accueil" styleClass="nav-button"/>
             <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
-            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="📲 Réservation" styleClass="nav-button" />
             <MenuButton text="🎁 Services" styleClass="nav-button" >
                 <items>
                     <MenuItem text="Services" onAction="#goToService" />
                     <MenuItem text="Partenaires" onAction="#goToPartenaire" />
 
                 </items>
-            </MenuButton>            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
-            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
-            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            </MenuButton>            <Button text="💎 Packs" styleClass="nav-button" />
+            <Button text="⭐ FeedBack" styleClass="nav-button" />
+            <Button text="🚨 Réclamations" styleClass="nav-button" />
             <Button text="🔧 Paramètres" styleClass="nav-button"/>
             <Button text="🛑 Déconnexion" styleClass="logout-button"/>
         </HBox>

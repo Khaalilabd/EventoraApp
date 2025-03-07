@@ -12,7 +12,7 @@ public class FXMain extends Application {
     @Override
     public void start(Stage stage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ChatAi/ChatAi.fxml")); // Corrected case to lowercase
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/EventoraAPP.fxml")); // Corrected case to lowercase
             if (loader.getLocation() == null) {
                 System.out.println("Erreur : Impossible de trouver chat.fxml dans /Chatbot/");
                 return;
