@@ -9,7 +9,6 @@
             prefWidth="1920.0"
             prefHeight="1080.0"
             fx:controller="Gui.Pack.Controllers.AjouterPack"
-
             stylesheets="/style.css">
 
     <!-- Navbar horizontale (identique à AjouterRec) -->
@@ -32,39 +31,40 @@
     </HBox>
 
     <!-- Contenu principal (structure identique à AjouterRec) -->
-    <VBox alignment="CENTER" styleClass="main-content"
-          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+    <ScrollPane fitToWidth="true" fitToHeight="true" AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <VBox alignment="CENTER" styleClass="main-content" spacing="20">
 
-        <!-- Titre principal -->
-        <Label text="Ajouter un pack" styleClass="main-title"/>
+            <!-- Titre principal -->
+            <Label text="Ajouter un pack" styleClass="main-title"/>
 
-        <!-- Sous-titre descriptif -->
-        <Label wrapText="true" styleClass="main-description"
-               text="Remplissez le formulaire pour ajouter un nouveau pack à votre catalogue."/>
+            <!-- Sous-titre descriptif -->
+            <Label wrapText="true" styleClass="main-description"
+                   text="Remplissez le formulaire pour ajouter un nouveau pack à votre catalogue."/>
 
-        <!-- Formulaire -->
-        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
-            <Label text="Nom Pack" styleClass="form-label"/>
-            <TextField fx:id="NomPackField" promptText="Titre du pack" styleClass="input-field"/>
-            <Label text="Pack Description" styleClass="form-label"/>
-            <TextArea fx:id="DescriptionField" promptText="Donner la description du pack" styleClass="input-field"/>
-            <Label text="Prix" styleClass="form-label"/>
-            <TextField fx:id="PrixField" promptText="Prix du pack" styleClass="input-field"/>
-            <ComboBox fx:id="LocationField" promptText="Sélectionner la localisation" styleClass="input-field"/>
-            <ComboBox fx:id="TypeField" promptText="Sélectionner le type du pack" styleClass="input-field"/>
-            <Label text="Nombre des Invités" styleClass="form-label"/>
-            <TextField fx:id="NbrGuestsField" promptText="Le nombre max des invités" styleClass="input-field"/>
-            <CheckComboBox fx:id="ServiceField" title="Sélectionner les services" styleClass="input-field" prefWidth="200.0"/>
-            <Button fx:id="uploadImageButton" text="Uploader une image" styleClass="card-button"/>
-            <ImageView fx:id="imagePreview" fitWidth="100.0" fitHeight="100.0" preserveRatio="true"/>
+            <!-- Formulaire -->
+            <VBox spacing="15" alignment="CENTER" styleClass="form-container">
+                <Label text="Nom Pack" styleClass="form-label"/>
+                <TextField fx:id="NomPackField" promptText="Titre du pack" styleClass="input-field"/>
+                <Label text="Pack Description" styleClass="form-label"/>
+                <TextArea fx:id="DescriptionField" promptText="Donner la description du pack" styleClass="input-field"/>
+                <Label text="Prix" styleClass="form-label"/>
+                <TextField fx:id="PrixField" promptText="Prix du pack" styleClass="input-field"/>
+                <ComboBox fx:id="LocationField" promptText="Sélectionner la localisation" styleClass="input-field"/>
+                <ComboBox fx:id="TypeField" promptText="Sélectionner le type du pack" styleClass="input-field"/>
+                <Label text="Nombre des Invités" styleClass="form-label"/>
+                <TextField fx:id="NbrGuestsField" promptText="Le nombre max des invités" styleClass="input-field"/>
+                <CheckComboBox fx:id="ServiceField" title="Sélectionner les services" styleClass="input-field" prefWidth="200.0"/>
+                <Button fx:id="uploadImageButton" text="Uploader une image" styleClass="card-button"/>
+                <ImageView fx:id="imagePreview" fitWidth="100.0" fitHeight="100.0" preserveRatio="true"/>
+            </VBox>
+
+            <!-- Boutons avec icônes (similaire à AjouterRec) -->
+            <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+                <Button fx:id="submitButton" text="✔ Soumettre" styleClass="card-button"/>
+                <Button fx:id="cancelButton" text="❌ Annuler" styleClass="card-button"/>
+                <Button fx:id="ReturnToListButton" text="↩ Retour" styleClass="card-button"/>
+            </HBox>
         </VBox>
-
-        <!-- Boutons avec icônes (similaire à AjouterRec) -->
-        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
-            <Button fx:id="submitButton" text="✔ Soumettre" styleClass="card-button"/>
-            <Button fx:id="cancelButton" text="❌ Annuler" styleClass="card-button"/>
-            <Button fx:id="ReturnToListButton" text="↩ Retour" styleClass="card-button"/>
-        </HBox>
-    </VBox>
+    </ScrollPane>
 </AnchorPane>

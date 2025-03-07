@@ -6,14 +6,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -21,10 +20,8 @@ import java.sql.SQLException;
 
 public class Authentification {
 
-    @FXML
-    private TextField usernameField;
-    @FXML
-    private PasswordField passwordField;
+    @FXML private TextField usernameField;
+    @FXML private PasswordField passwordField;
 
     private final MembresService membresService = new MembresService();
     private final HttpClient httpClient = HttpClient.newHttpClient();
@@ -35,47 +32,42 @@ public class Authentification {
         String password = passwordField.getText();
 
         if (username.isEmpty() || password.isEmpty()) {
-            afficherAlerte("Erreur", "Veuillez saisir votre nom d'utilisateur et votre mot de passe.");
+            showError("Erreur", "Veuillez saisir votre nom d'utilisateur et votre mot de passe.");
             return;
         }
 
         Utilisateurs utilisateur = membresService.rechercherMemParNom(username);
         if (utilisateur != null && verifierMotDePasse(password, utilisateur.getMotDePasse())) {
-            Parent root = FXMLLoader.load(getClass().getResource("/EventoraAPP/EventoraAPP.fxml"));
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root);
-            scene.getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
-            stage.setScene(scene);
-            stage.show();
+            switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
         } else {
-            afficherAlerte("Erreur", "Nom d'utilisateur ou mot de passe incorrect.");
+            showError("Erreur", "Nom d'utilisateur ou mot de passe incorrect.");
         }
     }
 
     @FXML
     private void forgotPassword(ActionEvent event) {
-        String email = usernameField.getText().trim(); // Use usernameField for email
+        String email = usernameField.getText().trim();
         if (email.isEmpty()) {
-            afficherAlerte("Erreur", "Veuillez entrer un email valide.");
+            showError("Erreur", "Veuillez entrer un email valide.");
             return;
         }
 
         String normalizedEmail = email.toLowerCase();
         Utilisateurs utilisateur = membresService.rechercherMemParEmail(normalizedEmail);
         if (utilisateur == null) {
-            afficherAlerte("Erreur", "Email non trouvé.");
+            showError("Erreur", "Email non trouvé.");
             return;
         }
 
         String token = membresService.generatePasswordResetToken(normalizedEmail);
         if (token == null) {
-            afficherAlerte("Erreur", "Échec de la génération du token. Veuillez réessayer.");
+            showError("Erreur", "Échec de la génération du token. Veuillez réessayer.");
             return;
         }
 
         String apiToken = System.getenv("POSTMARK_API_TOKEN");
         if (apiToken == null || apiToken.trim().isEmpty()) {
-            afficherAlerte("Erreur", "POSTMARK_API_TOKEN environment variable is not set or empty.");
+            showError("Erreur", "POSTMARK_API_TOKEN environment variable is not set or empty.");
             return;
         }
 
@@ -114,32 +106,27 @@ public class Authentification {
             System.out.println("Postmark Response Status: " + response.statusCode());
             System.out.println("Postmark Response Body: " + response.body());
             if (response.statusCode() == 200) {
-                afficherAlerte("Succès", "Un email avec un token de réinitialisation a été envoyé. Vérifiez votre boîte de réception.");
-                redirectToResetPassword(event, normalizedEmail); // Redirect with email
+                showSuccess("Succès", "Un email avec un token de réinitialisation a été envoyé. Vérifiez votre boîte de réception.");
+                redirectToResetPassword(event, normalizedEmail);
             } else {
-                afficherAlerte("Erreur", "Échec de l'envoi de l'email : " + response.body());
+                showError("Erreur", "Échec de l'envoi de l'email : " + response.body());
             }
         } catch (Exception e) {
-            afficherAlerte("Erreur", "Échec de l'envoi de l'email : " + e.getMessage());
+            showError("Erreur", "Échec de l'envoi de l'email : " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    // New method to redirect to ResetPassword with pre-filled email
     private void redirectToResetPassword(ActionEvent event, String email) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/ResetPassword.fxml"));
-            Parent root = loader.load();
+            AnchorPane layout = loader.load();
             ResetPassword controller = loader.getController();
-            controller.setEmail(email); // Pre-fill the email
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 1022, 687);
-            stage.setScene(scene);
-            stage.show();
+            controller.setEmail(email);
+            switchScene(event, layout);
         } catch (IOException e) {
-            System.err.println("Error loading FXML: " + e.getMessage());
+            showError("Erreur", "Échec du chargement de la page de réinitialisation : " + e.getMessage());
             e.printStackTrace();
-            afficherAlerte("Erreur", "Échec du chargement de la page de réinitialisation : " + e.getMessage());
         }
     }
 
@@ -147,40 +134,62 @@ public class Authentification {
         return motDePasseStocke != null && motDePasseSaisi.equals(motDePasseStocke);
     }
 
-
-    private void afficherAlerte(String titre, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(titre);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
     @FXML
     public void goToinscription(ActionEvent event) {
-        changerScene(event, "/Utilisateurs/AjouterUtilisateur.fxml");
+        switchScene(event, "/Utilisateurs/AjouterUtilisateur.fxml");
     }
 
     @FXML
     public void goBack(ActionEvent event) {
-        changerScene(event, "/EventoraAPP/Acceuil.fxml");
+        switchScene(event, "/EventoraAPP/Acceuil.fxml");
     }
 
-    private void changerScene(ActionEvent event, String cheminFXML) {
+    // Méthode switchScene suivant le style mémorisé
+    private void switchScene(ActionEvent event, String fxmlPath) {
         try {
-            URL fxmlURL = getClass().getResource(cheminFXML);
-            if (fxmlURL == null) {
-                System.err.println("Error: Could not find " + cheminFXML);
-                return;
-            }
-            Parent root = FXMLLoader.load(fxmlURL);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            AnchorPane layout = loader.load();
+            Scene scene = new Scene(layout);
+            scene.getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            Scene scene = new Scene(root, 1022, 687);
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
-            System.err.println("Error loading FXML: " + e.getMessage());
+            showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
             e.printStackTrace();
         }
+    }
+
+    // Surcharge pour gérer directement un layout déjà chargé
+    private void switchScene(ActionEvent event, AnchorPane layout) {
+        try {
+            Scene scene = new Scene(layout);
+            scene.getStylesheets().add(getClass().getResource("/alert-style.css").toExternalForm());
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+        } catch (Exception e) {
+            showError("Erreur de chargement", "Impossible d'afficher la page.");
+            e.printStackTrace();
+        }
+    }
+
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private void showSuccess(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private String escapeJsonString(String input) {

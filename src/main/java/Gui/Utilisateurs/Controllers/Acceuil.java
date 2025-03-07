@@ -42,8 +42,8 @@ public class Acceuil {
             Scene scene = new Scene(layout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
-            stage.setTitle("Eventora - Authentification"); // Conservé pour ce cas spécifique
             stage.setMaximized(true);
+            stage.setTitle("Eventora - Authentification"); // Conservé pour ce cas spécifique
             stage.show();
         } catch (IOException e) {
             showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
