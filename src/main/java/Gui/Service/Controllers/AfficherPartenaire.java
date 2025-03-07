@@ -211,7 +211,6 @@ public class AfficherPartenaire {
         switchScene(event, "/Pack/Packs.fxml");
     }
 
-    // Méthode switchScene suivant le style mémorisé
     private void switchScene(ActionEvent event, String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
