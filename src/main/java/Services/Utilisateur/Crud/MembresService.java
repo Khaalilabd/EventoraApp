@@ -301,30 +301,7 @@ public class MembresService implements Imembres<Utilisateurs> {
 
 
 
-    public Utilisateurs rechercherMemParEmail(String email) {
-        String req = "SELECT * FROM membres WHERE Email = ?";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
-            ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    Utilisateurs utilisateur = new Utilisateurs();
-                    utilisateur.setId(rs.getInt("id"));
-                    utilisateur.setNom(rs.getString("Nom"));
-                    utilisateur.setPrenom(rs.getString("Prénom"));
-                    utilisateur.setEmail(rs.getString("Email"));
-                    utilisateur.setCin(rs.getString("CIN"));
-                    utilisateur.setAdresse(rs.getString("Adresse"));
-                    utilisateur.setNumTel(rs.getString("NumTel"));
-                    utilisateur.setRole(Role.valueOf(rs.getString("Role")));
-                    utilisateur.setMotDePasse(rs.getString("motDePasse"));
-                    return utilisateur;
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+
     public String generatePasswordResetToken(String email) {
         String token = UUID.randomUUID().toString();
         Utilisateurs utilisateur = rechercherMemParEmail(email);
