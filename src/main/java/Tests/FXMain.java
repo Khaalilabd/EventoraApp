@@ -11,7 +11,7 @@ import java.io.IOException;
 public class FXMain extends Application {
     @Override
     public void start(Stage stage) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/AfficherUtilisateur.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
 
         try {
             Parent root = loader.load();

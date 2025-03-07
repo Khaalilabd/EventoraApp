@@ -25,6 +25,11 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONObject;
+
 public class AjouterReservationPack {
     @FXML
     private ComboBox<String> idPackfield;
@@ -52,7 +57,12 @@ public class AjouterReservationPack {
     // Twilio credentials (replace with your actual values)
     private static final String ACCOUNT_SID = "ACc57c0b58eff936708b3208d34fd03469";
     private static final String AUTH_TOKEN = "c041aac0a4b6c54d0280b74c416f2f89";
-    private static final String TWILIO_PHONE_NUMBER = "+12513125202"; // Your Twilio number
+    private static final String TWILIO_PHONE_NUMBER = "+12513125202";
+
+    // NumVerify API Key (replace with your actual API key)
+    private static final String NUMVERIFY_API_KEY = "YOUR_NUMVERIFY_API_KEY";
+
+    private final OkHttpClient client = new OkHttpClient();
 
     @FXML
     public void initialize() {
@@ -69,15 +79,14 @@ public class AjouterReservationPack {
             public void updateItem(LocalDate date, boolean empty) {
                 super.updateItem(date, empty);
                 LocalDate today = LocalDate.now();
-                setDisable(empty || date.isBefore(today)); // Disable dates before today
+                setDisable(empty || date.isBefore(today));
             }
         });
 
-        // Date validation listener (for error message)
         datefield.valueProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue != null && newValue.isBefore(LocalDate.now())) {
                 showAlert("Erreur", "Vous ne pouvez pas sélectionner une date antérieure à la date actuelle.");
-                datefield.setValue(null); // Reset datepicker value
+                datefield.setValue(null);
             }
         });
     }
@@ -89,6 +98,14 @@ public class AjouterReservationPack {
         }
     }
 
+    public void setSelectedPack(String packName) {
+        if (packNames.contains(packName)) {
+            idPackfield.setValue(packName);
+        } else {
+            System.out.println("Pack not found: " + packName);
+        }
+    }
+
     public void ajouterReservationPack(ActionEvent event) {
         String nom = nomfield.getText().trim();
         String prenom = prenomfield.getText().trim();
@@ -96,7 +113,6 @@ public class AjouterReservationPack {
         String numTel = numtelfield.getText().trim();
         String description = descriptionfield.getText().trim();
         LocalDate date = datefield.getValue();
-
         String selectedPackName = idPackfield.getValue();
 
         // Vérification des champs vides
@@ -114,6 +130,19 @@ public class AjouterReservationPack {
         // Vérification du numéro de téléphone (exactement 8 chiffres)
         if (!numTel.matches("^\\d{8}$")) {
             showAlert("Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
+            return;
+        }
+
+        // Validation via NumVerify API
+        try {
+            String formattedNumTel = "+216" + numTel; // Ajout du code pays pour la Tunisie
+            boolean isValidPhoneNumber = validatePhoneNumber(formattedNumTel);
+            if (!isValidPhoneNumber) {
+                showAlert("Erreur", "Le numéro de téléphone n'est pas valide selon NumVerify !");
+                return;
+            }
+        } catch (Exception e) {
+            showAlert("Erreur", "Erreur lors de la validation du numéro via NumVerify : " + e.getMessage());
             return;
         }
 
@@ -150,27 +179,40 @@ public class AjouterReservationPack {
         }
     }
 
+    // Méthode pour valider le numéro via NumVerify
+    private boolean validatePhoneNumber(String phoneNumber) throws IOException {
+        String url = "http://apilayer.net/api/validate?access_key=" + NUMVERIFY_API_KEY + "&number=" + phoneNumber;
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Erreur lors de la requête à NumVerify : " + response);
+            }
+
+            String jsonData = response.body().string();
+            JSONObject json = new JSONObject(jsonData);
+
+            return json.getBoolean("valid");
+        }
+    }
+
     private void sendSMSConfirmation(ReservationPack reservation) {
-        // Initialize Twilio with your credentials
         Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
 
-        // Get the customer's phone number (format it for E.164, assuming Tunisian prefix +216)
-        String customerPhoneNumber = "+216" + reservation.getNumtel(); // Ensure this is in E.164 format, e.g., "+21651863242"
-
-        // Construct the SMS message
+        String customerPhoneNumber = "+216" + reservation.getNumtel();
         String messageBody = String.format(
                 "Réservation Confirmée ! ID: %d, Pack: %s, Date: %s. Répondez 'ANNULER' pour annuler.",
                 reservation.getIdReservationPack(), reservation.getNom(), reservation.getDate().toString()
         );
 
         try {
-            // Send the SMS
             Message message = Message.creator(
-                    new PhoneNumber(customerPhoneNumber), // To: Customer's phone number
-                    new PhoneNumber(TWILIO_PHONE_NUMBER), // From: Your Twilio number
-                    messageBody // Message body
+                    new PhoneNumber(customerPhoneNumber),
+                    new PhoneNumber(TWILIO_PHONE_NUMBER),
+                    messageBody
             ).create();
-
             System.out.println("SMS envoyé avec succès avec SID: " + message.getSid());
         } catch (Exception e) {
             System.err.println("Échec lors de l'envoi du SMS: " + e.getMessage());
@@ -189,7 +231,7 @@ public class AjouterReservationPack {
         numtelfield.clear();
         descriptionfield.clear();
         datefield.setValue(null);
-        idPackfield.setValue(null); // Clear ComboBox
+        idPackfield.setValue(null);
     }
 
     private void showAlert(String title, String content) {

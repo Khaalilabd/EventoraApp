@@ -4,6 +4,7 @@ import Models.Reservation.ReservationPersonalise;
 import Models.Service.Service;
 import Services.Reservation.Crud.ReservationPersonaliseService;
 import Services.Service.Crud.ServiceService;
+import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,8 +15,13 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -41,9 +47,14 @@ public class ModifierReservationPersonalise {
     private Button submitButton;
     @FXML
     private Button cancelButton;
+    @FXML
+    private VBox successBanner; // Add banner
+    @FXML
+    private Label bannerMessage; // Add banner message
 
     private final ReservationPersonaliseService reservationService = new ReservationPersonaliseService();
     private final ServiceService serviceService = new ServiceService();
+    private final HttpClient httpClient = HttpClient.newHttpClient();
     private ReservationPersonalise reservationToEdit;
 
     @FXML
@@ -81,7 +92,6 @@ public class ModifierReservationPersonalise {
         numtelfield.setText(reservation.getNumtel());
         descriptionfield.setText(reservation.getDescription());
 
-        // Convertir java.util.Date ou java.sql.Date en LocalDate pour le DatePicker
         Date date = reservation.getDate();
         if (date != null) {
             LocalDate localDate;
@@ -131,12 +141,17 @@ public class ModifierReservationPersonalise {
         reservationToEdit.setDate(Date.from(datefield.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         reservationToEdit.setServiceIds(selectedServiceIds);
 
-        // Appeler la méthode du service pour modifier la réservation
-        reservationService.modifierReservationPersonalise(reservationToEdit);
-
-        showAlert("Succès", "Réservation modifiée avec succès !");
-        clearFields();
-        goToReservationListePersonalise();
+        // Modifier la réservation
+        ReservationPersonalise updatedReservation = reservationService.modifierReservationPersonalise(reservationToEdit);
+        if (updatedReservation != null) {
+            // Send email notification
+            sendReservationModificationEmail(updatedReservation);
+            showSuccessBanner("Réservation modifiée avec succès ! Un email de confirmation a été envoyé.");
+            clearFields();
+            goToReservationListePersonalise();
+        } else {
+            showAlert("Erreur", "Échec de la modification de la réservation.");
+        }
     }
 
     private boolean validateFields() {
@@ -146,7 +161,11 @@ public class ModifierReservationPersonalise {
             showAlert("Erreur", "Tous les champs doivent être remplis !");
             return false;
         }
-        if (!emailfield.getText().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+        if (!emailfield.getText().toLowerCase().endsWith("@esprit.tn")) { // Restrict to @esprit.tn
+            showAlert("Erreur", "Seuls les emails se terminant par @esprit.tn sont autorisés !");
+            return false;
+        }
+        if (!emailfield.getText().matches("^[A-Za-z0-9+_.-]+@esprit\\.tn$")) {
             showAlert("Erreur", "Adresse email invalide !");
             return false;
         }
@@ -184,6 +203,99 @@ public class ModifierReservationPersonalise {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    private void showSuccessBanner(String message) {
+        bannerMessage.setText(message);
+        successBanner.setVisible(true);
+        successBanner.setManaged(true);
+        successBanner.requestLayout();
+
+        PauseTransition delay = new PauseTransition(Duration.seconds(3));
+        delay.setOnFinished(event -> {
+            successBanner.setVisible(false);
+            successBanner.setManaged(false);
+        });
+        delay.play();
+    }
+
+    private void sendReservationModificationEmail(ReservationPersonalise reservation) {
+        String apiToken = System.getenv("POSTMARK_API_TOKEN2");
+        if (apiToken == null || apiToken.trim().isEmpty()) {
+            showAlert("Erreur", "POSTMARK_API_TOKEN environment variable is not set or empty.");
+            return;
+        }
+
+        String toEmail = reservation.getEmail().toLowerCase();
+        if (!toEmail.endsWith("@esprit.tn")) {
+            showAlert("Erreur", "L'email doit se terminer par @esprit.tn pour l'envoi !");
+            return;
+        }
+
+        String fromEmail = "khalil.abdelmoumen@esprit.tn";
+        String subject = "Modification de votre réservation - Eventora";
+        String htmlContent = "<h1>Modification de votre réservation</h1>" +
+                "<p>Bonjour " + reservation.getNom() + " " + reservation.getPrenom() + ",</p>" +
+                "<p>Votre réservation personnalisée a été modifiée avec succès.</p>" +
+                "<p><strong>Détails de la réservation :</strong></p>" +
+                "<ul>" +
+                "<li>Nom : " + reservation.getNom() + "</li>" +
+                "<li>Prénom : " + reservation.getPrenom() + "</li>" +
+                "<li>Email : " + reservation.getEmail() + "</li>" +
+                "<li>Téléphone : " + reservation.getNumtel() + "</li>" +
+                "<li>Description : " + reservation.getDescription() + "</li>" +
+                "<li>Date : " + reservation.getDate() + "</li>" +
+                "<li>Services : " + reservation.getServiceIds() + "</li>" +
+                "</ul>" +
+                "<p>Si vous avez des questions, n’hésitez pas à nous contacter.</p>" +
+                "<p>Meilleures salutations,<br>L’équipe Eventora</p>";
+        String textContent = "Bonjour " + reservation.getNom() + " " + reservation.getPrenom() + ",\n\n" +
+                "Votre réservation personnalisée a été modifiée avec succès.\n" +
+                "Détails de la réservation :\n" +
+                "- Nom : " + reservation.getNom() + "\n" +
+                "- Prénom : " + reservation.getPrenom() + "\n" +
+                "- Email : " + reservation.getEmail() + "\n" +
+                "- Téléphone : " + reservation.getNumtel() + "\n" +
+                "- Description : " + reservation.getDescription() + "\n" +
+                "- Date : " + reservation.getDate() + "\n" +
+                "- Services : " + reservation.getServiceIds() + "\n" +
+                "Si vous avez des questions, n’hésitez pas à nous contacter.\n\n" +
+                "Meilleures salutations,\nL’équipe Eventora";
+
+        String json = String.format(
+                "{\"From\":\"%s\",\"To\":\"%s\",\"Subject\":\"%s\",\"TextBody\":\"%s\",\"HtmlBody\":\"%s\"}",
+                escapeJsonString(fromEmail), escapeJsonString(toEmail), escapeJsonString(subject),
+                escapeJsonString(textContent), escapeJsonString(htmlContent)
+        );
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.postmarkapp.com/email"))
+                .header("Accept", "application/json")
+                .header("Content-Type", "application/json")
+                .header("X-Postmark-Server-Token", apiToken)
+                .POST(HttpRequest.BodyPublishers.ofString(json))
+                .build();
+
+        try {
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            System.out.println("Postmark Response Status: " + response.statusCode());
+            System.out.println("Postmark Response Body: " + response.body());
+            if (response.statusCode() != 200) {
+                showAlert("Erreur", "Échec de l'envoi de l'email : " + response.body());
+            }
+        } catch (Exception e) {
+            showAlert("Erreur", "Échec de l'envoi de l'email : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private String escapeJsonString(String input) {
+        if (input == null) return "";
+        return input.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
     }
 
     @FXML

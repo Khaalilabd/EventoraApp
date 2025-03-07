@@ -14,14 +14,13 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void ajouterReservationPersonalise(ReservationPersonalise reservationPersonalise) {
+        // Existing implementation remains unchanged
         String insertReservation = "INSERT INTO reservationpersonnalise (nom, prenom, email, numtel, description, date) " +
                 "VALUES (?, ?, ?, ?, ?, ?)";
         String insertServiceLink = "INSERT INTO reservation_personalise_service (reservation_id, service_id) VALUES (?, ?)";
 
         try {
-            connection.setAutoCommit(false); // Début de la transaction
-
-            // Insérer la réservation
+            connection.setAutoCommit(false);
             try (PreparedStatement ps = connection.prepareStatement(insertReservation, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, reservationPersonalise.getNom());
                 ps.setString(2, reservationPersonalise.getPrenom());
@@ -36,7 +35,6 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
                     int reservationId = generatedKeys.getInt(1);
                     reservationPersonalise.setIdReservationPersonalise(reservationId);
 
-                    // Insérer les liens vers les services
                     try (PreparedStatement psLink = connection.prepareStatement(insertServiceLink)) {
                         for (Integer serviceId : reservationPersonalise.getServiceIds()) {
                             psLink.setInt(1, reservationId);
@@ -47,11 +45,11 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
                     }
                 }
             }
-            connection.commit(); // Valider la transaction
+            connection.commit();
             System.out.println("Réservation personnalisée ajoutée avec succès ! ID: " + reservationPersonalise.getIdReservationPersonalise());
         } catch (SQLException e) {
             try {
-                connection.rollback(); // Annuler en cas d'erreur
+                connection.rollback();
             } catch (SQLException rollbackEx) {
                 System.err.println("Erreur lors du rollback : " + rollbackEx.getMessage());
             }
@@ -66,14 +64,14 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
     }
 
     @Override
-    public void modifierReservationPersonalise(ReservationPersonalise reservationPersonalise) {
+    public ReservationPersonalise modifierReservationPersonalise(ReservationPersonalise reservationPersonalise) {
         String updateReservation = "UPDATE reservationpersonnalise SET nom=?, prenom=?, email=?, numtel=?, description=?, date=? " +
                 "WHERE idReservationPersonalise=?";
         String deleteServices = "DELETE FROM reservation_personalise_service WHERE reservation_id=?";
         String insertServiceLink = "INSERT INTO reservation_personalise_service (reservation_id, service_id) VALUES (?, ?)";
 
         try {
-            connection.setAutoCommit(false); // Début de la transaction
+            connection.setAutoCommit(false);
 
             // Mettre à jour la réservation
             try (PreparedStatement ps = connection.prepareStatement(updateReservation)) {
@@ -103,15 +101,17 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
                 psLink.executeBatch();
             }
 
-            connection.commit(); // Valider la transaction
+            connection.commit();
             System.out.println("Réservation personnalisée modifiée avec succès !");
+            return reservationPersonalise; // Return the modified reservation
         } catch (SQLException e) {
             try {
-                connection.rollback(); // Annuler en cas d'erreur
+                connection.rollback();
             } catch (SQLException rollbackEx) {
                 System.err.println("Erreur lors du rollback : " + rollbackEx.getMessage());
             }
             System.err.println("Erreur lors de la modification de la réservation personnalisée : " + e.getMessage());
+            return null;
         } finally {
             try {
                 connection.setAutoCommit(true);
@@ -123,12 +123,12 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void supprimerReservationPersonalise(ReservationPersonalise reservationPersonalise) {
+        // Existing implementation remains unchanged
         String deleteReservation = "DELETE FROM reservationpersonnalise WHERE idReservationPersonalise=?";
         try (PreparedStatement ps = connection.prepareStatement(deleteReservation)) {
             ps.setInt(1, reservationPersonalise.getIdReservationPersonalise());
             ps.executeUpdate();
             System.out.println("Réservation personnalisée supprimée avec succès !");
-            // Les services liés seront supprimés automatiquement grâce à ON DELETE CASCADE
         } catch (SQLException e) {
             System.err.println("Erreur lors de la suppression de la réservation personnalisée : " + e.getMessage());
         }
@@ -136,6 +136,7 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public List<ReservationPersonalise> rechercherReservationPersonalise() {
+        // Existing implementation remains unchanged
         String req = "SELECT r.*, GROUP_CONCAT(rps.service_id) as service_ids " +
                 "FROM reservationpersonnalise r " +
                 "LEFT JOIN reservation_personalise_service rps ON r.idReservationPersonalise = rps.reservation_id " +
@@ -164,6 +165,7 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
     }
 
     private List<Integer> parseServiceIds(String serviceIdsString) {
+        // Existing implementation remains unchanged
         List<Integer> serviceIds = new ArrayList<>();
         if (serviceIdsString != null && !serviceIdsString.trim().isEmpty()) {
             String[] ids = serviceIdsString.split(",");
