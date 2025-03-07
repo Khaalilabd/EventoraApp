@@ -14,12 +14,18 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane  stylesheets="/style.css"
-            xmlns="http://javafx.com/javafx/20.0.2"
-             prefWidth="1920.0"
-             prefHeight="1080.0"
-             xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Reservation.Controllers.ModifierReservationPersonalise">
+
+    <!-- Success Banner -->
+    <VBox fx:id="successBanner" alignment="CENTER" visible="false" managed="false"
+          style="-fx-background-color: #4CAF50; -fx-text-fill: white; -fx-padding: 10; -fx-opacity: 0.9;"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <children>
+            <Label fx:id="bannerMessage" text="" style="-fx-font-size: 14px;"/>
+        </children>
+    </VBox>
 
     <!-- Navbar horizontale en haut -->
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
@@ -54,7 +60,6 @@
 
         <!-- Formulaire avec GridPane -->
         <GridPane hgap="10" vgap="10" styleClass="form-container">
-            <!-- Remplacement du ComboBox par un VBox pour les CheckBox -->
             <VBox fx:id="serviceCheckboxes" spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
             <TextField fx:id="nomfield" promptText="Entrez votre nom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
             <TextField fx:id="prenomfield" promptText="Entrez votre prénom" styleClass="input-field" GridPane.columnIndex="1" GridPane.rowIndex="2"/>

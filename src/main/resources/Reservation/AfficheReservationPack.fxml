@@ -3,8 +3,10 @@
 <?import javafx.geometry.Pos?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 
-<AnchorPane  stylesheets="/style.css"
+<AnchorPane stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Reservation.Controllers.AfficheReservationPack"
              prefWidth="1920.0"
@@ -41,6 +43,11 @@
         <Label wrapText="true" styleClass="main-description"
                text="Consultez, ajoutez ou gérez vos réservations de packs en toute simplicité."/>
 
+        <!-- Panneau de statistiques -->
+        <HBox spacing="20" alignment="CENTER" styleClass="stats-panel">
+            <Label fx:id="totalLabel" text="Total: 0" styleClass="stat-label"/>
+        </HBox>
+
         <!-- Barre d'outils (Ajout, Actualisation, Recherche) -->
         <HBox spacing="10" alignment="CENTER" styleClass="card-container">
             <Button fx:id="addReservationPack" text="➕ Ajouter" styleClass="card-button" onAction="#addReservationPack"/>
@@ -48,19 +55,9 @@
             <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
         </HBox>
 
-        <!-- Tableau des réservations -->
-        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="900.0" styleClass="custom-table">
-            <columns>
-                <TableColumn fx:id="colId" prefWidth="50.0" text="ID"/>
-                <TableColumn fx:id="colIdPack" prefWidth="100.0" text="Nom Pack"/>
-                <TableColumn fx:id="colNom" prefWidth="100.0" text="Nom"/>
-                <TableColumn fx:id="colPrenom" prefWidth="100.0" text="Prénom"/>
-                <TableColumn fx:id="colEmail" prefWidth="200.0" text="Email"/>
-                <TableColumn fx:id="colnumTel" prefWidth="120.0" text="Num. Téléphone"/>
-                <TableColumn fx:id="colDescription" prefWidth="200.0" text="Description"/>
-                <TableColumn fx:id="colDate" prefWidth="120.0" text="Date"/>
-                <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions"/>
-            </columns>
-        </TableView>
+        <!-- Conteneur des bulles en grille -->
+        <ScrollPane prefHeight="575.0" prefWidth="999.0">
+            <GridPane fx:id="reservationGrid" hgap="20" vgap="20" alignment="CENTER" styleClass="grid-list"/>
+        </ScrollPane>
     </VBox>
 </AnchorPane>
