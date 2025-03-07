@@ -32,7 +32,7 @@ public class Authentification {
         String password = passwordField.getText();
 
         if (email.isEmpty() || password.isEmpty()) {
-            showError("Erreur", "Veuillez saisir votre email et votre mot de passe.");
+            showError("Erreur", "Veuillez saisir votre nom d'utilisateur et votre mot de passe.");
             return;
         }
 
@@ -53,7 +53,7 @@ public class Authentification {
         }
 
         String normalizedEmail = email.toLowerCase();
-        Utilisateurs utilisateur = membresService.rechercherMemParEmail(normalizedEmail);
+        Utilisateurs utilisateur = membresService.rechercherMemParNom(normalizedEmail);
         if (utilisateur == null) {
             showError("Erreur", "Email non trouvé.");
             return;
