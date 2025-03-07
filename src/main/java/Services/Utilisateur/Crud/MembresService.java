@@ -167,10 +167,10 @@ public class MembresService implements Imembres<Utilisateurs> {
         return null;
     }
 
-    public Utilisateurs rechercherMemParNom(String username) {
-        String req = "SELECT * FROM membres WHERE Nom = ?";
+    public Utilisateurs rechercherMemParNom(String email) {
+        String req = "SELECT * FROM membres WHERE Email = ?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
-            ps.setString(1, username);
+            ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return extraireMembre(rs);

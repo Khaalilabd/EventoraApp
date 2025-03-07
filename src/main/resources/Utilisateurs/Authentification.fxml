@@ -53,7 +53,7 @@
             <Label text="Connexion" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #C1272D;"/>
 
             <!-- Authentication fields -->
-            <TextField fx:id="usernameField" promptText="Email" style="-fx-pref-width: 300; -fx-pref-height: 40; -fx-font-size: 16px;"/>
+            <TextField fx:id="emailField" promptText="Email" style="-fx-pref-width: 300; -fx-pref-height: 40; -fx-font-size: 16px;"/>
             <PasswordField fx:id="passwordField" promptText="Mot de passe" style="-fx-pref-width: 300; -fx-pref-height: 40; -fx-font-size: 16px;"/>
 
             <!-- Forgot Password / Help links -->

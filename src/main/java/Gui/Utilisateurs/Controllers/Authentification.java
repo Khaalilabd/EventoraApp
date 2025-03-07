@@ -20,7 +20,7 @@ import java.sql.SQLException;
 
 public class Authentification {
 
-    @FXML private TextField usernameField;
+    @FXML private TextField emailField;
     @FXML private PasswordField passwordField;
 
     private final MembresService membresService = new MembresService();
@@ -28,15 +28,15 @@ public class Authentification {
 
     @FXML
     private void seConnecter(ActionEvent event) throws IOException, SQLException {
-        String username = usernameField.getText();
+        String email = emailField.getText();
         String password = passwordField.getText();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            showError("Erreur", "Veuillez saisir votre nom d'utilisateur et votre mot de passe.");
+        if (email.isEmpty() || password.isEmpty()) {
+            showError("Erreur", "Veuillez saisir votre email et votre mot de passe.");
             return;
         }
 
-        Utilisateurs utilisateur = membresService.rechercherMemParNom(username);
+        Utilisateurs utilisateur = membresService.rechercherMemParNom(email);
         if (utilisateur != null && verifierMotDePasse(password, utilisateur.getMotDePasse())) {
             switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
         } else {
@@ -46,7 +46,7 @@ public class Authentification {
 
     @FXML
     private void forgotPassword(ActionEvent event) {
-        String email = usernameField.getText().trim();
+        String email = emailField.getText().trim();
         if (email.isEmpty()) {
             showError("Erreur", "Veuillez entrer un email valide.");
             return;
