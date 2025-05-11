@@ -89,7 +89,7 @@
             <Label text="Localisation GPS de l'adresse :" styleClass="main-description"/>
             <Label fx:id="locationLabel" text="Coordonnées: Chargement..." styleClass="main-description"/>
             <!-- Carte OpenStreetMap -->
-            <WebView fx:id="mapView" prefHeight="150.0" prefWidth="999.0"/>
+            <WebView fx:id="mapView" prefHeight="150.0" prefWidth="999.0" minHeight="150.0" minWidth="999.0"/>
         </VBox>
     </VBox>
 </AnchorPane>

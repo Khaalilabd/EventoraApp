@@ -10,6 +10,8 @@
 <AnchorPane style="-fx-background-color: #F5E1C0;"
             xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             fx:controller="Gui.Utilisateurs.Controllers.Authentification">
 
     <HBox alignment="CENTER"
@@ -51,13 +53,13 @@
             <Label text="Connexion" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #C1272D;"/>
 
             <!-- Authentication fields -->
-            <TextField fx:id="usernameField" promptText="Email" style="-fx-pref-width: 300; -fx-pref-height: 40; -fx-font-size: 16px;"/>
+            <TextField fx:id="emailField" promptText="Email" style="-fx-pref-width: 300; -fx-pref-height: 40; -fx-font-size: 16px;"/>
             <PasswordField fx:id="passwordField" promptText="Mot de passe" style="-fx-pref-width: 300; -fx-pref-height: 40; -fx-font-size: 16px;"/>
 
             <!-- Forgot Password / Help links -->
             <HBox spacing="10">
-                <Label text="Mot de passe oublié ?" style="-fx-text-fill: #C1272D; -fx-underline: true; -fx-cursor: hand;"/>
-                <Label text="|" style="-fx-text-fill: gray;"/>
+                <Hyperlink text="Mot de passe oublié ?" onAction="#forgotPassword"
+                           style="-fx-text-fill: #C1272D; -fx-border-color: transparent; -fx-cursor: hand;"/>                <Label text="|" style="-fx-text-fill: gray;"/>
                 <Label text="Besoin d'aide ?" style="-fx-text-fill: #C1272D; -fx-underline: true; -fx-cursor: hand;"/>
             </HBox>
 

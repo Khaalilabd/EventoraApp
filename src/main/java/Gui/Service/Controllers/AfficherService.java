@@ -11,7 +11,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -29,39 +28,19 @@ import java.util.List;
 
 public class AfficherService {
 
-    @FXML
-    private TableView<Service> tableView;
-
-    @FXML
-    private TableColumn<Service, Integer> idColumn;
-
-    @FXML
-    private TableColumn<Service, String> id_partenaireColumn;
-
-    @FXML
-    private TableColumn<Service, String> titleColumn;
-
-    @FXML
-    private TableColumn<Service, String> locationColumn;
-
-    @FXML
-    private TableColumn<Service, String> sponsorColumn;
-
-    @FXML
-    private TableColumn<Service, String> descriptionColumn;
-
-    @FXML
-    private TableColumn<Service, String> prixColumn;
-
-    @FXML
-    private TableColumn<Service, String> colActions;
-
-    @FXML
-    private TextField searchField;
+    @FXML private TableView<Service> tableView;
+    @FXML private TableColumn<Service, Integer> idColumn;
+    @FXML private TableColumn<Service, String> id_partenaireColumn;
+    @FXML private TableColumn<Service, String> titleColumn;
+    @FXML private TableColumn<Service, String> locationColumn;
+    @FXML private TableColumn<Service, String> sponsorColumn;
+    @FXML private TableColumn<Service, String> descriptionColumn;
+    @FXML private TableColumn<Service, String> prixColumn;
+    @FXML private TableColumn<Service, String> colActions;
+    @FXML private TextField searchField;
 
     private final ServiceService serviceService;
     private final PartenaireService partenaireService;
-
     private ObservableList<Service> servicesList = FXCollections.observableArrayList();
 
     public AfficherService() {
@@ -78,7 +57,6 @@ public class AfficherService {
             return new SimpleStringProperty(partenaire != null ? partenaire.getNom_partenaire() : "Inconnu");
         });
 
-        // Mise à jour des colonnes avec surlignement
         setHighlightedColumn(titleColumn, Service::getTitre);
         setHighlightedColumn(locationColumn, service -> service.getLocation().getLabel());
         setHighlightedColumn(sponsorColumn, service -> service.getTypeService().getLabel());
@@ -149,20 +127,22 @@ public class AfficherService {
     private void handleEdit(Service service) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/ModifierService.fxml"));
-            AnchorPane modifRecLayout = loader.load();
-
+            AnchorPane layout = loader.load();
             ModifierService controller = loader.getController();
             controller.setServiceToEdit(service);
 
-            Scene currentScene = tableView.getScene();
-            currentScene.setRoot(modifRecLayout);
+            Scene scene = new Scene(layout);
+            Stage stage = (Stage) tableView.getScene().getWindow();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
         } catch (IOException e) {
+            showError("Erreur de chargement", "Impossible d'afficher la page : /Service/ModifierService.fxml");
             e.printStackTrace();
         }
     }
 
     private void handleDelete(Service service) {
-        System.out.println("Supprimer le service avec ID : " + service.getId());
         serviceService.SupprimerService(service);
         loadServices();
     }
@@ -214,109 +194,71 @@ public class AfficherService {
         return new TextFlow(before, highlight, after);
     }
 
-
     @FXML
     private void goToStatistiques(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Statistique.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Statistiques des Services");
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        switchScene(event, "/Service/Statistique.fxml");
     }
+
     @FXML
-    private void addService(ActionEvent event) throws IOException {
-        try {
-            // Charger le fichier FXML pour la fenêtre "AjouterService"
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/AjouterService.fxml"));
-            Scene scene = new Scene(loader.load());
-
-            // Récupérer la fenêtre (Stage) actuelle à partir de l'événement
-            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-
-            // Fermer la fenêtre actuelle
-            currentStage.close();
-
-            // Créer une nouvelle fenêtre pour "AjouterService"
-            Stage newStage = new Stage();
-            newStage.setScene(scene);
-            newStage.setTitle("Ajouter un service");
-            newStage.show();
-        } catch (IOException e) {
-            System.out.println("Erreur lors du chargement de la fenêtre d'ajout de service : " + e.getMessage());
-            e.printStackTrace();
-        }
+    private void addService(ActionEvent event) {
+        switchScene(event, "/Service/AjouterService.fxml");
     }
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
 
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
+    @FXML
+    private void goToService(ActionEvent event) {
+        switchScene(event, "/Service/Service.fxml");
     }
 
     @FXML
     private void refreshList() {
-        loadServices(); // Recharge la liste des services
+        loadServices();
     }
+
     @FXML
-    private void goToPartenaire(javafx.event.ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Partenaire.fxml"));
-        AnchorPane partenaireLayout = loader.load();
-        Scene scene = new Scene(partenaireLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+    private void goToPartenaire(ActionEvent event) {
+        switchScene(event, "/Service/Partenaire.fxml");
     }
+
     @FXML
-    private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+    private void goToReclamation(ActionEvent event) {
+        switchScene(event, "/Reclamation/Reclamation.fxml");
     }
+
     @FXML
-    private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
-        currentStage.show();
+    private void goToFeedback(ActionEvent event) {
+        switchScene(event, "/Reclamation/Feedback.fxml");
     }
+
     @FXML
-    private void goToReservation(ActionEvent event) throws IOException {
+    private void goToReservation(ActionEvent event) {
+        switchScene(event, "/Reservation/Reservation.fxml");
+    }
+
+    @FXML
+    private void goToPack(ActionEvent event) {
+        switchScene(event, "/Pack/Packs.fxml");
+    }
+
+    // Méthode switchScene suivant le style mémorisé
+    private void switchScene(ActionEvent event, String fxmlPath) {
         try {
-            // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            AnchorPane layout = loader.load();
+            Scene scene = new Scene(layout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
+            showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
             e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
     }
-    @FXML
-    private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

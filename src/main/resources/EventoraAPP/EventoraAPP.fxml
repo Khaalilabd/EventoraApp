@@ -4,12 +4,18 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.geometry.Pos?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.animation.TranslateTransition?>
+<?import javafx.util.Duration?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.EventoraAPP.Controllers.EventoraAPP"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             stylesheets="/style.css">
 
+    <!-- Navbar -->
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
           AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <HBox alignment="CENTER_LEFT">
@@ -28,6 +34,7 @@
         </HBox>
     </HBox>
 
+    <!-- Main content -->
     <VBox alignment="CENTER" styleClass="main-content"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
@@ -70,8 +77,22 @@
                 <Label text="Profitez de nos offres groupées avantageuses !" styleClass="card-description"/>
                 <Button text="Voir les packs" styleClass="card-button" onAction="#goToPack"/>
             </VBox>
-            <Button text="Besoin D'un AI ?" styleClass="card-button" onAction="#goToChat"/>
-
         </HBox>
     </VBox>
+
+    <!-- Chat Container (Panneau à droite) -->
+    <VBox fx:id="chatContainer" visible="false"
+          prefWidth="350" prefHeight="600"
+          style="-fx-background-color: white; -fx-border-color: black; -fx-padding: 10;"
+          AnchorPane.topAnchor="80.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.bottomAnchor="0.0"/>
+
+    <!-- Floating Chat Button -->
+    <Button fx:id="chatButton"
+            text="💬"
+            style="-fx-background-color: #0078D7; -fx-text-fill: white; -fx-font-size: 20px;
+                   -fx-background-radius: 50%; -fx-min-width: 50px; -fx-min-height: 50px;
+                   -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);"
+            onAction="#toggleChat"
+            AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0"/>
 </AnchorPane>

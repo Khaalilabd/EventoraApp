@@ -5,9 +5,7 @@ import Models.Reclamation.TypeReclamation;
 import Models.Reclamation.Statut;
 import Models.Utilisateur.Utilisateurs;
 import Services.Reclamation.Crud.ReclamationService;
-import Services.Utilisateur.Crud.MembresService;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import Utils.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,59 +17,41 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
 public class AjouterRec {
 
-    @FXML
-    private TextField titleField;
-    @FXML
-    private ComboBox<TypeReclamation> typeField;
-    @FXML
-    private ComboBox<String> userField;
-    @FXML
-    private TextArea descField;
-    @FXML
-    private Button submitButton;
-    @FXML
-    private Button cancelButton;
+    @FXML private TextField titleField;
+    @FXML private ComboBox<TypeReclamation> typeField;
+    @FXML private TextArea descField;
+    @FXML private Button submitButton;
+    @FXML private Button cancelButton;
 
     private final ReclamationService reclamationService = new ReclamationService();
-    private final MembresService utilisateurService = new MembresService();
-    private ObservableList<String> userNames = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        typeField.getItems().setAll(TypeReclamation.values());
+        typeField.getItems().setAll(TypeReclamation.values()); // Initialisation uniquement pour typeField
         submitButton.setOnAction(this::ajouterReclamation);
         cancelButton.setOnAction(event -> annuler());
-
-        loadUserNames();
-        userField.setItems(userNames);
-    }
-
-    private void loadUserNames() {
-        List<Utilisateurs> utilisateurs = utilisateurService.RechercherMem();
-        for (Utilisateurs utilisateur : utilisateurs) {
-            userNames.add(utilisateur.getNom() + " " + utilisateur.getPrenom());
-        }
     }
 
     private void ajouterReclamation(ActionEvent event) {
         String titre = titleField.getText();
         String description = descField.getText();
         TypeReclamation type = typeField.getValue();
-        String selectedUserName = userField.getValue();
 
-        if (titre.isEmpty() || description.isEmpty() || type == null || selectedUserName == null) {
+        if (titre.isEmpty() || description.isEmpty() || type == null) {
             showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
-        int userId = utilisateurService.getIdByNomPrenom(selectedUserName);
-        if (userId == -1) {
-            showAlert("Erreur", "Utilisateur non trouvé.");
+
+        // Récupérer l'utilisateur connecté
+        Utilisateurs utilisateurConnecte = SessionManager.getInstance().getUtilisateurConnecte();
+        if (utilisateurConnecte == null) {
+            showAlert("Erreur", "Aucun utilisateur connecté.");
             return;
         }
+        int userId = utilisateurConnecte.getId();
 
         Reclamation reclamation = new Reclamation(userId, titre, description, type);
         reclamation.setStatut(Statut.EN_ATTENTE);
@@ -102,7 +82,6 @@ public class AjouterRec {
         titleField.clear();
         descField.clear();
         typeField.setValue(null);
-        userField.setValue(null);
     }
 
     private void showAlert(String title, String content) {
@@ -111,7 +90,6 @@ public class AjouterRec {
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
-
         alert.showAndWait();
     }
 
@@ -159,7 +137,6 @@ public class AjouterRec {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
         Parent root = loader.load();
         Scene newScene = new Scene(root);
-
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.close();
         Stage newStage = new Stage();
@@ -176,6 +153,7 @@ public class AjouterRec {
         stage.setScene(scene);
         stage.show();
     }
+
     @FXML
     private void goToAccueil(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/EventoraAPP.fxml"));
@@ -184,5 +162,22 @@ public class AjouterRec {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    private void deconnexion(ActionEvent event) {
+        // Effacer la session
+        SessionManager.getInstance().clearSession();
+        // Rediriger vers la page de connexion
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Authentification.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Erreur lors du chargement de la page de connexion : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

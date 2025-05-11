@@ -13,18 +13,24 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.sql.SQLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -51,11 +57,16 @@ public class AjouterPack {
     private Button cancelButton;
     @FXML
     private Button ReturnToListButton;
+    @FXML
+    private Button uploadImageButton;
+    @FXML
+    private ImageView imagePreview;
 
     private final PackService packService = new PackService();
     private final ServiceService serviceService = new ServiceService();
     private final MembresService membresService = new MembresService();
     private final HttpClient httpClient = HttpClient.newHttpClient();
+    private File selectedImageFile;
 
     @FXML
     public void initialize() {
@@ -71,7 +82,6 @@ public class AjouterPack {
             public String toString(Service service) {
                 return service != null ? service.getTitre() : "";
             }
-
             @Override
             public Service fromString(String string) {
                 return null;
@@ -82,6 +92,7 @@ public class AjouterPack {
         submitButton.setOnAction(this::ajouterPack);
         cancelButton.setOnAction(this::annuler);
         ReturnToListButton.setOnAction(this::goToAffichePack);
+        uploadImageButton.setOnAction(this::uploadImage);
     }
 
     @FXML
@@ -116,14 +127,13 @@ public class AjouterPack {
                 return;
             }
 
-            Pack newPack = new Pack(nomPack, description, prix, location, type, nbrGuests, new ArrayList<>(selectedServices));
-            try {
-                packService.ajouter(newPack);
-            } catch (Exception e) {
-                showAlert("Erreur", "Une erreur est survenue lors de l'ajout du pack.");
-                e.printStackTrace();
-
+            String imagePath = null;
+            if (selectedImageFile != null) {
+                imagePath = saveImage(selectedImageFile, nomPack);
             }
+
+            Pack newPack = new Pack(nomPack, description, prix, location, type, nbrGuests, new ArrayList<>(selectedServices), imagePath);
+            packService.ajouter(newPack);
 
             try {
                 boolean emailSentSuccessfully = sendEmailNotificationToUsers(nomPack);
@@ -132,22 +142,49 @@ public class AjouterPack {
                 }
             } catch (IOException e) {
                 showAlert("Avertissement", "Pack ajouté, mais une erreur d'entrée/sortie est survenue lors de l'envoi des notifications par email : " + e.getMessage());
-                e.printStackTrace();
             } catch (InterruptedException e) {
                 showAlert("Avertissement", "Pack ajouté, mais une erreur d'interruption est survenue lors de l'envoi des notifications par email : " + e.getMessage());
-                e.printStackTrace();
             } catch (Exception e) {
                 showAlert("Avertissement", "Pack ajouté, mais une erreur inattendue est survenue lors de l'envoi des notifications : " + e.getMessage());
-                e.printStackTrace();
             }
 
             showAlert("Succès", "Pack ajouté avec succès !");
-            goToAffichePack(event);
+            switchScene(event, "/Pack/AffichePack.fxml");
 
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur inattendue est survenue : " + e.getMessage());
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void uploadImage(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Choisir une image pour le pack");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Images", "*.png", "*.jpg", "*.jpeg")
+        );
+        selectedImageFile = fileChooser.showOpenDialog(((Node) event.getSource()).getScene().getWindow());
+        if (selectedImageFile != null) {
+            uploadImageButton.setText("Image sélectionnée : " + selectedImageFile.getName());
+            Image image = new Image(selectedImageFile.toURI().toString(), 100, 100, true, true);
+            imagePreview.setImage(image);
+        }
+    }
+
+    private String saveImage(File imageFile, String nomPack) throws IOException {
+        String uploadDir = "src/main/resources/images/packs/";
+        File dir = new File(uploadDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String fileExtension = imageFile.getName().substring(imageFile.getName().lastIndexOf("."));
+        String newFileName = nomPack.replaceAll("[^a-zA-Z0-9]", "_") + "_" + System.currentTimeMillis() + fileExtension;
+        Path targetPath = Paths.get(uploadDir, newFileName);
+
+        Files.copy(imageFile.toPath(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+        return "/images/packs/" + newFileName;
     }
 
     private boolean sendEmailNotificationToUsers(String nomPack) throws IOException, InterruptedException {
@@ -163,19 +200,17 @@ public class AjouterPack {
             return false;
         }
 
-        // Filter emails to only include @esprit.tn addresses
         List<String> espritEmails = userEmails.stream()
                 .filter(email -> email.toLowerCase().endsWith("@esprit.tn"))
                 .collect(Collectors.toList());
 
-        // Log skipped emails (non-@esprit.tn addresses)
         userEmails.stream()
                 .filter(email -> !email.toLowerCase().endsWith("@esprit.tn"))
                 .forEach(email -> System.out.println("Email ignoré (domaine non @esprit.tn) : " + email));
 
         if (espritEmails.isEmpty()) {
             System.out.println("Aucune adresse email @esprit.tn trouvée pour envoyer des notifications.");
-            return true; // Consider this a success since we only want to send to @esprit.tn
+            return true;
         }
 
         String fromEmail = "khalil.abdelmoumen@esprit.tn";
@@ -219,13 +254,9 @@ public class AjouterPack {
                     System.out.println("Erreur lors de l'envoi de l'email à " + toEmail + " : " + response.body());
                     allEmailsSentSuccessfully = false;
                 }
-                Thread.sleep(100); // Add a small delay to avoid rate limits
-            } catch (IOException e) {
-                System.out.println("IOException lors de l'envoi de l'email à " + toEmail + " : " + e.getMessage());
-                e.printStackTrace();
-                allEmailsSentSuccessfully = false;
-            } catch (InterruptedException e) {
-                System.out.println("InterruptedException lors de l'envoi de l'email à " + toEmail + " : " + e.getMessage());
+                Thread.sleep(100);
+            } catch (IOException | InterruptedException e) {
+                System.out.println("Erreur lors de l'envoi de l'email à " + toEmail + " : " + e.getMessage());
                 e.printStackTrace();
                 allEmailsSentSuccessfully = false;
             } catch (Exception e) {
@@ -241,11 +272,11 @@ public class AjouterPack {
         if (input == null) {
             return "";
         }
-        return input.replace("\\", "\\\\")  // Escape backslashes
-                .replace("\"", "\\\"")  // Escape double quotes
-                .replace("\n", "\\n")   // Escape newlines
-                .replace("\r", "\\r")   // Escape carriage returns
-                .replace("\t", "\\t");  // Escape tabs
+        return input.replace("\\", "\\\\")
+                .replace("\"", "\\\"")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
     }
 
     @FXML
@@ -261,87 +292,73 @@ public class AjouterPack {
         TypeField.setValue(null);
         NbrGuestsField.clear();
         ServiceField.getCheckModel().clearChecks();
+        uploadImageButton.setText("Uploader une image");
+        selectedImageFile = null;
+        imagePreview.setImage(null);
     }
 
     private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(title.equals("Erreur") || title.equals("Avertissement") ? Alert.AlertType.ERROR : Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
     }
 
+    @FXML
     private void goToAffichePack(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AffichePack.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            showAlert("Erreur", "Impossible de charger la page AffichePack.");
-            e.printStackTrace();
-        }
+        switchScene(event, "/Pack/AffichePack.fxml");
     }
 
     @FXML
     private void goToPack(ActionEvent event) {
+        switchScene(event, "/Pack/Packs.fxml");
+    }
+
+    @FXML
+    private void goToFeedback(ActionEvent event) {
+        switchScene(event, "/Reclamation/Feedback.fxml");
+    }
+
+    @FXML
+    private void goToReclamation(ActionEvent event) {
+        switchScene(event, "/Reclamation/Reclamation.fxml");
+    }
+    @FXML
+    private void goToAccueil(ActionEvent event) {
+        switchScene(event, "/Reclamation/Reclamation.fxml");
+    }
+
+    @FXML
+    private void goToReservation(ActionEvent event) {
+        switchScene(event, "/Reservation/Reservation.fxml");
+    }
+
+    @FXML
+    private void goToService(ActionEvent event) {
+        switchScene(event, "/Service/Service.fxml");
+    }
+
+    // Méthode switchScene suivant le style mémorisé
+    private void switchScene(ActionEvent event, String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            System.out.println("Erreur lors du chargement de la page Pack : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
-        currentStage.show();
-    }
-
-    @FXML
-    private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    @FXML
-    private void goToReservation(ActionEvent event) throws IOException {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            AnchorPane layout = loader.load();
+            Scene scene = new Scene(layout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
+            showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
             e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
     }
 
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

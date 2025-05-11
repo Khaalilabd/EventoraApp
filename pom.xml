@@ -99,6 +99,18 @@
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.11.0</version>
+        </dependency>
+
+        <!-- Gson pour manipuler JSON -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
         <!-- SQLite (optionnel, utile pour les tests) -->
         <dependency>
             <groupId>org.xerial</groupId>
@@ -152,6 +164,11 @@
             <version>10.6.7</version> <!-- Latest stable version as of Feb 27, 2025 -->
         </dependency>
 
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20231013</version>
+        </dependency>
 
 
     </dependencies>

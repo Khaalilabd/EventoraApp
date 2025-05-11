@@ -1,0 +1,232 @@
+/* Barre de navigation */
+.navbar {
+    -fx-background-color: #333333;
+    -fx-padding: 10px;
+}
+
+.nav-title {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+    -fx-transition: background-color 0.3s;
+}
+
+.nav-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+}
+
+.logout-button {
+    -fx-background-color: #C8102E;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 16px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+}
+
+/* Contenu principal */
+.main-content {
+    -fx-background-color: linear-gradient(to bottom, #C8102E, #F5DEB3);
+    -fx-padding: 20px;
+}
+
+.page-title {
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.page-description {
+    -fx-text-fill: #EEEEEE;
+    -fx-font-size: 14px;
+}
+
+.info-button {
+    -fx-background-color: #C8102E;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-cursor: hand;
+    -fx-background-radius: 5px;
+}
+
+/* Image */
+.image-view {
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 10, 0 , 0 , 0 );
+    -fx-background-radius: 10px;
+}
+
+.card-container {
+    -fx-padding: 20px;
+}
+.card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 10, 0 , 0 , 0 );
+    -fx-alignment: center; /* Aligner le contenu verticalement */
+    -fx-transition: transform 0.3s, effect 0.3s; /* Ajout des transitions */
+}
+
+.card-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+    -fx-alignment: center; /* Aligner le texte au centre */
+}
+
+.card-description {
+    -fx-font-size: 14px;
+    -fx-text-fill: #666666;
+    -fx-alignment: center; /* Aligner le texte au centre */
+}
+
+.card-button {
+    -fx-background-color: #C8102E;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.image-view {
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 10, 0 , 0 , 0 );
+    -fx-background-radius: 10px;
+}
+
+.main-title {
+    -fx-font-size: 36px; /* Taille du titre principal */
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF; /* Couleur du titre principal */
+    -fx-padding: 20px; /* Marge autour du titre principal */
+}
+
+.main-description {
+    -fx-font-size: 16px; /* Taille du paragraphe descriptif */
+    -fx-text-fill: #EEEEEE; /* Couleur du paragraphe descriptif */
+    -fx-padding: 10px; /* Marge autour du paragraphe descriptif */
+    -fx-text-alignment: center; /* Alignement du texte au centre */
+}
+.card:hover {
+    -fx-translate-y: -10px; /* Déplacement vers le haut */
+    -fx-scale-x: 1.05; /* Agrandissement horizontal */
+    -fx-scale-y: 1.05; /* Agrandissement vertical */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 0); /* Ombre au survol */
+}
+
+
+/* Formulaire */
+.form-container {
+    -fx-background-color: #FFFFFF; /* Fond blanc pour le formulaire */
+    -fx-background-radius: 10px; /* Bords arrondis pour le formulaire */
+    -fx-padding: 20px; /* Padding pour espacer les éléments */
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 10, 0 , 0 , 0 ); /* Ombre douce */
+    -fx-pref-width: 500px; /* Largeur préférée du formulaire */
+    -fx-alignment: center; /* Centrer les éléments à l'intérieur */
+}
+
+/* Champs de saisie (ComboBox, TextField, TextArea) */
+.input-field {
+    -fx-border-color: #C8102E;
+    -fx-border-width: 1px;
+    -fx-background-color: #F9F9F9;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 3);
+}
+
+
+/* Boutons (Soumettre, Annuler) */
+.submit-button, .cancel-button {
+    -fx-background-color: #C8102E; /* Fond rouge */
+    -fx-text-fill: #FFFFFF; /* Texte blanc */
+    -fx-font-size: 16px; /* Taille de police */
+    -fx-padding: 10px 20px; /* Padding interne */
+    -fx-background-radius: 5px; /* Bords arrondis */
+    -fx-cursor: hand; /* Curseur main au survol */
+    -fx-pref-width: 150px; /* Largeur préférée */
+
+}
+
+.submit-button:hover, .cancel-button:hover {
+    -fx-background-color: #9B0A1E; /* Fond plus foncé au survol */
+}
+
+.form-container {
+    -fx-background-color: #F0F0F0; /* Gris clair */
+    -fx-background-radius: 10px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+    -fx-pref-width: 500px;
+    -fx-alignment: center;
+    -fx-spacing: 20px;
+
+}
+
+
+/* Conteneur HBox pour les boutons */
+.hbox-buttons {
+    -fx-spacing: 20px; /* Espacement entre les boutons */
+
+}
+.table-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E6E6E6;
+    -fx-border-width: 1px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
+}
+/* HBox (for Buttons in the content area) */
+.hbox-buttons {
+    -fx-spacing: 20px;
+    -fx-alignment: CENTER;
+}
+
+/* Inputs and search field */
+.text-field {
+    -fx-background-color: #F0F0F0;
+    -fx-border-color: #C8102E;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+    -fx-font-size: 16px;
+    -fx-pref-width: 300px;
+}
+
+.table-view .column-header {
+    -fx-background-color: #E6E6E6;
+    -fx-text-fill: #333333;
+}
+.table-view .table-row-cell:selected {
+    -fx-background-color: #2dc2dd; /* Rouge foncé */
+    -fx-text-fill: white; /* Texte blanc */
+}
+
+.table-view .table-row-cell {
+    -fx-background-color: #FFFFFF;
+}
+
+ .add-button2 {
+    -fx-background-color: #11a791; /* Fond rouge */
+    -fx-text-fill: #FFFFFF; /* Texte blanc */
+    -fx-font-size: 16px; /* Taille de police */
+    -fx-padding: 10px 20px; /* Padding interne */
+    -fx-background-radius: 5px; /* Bords arrondis */
+    -fx-cursor: hand; /* Curseur main au survol */
+    -fx-pref-width: 280px; /* Largeur préférée */
+
+ }
+.feedback-container {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-width: 2px;
+    -fx-background-insets: 0, 1;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
+}
+

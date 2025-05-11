@@ -1,8 +1,13 @@
 package Gui.Reclamation.Controllers;
 
+import Services.Reclamation.Crud.FeedBackService;
+import Services.Utilisateur.Crud.MembresService;
 import Models.Reclamation.Feedback;
 import Models.Reclamation.Recommend;
-import Services.Reclamation.Crud.FeedBackService;
+import Models.Utilisateur.Utilisateurs;
+import com.jfoenix.controls.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,218 +15,156 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import com.jfoenix.controls.*;
 
 import java.io.IOException;
+import java.util.List;
 
 public class ModifierFeedback {
 
-    @FXML
-    private JFXTextArea descField;
-    @FXML
-    private JFXCheckBox recommendCheck;
-    @FXML
-    private JFXButton star1, star2, star3, star4, star5;
-    @FXML
-    private JFXButton submitButton;
-    @FXML
-    private Button cancelButton;
-    private final FeedBackService feedbackService = new FeedBackService();
-    private int selectedStars = 0;
-    private int feedbackId; // Ajoutez une variable pour stocker l'ID du feedback
+    @FXML private Label feedbackIdLabel;
+    @FXML private ComboBox<String> userField;
+    @FXML private JFXTextArea descField;
+    @FXML private JFXCheckBox recommendCheck;
+    @FXML private JFXButton submitButton;
+    @FXML private JFXButton star1, star2, star3, star4, star5;
+
+    private int rating = 0;
+    private final FeedBackService feedBackService = new FeedBackService();
+    private final MembresService utilisateurService = new MembresService();
+    private ObservableList<String> userNames = FXCollections.observableArrayList();
+    private Feedback feedback;
 
     @FXML
     public void initialize() {
-        star1.setOnAction(e -> selectStars(1));
-        star2.setOnAction(e -> selectStars(2));
-        star3.setOnAction(e -> selectStars(3));
-        star4.setOnAction(e -> selectStars(4));
-        star5.setOnAction(e -> selectStars(5));
-        submitButton.setOnAction(this::handleSubmit);
-        cancelButton.setOnAction(this::handleCancel);
-    }
+        loadUserNames();
+        userField.setItems(userNames);
 
-    private void selectStars(int stars) {
-        selectedStars = stars;
-        resetStarButtons();
-        for (int i = 0; i < stars; i++) {
-            JFXButton starButton = getStarButton(i);
-            starButton.setStyle("-fx-font-size: 24px; -fx-text-fill: gold;");
+        JFXButton[] stars = {star1, star2, star3, star4, star5};
+        for (int i = 0; i < stars.length; i++) {
+            int ratingValue = i + 1;
+            stars[i].addEventHandler(MouseEvent.MOUSE_CLICKED, event -> updateRating(ratingValue));
         }
     }
 
-    private void resetStarButtons() {
-        star1.setStyle("-fx-font-size: 24px; -fx-text-fill: gray;");
-        star2.setStyle("-fx-font-size: 24px; -fx-text-fill: gray;");
-        star3.setStyle("-fx-font-size: 24px; -fx-text-fill: gray;");
-        star4.setStyle("-fx-font-size: 24px; -fx-text-fill: gray;");
-        star5.setStyle("-fx-font-size: 24px; -fx-text-fill: gray;");
-    }
-
-    private JFXButton getStarButton(int index) {
-        switch (index) {
-            case 0: return star1;
-            case 1: return star2;
-            case 2: return star3;
-            case 3: return star4;
-            case 4: return star5;
-            default: return null;
+    private void loadUserNames() {
+        List<Utilisateurs> utilisateurs = utilisateurService.RechercherMem();
+        for (Utilisateurs utilisateur : utilisateurs) {
+            userNames.add(utilisateur.getNom() + " " + utilisateur.getPrenom());
         }
-    }
-
-    @FXML
-    private void handleSubmit(ActionEvent event) {
-        try {
-            String description = descField.getText();
-            int vote = selectedStars;
-            Recommend recommendation = recommendCheck.isSelected() ? Recommend.Oui : Recommend.Non;
-
-            if (description.isEmpty() || vote == 0) {
-                showAlert("Erreur", "Veuillez remplir tous les champs !");
-                return;
-            }
-
-            // Utiliser la variable feedbackId pour la modification
-            System.out.println("ID du feedback à modifier : " + feedbackId);
-
-            Feedback feedback = new Feedback(feedbackId, description, vote, recommendation);
-            System.out.println("Description: " + description);
-            System.out.println("Vote: " + vote);
-            System.out.println("Recommendation: " + recommendation);
-
-            feedbackService.ModifierFeedBack(feedback);
-            showAlert("Succès", "Feedback envoyé avec succès !");
-            clearFields();
-            navigateToFeedbackPage(event);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("Erreur", "Une erreur est survenue lors de l'envoi du feedback.");
-        }
-    }
-
-
-    @FXML
-    private void handleCancel(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/AfficheFeedback.fxml"));
-            AnchorPane feedbackPage = loader.load();
-            Scene scene = new Scene(feedbackPage);
-            Stage stage = (Stage) cancelButton.getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Erreur de navigation");
-            alert.setHeaderText("Une erreur est survenue lors du changement de page.");
-            alert.setContentText(e.getMessage());
-            alert.showAndWait();
-        }
-    }
-
-    private void clearFields() {
-        descField.clear();
-        recommendCheck.setSelected(false);
-        selectedStars = 0;
-        resetStarButtons();
-    }
-
-    private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
-
-    @FXML
-    private void navigateToFeedbackPage(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/AfficheFeedback.fxml"));
-            Parent root = loader.load();
-            Scene currentScene = ((Node) event.getSource()).getScene();
-            Stage stage = (Stage) currentScene.getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur de navigation vers la page des feedbacks : " + e.getMessage());
-        }
-    }
-
-    @FXML
-    private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
-        currentStage.show();
     }
 
     public void setFeedback(Feedback feedback) {
+        this.feedback = feedback;
+        feedbackIdLabel.setText("Feedback ID: " + feedback.getId());
+        // Pré-remplir le nom de l'utilisateur (non modifiable)
+        String userName = utilisateurService.getUserNameById(feedback.getIdUser());
+        userField.setValue(userName);
+        userField.setDisable(true); // Désactiver la modification de l'utilisateur
+
+        // Pré-remplir les étoiles
+        rating = feedback.getVote();
+        updateRating(rating);
+
         // Pré-remplir la description
         descField.setText(feedback.getDescription());
 
         // Pré-remplir la recommandation
         recommendCheck.setSelected(feedback.getRecommend() == Recommend.Oui);
+    }
 
-        // Pré-remplir les étoiles (vote)
-        selectedStars = feedback.getVote();
-        resetStarButtons();
-        for (int i = 0; i < selectedStars; i++) {
-            JFXButton starButton = getStarButton(i);
-            starButton.setStyle("-fx-font-size: 24px; -fx-text-fill: gold;");
+    private void updateRating(int value) {
+        rating = value;
+        JFXButton[] stars = {star1, star2, star3, star4, star5};
+        for (int i = 0; i < stars.length; i++) {
+            stars[i].setStyle(i < rating ? "-fx-text-fill: gold;" : "-fx-text-fill: gray;");
         }
+    }
 
-        // Assigner l'ID du feedback à la variable feedbackId
-        feedbackId = feedback.getId();
+    @FXML
+    private void saveFeedback(ActionEvent event) {
+        try {
+            String description = descField.getText();
+            Recommend recommend = recommendCheck.isSelected() ? Recommend.Oui : Recommend.Non;
+
+            if (description.trim().isEmpty()) {
+                showAlert("Error", "Please provide feedback description.");
+                return;
+            }
+
+            // Mettre à jour l'objet Feedback
+            feedback.setVote(rating);
+            feedback.setDescription(description);
+            feedback.setRecommend(recommend);
+
+            // Sauvegarder dans la base de données
+            feedBackService.ModifierFeedBack(feedback);
+
+            // Afficher une confirmation
+            showAlert("Success", "Feedback modified successfully!");
+
+            // Retourner à la liste des feedbacks
+            goToafficheFeedb(event);
+        } catch (Exception e) {
+            showAlert("Error", "An error occurred while modifying the feedback: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void goToFeedback(ActionEvent event) throws IOException {
+        switchScene("/Reclamation/Feedback.fxml", event);
+    }
+
+    @FXML
+    private void goToAccueil(ActionEvent event) throws IOException {
+        switchScene("/EventoraAPP/EventoraAPP.fxml", event);
+    }
+
+    @FXML
+    private void goToReservation(ActionEvent event) throws IOException {
+        switchScene("/Reservation/Reservation.fxml", event);
+    }
+
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        switchScene("/Service/Service.fxml", event);
+    }
+
+    @FXML
+    private void goToPack(ActionEvent event) throws IOException {
+        switchScene("/Pack/Packs.fxml", event);
+    }
+    @FXML
+    private void goToafficheFeedb(ActionEvent event) throws IOException {
+        switchScene("/Reclamation/AfficheFeedback.fxml", event);
     }
 
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene scene = new Scene(reclamationLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+        switchScene("/Reclamation/Reclamation.fxml", event);
     }
-    @FXML
-    private void goToReservation(ActionEvent event) throws IOException {
+
+    private void switchScene(String fxmlFile, ActionEvent event) throws IOException {
         try {
-            // Vérifier le chemin correct du fichier FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.show();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+            Parent layout = loader.load();
+            Scene newScene = new Scene(layout);
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            currentStage.setScene(newScene);
+            currentStage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
+            showAlert("Error", "Error while changing scene: " + e.getMessage());
+            throw e;
         }
     }
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
 
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
-    }
-    @FXML
-    private void goToPack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
-        AnchorPane packLayout = loader.load();
-        Scene scene = new Scene(packLayout);
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-        stage.show();
+    private void showAlert(String title, String message) {
+        JFXAlert<?> alert = new JFXAlert<>();
+        JFXDialogLayout layout = new JFXDialogLayout();
+        layout.setHeading(new Label(title));
+        layout.setBody(new Label(message));
+        alert.setContent(layout);
+        alert.show();
     }
 }

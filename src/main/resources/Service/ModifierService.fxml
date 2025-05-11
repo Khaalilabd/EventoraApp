@@ -12,6 +12,8 @@
 
 <AnchorPane stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             fx:controller="Gui.Service.Controllers.ModifierService">
 
     <!-- Navbar horizontale en haut -->

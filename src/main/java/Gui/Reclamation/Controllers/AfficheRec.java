@@ -3,11 +3,14 @@ package Gui.Reclamation.Controllers;
 import Models.Reclamation.Statut;
 import Services.Reclamation.Crud.ReclamationService;
 import Models.Reclamation.Reclamation;
+import Models.Utilisateur.Utilisateurs;
+import Utils.SessionManager;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.geometry.Insets; // Correct import for JavaFX Insets
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,7 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
+import javafx.stage.Modality;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -37,21 +40,43 @@ public class AfficheRec {
 
     @FXML
     public void initialize() {
-        loadReclamations();
+        statusFilter.setItems(FXCollections.observableArrayList(
+                "Tous",
+                Statut.RESOLUE.getLabel(),
+                Statut.EN_COURS.getLabel(),
+                Statut.EN_ATTENTE.getLabel(),
+                Statut.REJETEE.getLabel()
+        ));
+        statusFilter.getSelectionModel().selectFirst(); // Par défaut "Tous"
         searchField.textProperty().addListener((observable, oldValue, newValue) -> searchReclamation(newValue));
         statusFilter.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> filterByStatus(newVal));
-        statusFilter.getSelectionModel().selectFirst(); // "Tous" par défaut
+
+        loadReclamations(); // Chargement initial
     }
 
     private void loadReclamations() {
         try {
             reclamationGrid.getChildren().clear();
-            List<Reclamation> reclamations = reclamationService.RechercherRec();
+            List<Reclamation> reclamations = getReclamationsForCurrentUser();
             populateGrid(reclamations);
             updateStatistics(reclamations);
         } catch (Exception e) {
             e.printStackTrace();
             showErrorAlert("Impossible de charger les réclamations", e.getMessage());
+        }
+    }
+
+    private List<Reclamation> getReclamationsForCurrentUser() {
+        Utilisateurs utilisateurConnecte = SessionManager.getInstance().getUtilisateurConnecte();
+        if (utilisateurConnecte == null) {
+            showErrorAlert("Erreur", "Aucun utilisateur connecté.");
+            return List.of(); // Retourne une liste vide si aucun utilisateur connecté
+        }
+
+        if (utilisateurConnecte.getRole() == Models.Utilisateur.Role.ADMIN) {
+            return reclamationService.RechercherRec(); // Toutes les réclamations pour ADMIN
+        } else {
+            return reclamationService.RechercherRecParUtilisateur(utilisateurConnecte.getId()); // Réclamations de l'utilisateur pour MEMBRE
         }
     }
 
@@ -64,12 +89,12 @@ public class AfficheRec {
             VBox card = createReclamationCard(reclamation);
             reclamationGrid.add(card, column, row);
             column++;
-            if (column >= 5) { // Limite à 3 cartes par ligne
+            if (column >= 8) { // Limite à 3 cartes par ligne
                 column = 0;
                 row++;
             }
         }
-        for (int i = 0; i < 5; i++) { // Définit 3 colonnes
+        for (int i = 0; i < 8; i++) { // Définit 3 colonnes
             ColumnConstraints colConst = new ColumnConstraints();
             colConst.setPercentWidth(33.33); // Chaque colonne prend 1/3 de la largeur
             reclamationGrid.getColumnConstraints().add(colConst);
@@ -116,35 +141,99 @@ public class AfficheRec {
             case REJETEE: statutLabel.getStyleClass().add("statut-rejetee"); break;
         }
 
+        // Vérifier le rôle de l'utilisateur connecté
+        Utilisateurs utilisateurConnecte = SessionManager.getInstance().getUtilisateurConnecte();
         HBox actionButtons = new HBox(5);
         actionButtons.setAlignment(Pos.CENTER);
-        Button editButton = createIconButton("/Images/modif.png", () -> handleEdit(reclamation));
-        Button deleteButton = createIconButton("/Images/supp.png", () -> handleDelete(reclamation));
-        Button btnResolved = new Button("✅");
-        Button btnInProgress = new Button("⏳");
-        Button btnRejected = new Button("❌");
-        btnResolved.setOnAction(e -> handleStatutChange(reclamation, Statut.RESOLUE));
-        btnInProgress.setOnAction(e -> handleStatutChange(reclamation, Statut.EN_COURS));
-        btnRejected.setOnAction(e -> handleStatutChange(reclamation, Statut.REJETEE));
-        actionButtons.getChildren().addAll(editButton, deleteButton, btnResolved, btnInProgress, btnRejected);
 
+        // Bouton Supprimer (disponible pour tous)
+        Button deleteButton = createIconButton("/Images/supp.png", () -> handleDelete(reclamation), "Supprimer");
+
+        // Bouton Détails (disponible pour tous)
+        Button detailsButton = createIconButton("/Images/details.png", () -> showDetails(reclamation), "Détails");
+
+        // Bouton QR (disponible pour tous)
         Button qrButton = new Button("Voir QR");
         qrButton.getStyleClass().add("qr-button");
         qrButton.setOnAction(e -> showQRCode(reclamation));
+
+        if (utilisateurConnecte != null && utilisateurConnecte.getRole() == Models.Utilisateur.Role.ADMIN) {
+            // Ajouter les boutons pour l'Admin uniquement
+            Button editButton = createIconButton("/Images/modif.png", () -> handleEdit(reclamation), "Modifier");
+            Button btnResolved = new Button("✅");
+            Button btnInProgress = new Button("⏳");
+            Button btnRejected = new Button("❌");
+            btnResolved.setOnAction(e -> handleStatutChange(reclamation, Statut.RESOLUE));
+            btnInProgress.setOnAction(e -> handleStatutChange(reclamation, Statut.EN_COURS));
+            btnRejected.setOnAction(e -> handleStatutChange(reclamation, Statut.REJETEE));
+            actionButtons.getChildren().addAll(editButton, deleteButton, detailsButton, btnResolved, btnInProgress, btnRejected);
+        } else {
+            // Pour les membres, afficher uniquement les boutons Supprimer et Détails
+            actionButtons.getChildren().addAll(deleteButton, detailsButton);
+        }
 
         card.getChildren().addAll(idLabel, titleLabel, descLabel, typeLabel, statutLabel, actionButtons, qrButton);
         return card;
     }
 
-    private Button createIconButton(String iconPath, Runnable action) {
-        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream(iconPath)));
-        icon.setFitHeight(20);
-        icon.setFitWidth(20);
+    private Button createIconButton(String iconPath, Runnable action, String fallbackText) {
         Button button = new Button();
-        button.setGraphic(icon);
         button.getStyleClass().add("table-button");
         button.setOnAction(e -> action.run());
+
+        // Essayer de charger l'icône
+        try {
+            Image image = new Image(getClass().getResourceAsStream(iconPath));
+            ImageView icon = new ImageView(image);
+            icon.setFitHeight(20);
+            icon.setFitWidth(20);
+            button.setGraphic(icon);
+        } catch (NullPointerException e) {
+            // Si l'icône ne peut pas être chargée, utiliser le texte de secours
+            System.err.println("Erreur : Impossible de charger l'icône à " + iconPath);
+            button.setText(fallbackText);
+        }
+
         return button;
+    }
+
+    private void showDetails(Reclamation reclamation) {
+        // Créer une nouvelle fenêtre pour afficher les détails
+        Stage detailsStage = new Stage();
+        detailsStage.initModality(Modality.APPLICATION_MODAL);
+        detailsStage.setTitle("Détails de la réclamation");
+
+        // Créer un layout pour afficher les détails
+        VBox detailsLayout = new VBox(10);
+        detailsLayout.setAlignment(Pos.CENTER);
+        detailsLayout.setPadding(new Insets(20)); // Correct JavaFX Insets
+
+        // Ajouter les informations de la réclamation
+        Label idLabel = new Label("ID: " + reclamation.getId());
+        idLabel.getStyleClass().add("card-id");
+        Label titleLabel = new Label("Titre: " + reclamation.getTitre());
+        titleLabel.getStyleClass().add("card-title");
+        Label descLabel = new Label("Description: " + reclamation.getDescription());
+        descLabel.getStyleClass().add("card-description");
+        descLabel.setWrapText(true);
+        Label typeLabel = new Label("Type: " + reclamation.getType().getLabel());
+        typeLabel.getStyleClass().add("card-type");
+        Label statutLabel = new Label("Statut: " + reclamation.getStatut().getLabel());
+        statutLabel.getStyleClass().add("card-statut");
+
+        // Bouton pour fermer la fenêtre
+        Button closeButton = new Button("Fermer");
+        closeButton.getStyleClass().add("card-button");
+        closeButton.setOnAction(e -> detailsStage.close());
+
+        // Ajouter les éléments au layout
+        detailsLayout.getChildren().addAll(idLabel, titleLabel, descLabel, typeLabel, statutLabel, closeButton);
+
+        // Créer la scène
+        Scene detailsScene = new Scene(detailsLayout, 400, 300);
+        detailsScene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
+        detailsStage.setScene(detailsScene);
+        detailsStage.show();
     }
 
     private void handleStatutChange(Reclamation reclamation, Statut newStatut) {
@@ -238,6 +327,14 @@ public class AfficheRec {
         try {
             reclamationGrid.getChildren().clear();
             List<Reclamation> resultatRecherche = reclamationService.RechercherRecParMotCle(motCle.toLowerCase());
+            // Filtrer selon le rôle de l'utilisateur
+            Utilisateurs utilisateurConnecte = SessionManager.getInstance().getUtilisateurConnecte();
+            if (utilisateurConnecte != null && utilisateurConnecte.getRole() != Models.Utilisateur.Role.ADMIN) {
+                resultatRecherche = resultatRecherche.stream()
+                        .filter(r -> r.getIdUser() == utilisateurConnecte.getId())
+                        .collect(Collectors.toList());
+            }
+
             String selectedStatus = statusFilter.getValue();
             if (selectedStatus != null && !"Tous".equals(selectedStatus)) {
                 resultatRecherche = resultatRecherche.stream()
@@ -254,11 +351,9 @@ public class AfficheRec {
     private void filterByStatus(String status) {
         try {
             reclamationGrid.getChildren().clear();
-            List<Reclamation> reclamations;
-            if ("Tous".equals(status)) {
-                reclamations = reclamationService.RechercherRec();
-            } else {
-                reclamations = reclamationService.RechercherRec().stream()
+            List<Reclamation> reclamations = getReclamationsForCurrentUser();
+            if (status != null && !"Tous".equals(status)) {
+                reclamations = reclamations.stream()
                         .filter(r -> r.getStatut().getLabel().equals(status))
                         .collect(Collectors.toList());
             }
@@ -338,5 +433,22 @@ public class AfficheRec {
         Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         currentStage.setScene(newScene);
         currentStage.show();
+    }
+
+    @FXML
+    private void deconnexion(ActionEvent event) {
+        // Effacer la session
+        SessionManager.getInstance().clearSession();
+        // Rediriger vers la page de connexion
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Authentification.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Erreur lors du chargement de la page de connexion : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

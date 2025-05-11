@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,8 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             reclamation.setStatut(Statut.EN_ATTENTE);
         }
 
-        String req = "INSERT INTO reclamation (idUser, titre, description, type, statut, qr_code_url) VALUES (?, ?, ?, ?, ?, ?)";
+        // Ajout du champ date dans la requête SQL
+        String req = "INSERT INTO reclamation (idUser, titre, description, type, statut, date, qr_code_url) VALUES (?, ?, ?, ?, ?, ?, ?)";
         Connection conn = null;
         try {
             conn = Mydatasource.getInstance().getConnection();
@@ -48,19 +50,21 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                 ps.setString(3, reclamation.getDescription());
                 ps.setString(4, reclamation.getType().getLabel());
                 ps.setString(5, reclamation.getStatut().getLabel());
-                ps.setString(6, "");
+                ps.setObject(6, reclamation.getDate()); // Ajout de la date
+                ps.setString(7, "");
                 ps.executeUpdate();
                 ResultSet rs = ps.getGeneratedKeys();
                 if (rs.next()) {
                     int id = rs.getInt(1);
                     reclamation.setId(id);
                     String reclamationInfo = String.format(
-                            "Réclamation ID: %d\nTitre: %s\nDescription: %s\nType: %s\nStatut: %s",
+                            "Réclamation ID: %d\nTitre: %s\nDescription: %s\nType: %s\nStatut: %s\nDate: %s",
                             id,
                             reclamation.getTitre(),
                             reclamation.getDescription(),
                             reclamation.getType().getLabel(),
-                            reclamation.getStatut().getLabel()
+                            reclamation.getStatut().getLabel(),
+                            reclamation.getDate().toString() // Ajout de la date dans le QR code
                     );
                     String qrFilePath = generateQRCode(reclamationInfo, id);
                     String updateReq = "UPDATE reclamation SET qr_code_url = ? WHERE id = ?";
@@ -95,7 +99,6 @@ public class ReclamationService implements Ireclamation<Reclamation> {
             }
         }
     }
-
     private String generateQRCode(String url, int id) throws WriterException, IOException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(url, BarcodeFormat.QR_CODE, 200, 200);
@@ -106,7 +109,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
     @Override
     public List<Reclamation> RechercherRec() {
-        String req = "SELECT Id, idUser, Titre, Description, Type, Statut, qr_code_url FROM reclamation";
+        String req = "SELECT Id, idUser, Titre, Description, Type, Statut, date, qr_code_url FROM reclamation"; // Ajout de date
         List<Reclamation> reclamations = new ArrayList<>();
 
         try (Connection conn = Mydatasource.getInstance().getConnection();
@@ -121,6 +124,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                 r.setDescription(rs.getString("Description"));
                 r.setType(TypeReclamation.fromLabel(rs.getString("Type")));
                 r.setStatut(Statut.fromLabel(rs.getString("Statut")));
+                r.setDate(rs.getObject("date", LocalDateTime.class)); // Récupération de la date
                 r.setQrCodeUrl(rs.getString("qr_code_url"));
                 reclamations.add(r);
             }
@@ -135,7 +139,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
     public Reclamation findById(int id) {
         long startTime = System.currentTimeMillis();
         System.out.println("Recherche de la réclamation avec ID : " + id);
-        String req = "SELECT Id, idUser, Titre, Description, Type, Statut, qr_code_url FROM reclamation WHERE Id = ?";
+        String req = "SELECT Id, idUser, Titre, Description, Type, Statut, date, qr_code_url FROM reclamation WHERE Id = ?"; // Ajout de date
         try (Connection conn = Mydatasource.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(req)) {
             ps.setInt(1, id);
@@ -148,6 +152,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                     r.setDescription(rs.getString("Description"));
                     r.setType(TypeReclamation.fromLabel(rs.getString("Type")));
                     r.setStatut(Statut.fromLabel(rs.getString("Statut")));
+                    r.setDate(rs.getObject("date", LocalDateTime.class)); // Récupération de la date
                     r.setQrCodeUrl(rs.getString("qr_code_url"));
                     System.out.println("Réclamation trouvée : " + r.getTitre());
                     long endTime = System.currentTimeMillis();
@@ -166,7 +171,6 @@ public class ReclamationService implements Ireclamation<Reclamation> {
         System.out.println("Temps de traitement de findById : " + (endTime - startTime) + " ms");
         return null;
     }
-
     @Override
     public void ModifierRec(Reclamation reclamation) {
         String req = "UPDATE reclamation SET titre = ?, description = ?, type = ? WHERE id = ?";
@@ -220,7 +224,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
 
     @Override
     public List<Reclamation> RechercherRecParMotCle(String motCle) {
-        String req = "SELECT Id, idUser, Titre, Description, Type, qr_code_url FROM reclamation WHERE Titre LIKE ? OR Description LIKE ? OR Type LIKE ?";
+        String req = "SELECT Id, idUser, Titre, Description, Type, date, qr_code_url FROM reclamation WHERE Titre LIKE ? OR Description LIKE ? OR Type LIKE ?"; // Ajout de date
         List<Reclamation> reclamations = new ArrayList<>();
         try (Connection conn = Mydatasource.getInstance().getConnection();
              PreparedStatement ps = conn.prepareStatement(req)) {
@@ -235,6 +239,7 @@ public class ReclamationService implements Ireclamation<Reclamation> {
                     r.setTitre(rs.getString("Titre"));
                     r.setDescription(rs.getString("Description"));
                     r.setType(TypeReclamation.fromLabel(rs.getString("Type")));
+                    r.setDate(rs.getObject("date", LocalDateTime.class)); // Récupération de la date
                     r.setQrCodeUrl(rs.getString("qr_code_url"));
                     reclamations.add(r);
                 }
@@ -246,7 +251,6 @@ public class ReclamationService implements Ireclamation<Reclamation> {
         }
         return reclamations;
     }
-
     @Override
     public void ModifierStatut(Reclamation reclamation) {
         String req = "UPDATE reclamation SET statut = ? WHERE id = ?";
@@ -279,12 +283,41 @@ public class ReclamationService implements Ireclamation<Reclamation> {
     }
     private String generateReclamationText(Reclamation reclamation) {
         return String.format(
-                "Réclamation ID: %d\nTitre: %s\nDescription: %s\nType: %s\nStatut: %s",
+                "Réclamation ID: %d\nTitre: %s\nDescription: %s\nType: %s\nStatut: %s\nDate: %s",
                 reclamation.getId(),
                 reclamation.getTitre(),
                 reclamation.getDescription(),
                 reclamation.getType().getLabel(),
-                reclamation.getStatut().getLabel()
+                reclamation.getStatut().getLabel(),
+                reclamation.getDate().toString() // Ajout de la date
         );
+    }
+    public List<Reclamation> RechercherRecParUtilisateur(int idUser) {
+        String req = "SELECT Id, idUser, Titre, Description, Type, Statut, date, qr_code_url FROM reclamation WHERE idUser = ?"; // Ajout de date
+        List<Reclamation> reclamations = new ArrayList<>();
+
+        try (Connection conn = Mydatasource.getInstance().getConnection();
+             PreparedStatement ps = conn.prepareStatement(req)) {
+            ps.setInt(1, idUser);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Reclamation r = new Reclamation();
+                    r.setId(rs.getInt("Id"));
+                    r.setIdUser(rs.getInt("idUser"));
+                    r.setTitre(rs.getString("Titre"));
+                    r.setDescription(rs.getString("Description"));
+                    r.setType(TypeReclamation.fromLabel(rs.getString("Type")));
+                    r.setStatut(Statut.fromLabel(rs.getString("Statut")));
+                    r.setDate(rs.getObject("date", LocalDateTime.class)); // Récupération de la date
+                    r.setQrCodeUrl(rs.getString("qr_code_url"));
+                    reclamations.add(r);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération des réclamations de l'utilisateur : " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Erreur lors de la récupération des réclamations de l'utilisateur", e);
+        }
+        return reclamations;
     }
 }

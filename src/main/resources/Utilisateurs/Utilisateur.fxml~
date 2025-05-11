@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane  styleClass="main-container"
+            stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Utilisateurs.Controllers.Utilisateur">
+    <!-- Barre de navigation -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Espace Utilisateur" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="15" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAcceuil"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button" onAction="#goToParametres"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button" onAction="#goToAuth"/>
+        </HBox>
+    </HBox>
+
+    <!-- Contenu principal -->
+    <ScrollPane fitToWidth="true" vbarPolicy="AS_NEEDED" pannable="true"
+                AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40px;">
+            <Label text="Mon Espace Utilisateur"
+                   styleClass="main-title"/>
+            <Label text="Gérez vos informations et réservations en toute simplicité."
+                   styleClass="main-description"/>
+
+            <!-- Cartes disposées en grille 2x2 -->
+            <GridPane hgap="20" vgap="20" alignment="CENTER" styleClass="card-container">
+                <!-- Carte 1 : Réclamation (Ligne 1, Colonne 0) -->
+                <VBox fx:id="card1" styleClass="card" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <ImageView fitHeight="200" fitWidth="300">
+                        <image>
+                            <Image url="/Images/recrec.png"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Réclamation" styleClass="card-title"/>
+                    <Label text="Déposez une réclamation ou suivez vos demandes."
+                           styleClass="card-description" wrapText="true"/>
+                    <Button fx:id="reclamationButton" text="Consulter" onAction="#goToReclamation"
+                            styleClass="card-button"/>
+                </VBox>
+
+                <!-- Carte 2 : Informations (Ligne 1, Colonne 1) -->
+                <VBox fx:id="card2" styleClass="card" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <ImageView fitHeight="200" fitWidth="300">
+                        <image>
+                            <Image url="/Images/informations.jpg"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Informations" styleClass="card-title"/>
+                    <Label text="Consultez et modifiez vos informations personnelles."
+                           styleClass="card-description" wrapText="true"/>
+                    <Button fx:id="informationsButton" text="Consulter" onAction="#goToInformations"
+                            styleClass="card-button"/>
+                </VBox>
+
+                <!-- Carte 3 : Réservation (Ligne 2, Colonne 0) -->
+                <VBox fx:id="card3" styleClass="card" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                    <ImageView fitHeight="200" fitWidth="300">
+                        <image>
+                            <Image url="/Images/reservation.jpg"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Réservation" styleClass="card-title"/>
+                    <Label text="Gérez vos réservations et planifiez vos événements."
+                           styleClass="card-description" wrapText="true"/>
+                    <Button fx:id="reservationButton" text="Consulter" onAction="#goToReservation"
+                            styleClass="card-button"/>
+                </VBox>
+
+                <!-- Carte 4 : Paramètres (Ligne 2, Colonne 1) -->
+                <VBox fx:id="card4" styleClass="card" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                    <ImageView fitHeight="200" fitWidth="300">
+                        <image>
+                            <Image url="/Images/parametres.jpg"/>
+                        </image>
+                    </ImageView>
+                    <Label text="Paramètres" styleClass="card-title"/>
+                    <Label text="Ajustez vos préférences et paramètres de compte."
+                           styleClass="card-description" wrapText="true"/>
+                    <Button fx:id="parametresButton" text="Accéder" onAction="#goToParametres"
+                            styleClass="card-button"/>
+                </VBox>
+            </GridPane>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

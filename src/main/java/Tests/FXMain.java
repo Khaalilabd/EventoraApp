@@ -10,14 +10,8 @@ import java.io.IOException;
 
 public class FXMain extends Application {
     @Override
-<<<<<<< HEAD
-    public void start(Stage stage)  {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservation.fxml"));
-=======
     public void start(Stage stage) {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-
->>>>>>> 045bb7bc8abc11f947fe3eaa6f96081c22d0f87e
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/EventoraAPP/Acceuil.fxml"));
         try {
             Parent root = loader.load();
             Scene scene = new Scene(root);
@@ -30,7 +24,6 @@ public class FXMain extends Application {
             r.printStackTrace();
         }
     }
-
     public static void main(String[] args) {
         launch();
     }

@@ -9,5 +9,4 @@ public interface IReservationPack<T> {
     void supprimerReservationPack(T t);
     List<T> rechercherReservationPack();
 
-
 }

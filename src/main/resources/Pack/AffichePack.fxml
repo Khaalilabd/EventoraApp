@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.Pos?>
+
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+<AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Gui.Pack.Controllers.AffichePack"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             stylesheets="/style.css">
 
-    <!-- Navbar horizontale (identique à AjouterRec) -->
+    <!-- Navbar -->
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
           AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <HBox alignment="CENTER_LEFT">
@@ -27,47 +30,33 @@
         </HBox>
     </HBox>
 
-    <!-- Contenu principal (structure inspirée de AjouterRec) -->
-    <VBox alignment="CENTER" styleClass="main-content"
+    <!-- Main content -->
+    <VBox alignment="CENTER" styleClass="main-content" spacing="10"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
-
-        <!-- Titre principal -->
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
         <Label text="Liste des Packs" styleClass="main-title"/>
-
-        <!-- Sous-titre descriptif -->
         <Label wrapText="true" styleClass="main-description"
-               text="Consultez, ajoutez ou gérez les packs disponibles dans votre catalogue."/>
+               text="Visualisez, modifiez ou supprimez les packs existants."/>
 
-        <!-- Champ de recherche -->
+        <!-- Filter and Sort Section -->
         <VBox spacing="10" alignment="CENTER" styleClass="form-container">
             <HBox spacing="10" alignment="CENTER">
-                <!-- Basic Search -->
                 <TextField fx:id="searchField" promptText="Rechercher..." styleClass="input-field" prefWidth="200.0"/>
-                <!-- Sorting Options -->
+                <ComboBox fx:id="EventFilter" promptText="Filtrer par événement..." styleClass="input-field" prefWidth="150.0"/>
                 <ComboBox fx:id="sortByCombo" promptText="Trier par..." styleClass="input-field" prefWidth="150.0"/>
                 <ToggleButton fx:id="sortOrderToggle" text="⬆ Ascendant" styleClass="card-button"/>
             </HBox>
         </VBox>
-        <!-- Boutons avec icônes -->
-        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
-            <Button text="➕ Ajouter Pack" styleClass="card-button" onAction="#addPack"/>
-            <Button text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
-            <Button text="🎉 Événements" styleClass="card-button" onAction="#goToEvenement"/>
-        </HBox>
 
-        <!-- Tableau des packs -->
-        <TableView fx:id="tableView" prefHeight="575.0" prefWidth="999.0">
-            <columns>
-                <TableColumn fx:id="colNom" prefWidth="150.0" text="Nom"/>
-                <TableColumn fx:id="colDescription" prefWidth="250.0" text="Description"/>
-                <TableColumn fx:id="colPrix" prefWidth="100.0" text="Prix"/>
-                <TableColumn fx:id="colLocation" prefWidth="150.0" text="Localisation"/>
-                <TableColumn fx:id="colType" prefWidth="120.0" text="Type"/>
-                <TableColumn fx:id="colNbrGuests" prefWidth="100.0" text="Invités"/>
-                <TableColumn fx:id="colServices" prefWidth="200.0" text="Services inclus"/>
-                <TableColumn fx:id="colActions" prefWidth="180.0" text="Actions"/>
-            </columns>
-        </TableView>
+        <!-- TilePane for Bubbles -->
+        <ScrollPane fitToWidth="true" prefHeight="400.0" prefWidth="900.0">
+            <TilePane fx:id="packTilePane" hgap="15" vgap="15" alignment="CENTER" styleClass="bubble-container" prefColumns="3"/>
+        </ScrollPane>
+
+        <HBox spacing="10" alignment="CENTER">
+            <Button text="Ajouter un Pack" onAction="#addPack" styleClass="card-button"/>
+            <Button text=" Rafraîchir" onAction="#refreshList" styleClass="card-button"/>
+            <Button text="Événements" onAction="#goToEvenement" styleClass="card-button"/>
+        </HBox>
     </VBox>
 </AnchorPane>

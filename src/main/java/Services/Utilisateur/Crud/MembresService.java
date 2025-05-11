@@ -4,61 +4,101 @@ import Models.Utilisateur.Role;
 import Models.Utilisateur.Utilisateurs;
 import Services.Utilisateur.Interface.Imembres;
 import Utils.Mydatasource;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MembresService implements Imembres<Utilisateurs> {
 
-    Connection connection = Mydatasource.getInstance().getConnection();
+    private static final String ROLE_MEMBRE = "MEMBRE";
+    private final Connection connection = Mydatasource.getInstance().getConnection();
+    private final BrevoEmailSender emailSender = new BrevoEmailSender();
 
     @Override
-    public void AjouterMem(Utilisateurs membre) {
-        String req = "INSERT INTO membres (Nom, Prénom, CIN, Email, Adresse, NumTel, Role, MotDePasse, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    public void AjouterMem(Utilisateurs utilisateurs) {
+        String req = "INSERT INTO membres (Nom, Prénom, Email, CIN, Adresse, NumTel, Role, MotDePasse, Image, token, isConfirmed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, membre.getNom());
-            ps.setString(2, membre.getPrenom());
-            ps.setString(3, membre.getCin());
-            ps.setString(4, membre.getEmail());
-            ps.setString(5, membre.getAdresse());
-            ps.setString(6, membre.getNumTel());
-            ps.setString(7, "MEMBRE");
-            ps.setString(8, membre.getMotDePasse());
-            ps.setString(9, membre.getImage()); // Ajout du champ image
+        try (PreparedStatement ps = connection.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, utilisateurs.getNom());
+            ps.setString(2, utilisateurs.getPrenom());
+            ps.setString(3, utilisateurs.getEmail());
+            ps.setString(4, utilisateurs.getCin());
+            ps.setString(5, utilisateurs.getAdresse());
+            ps.setString(6, utilisateurs.getNumTel());
+            ps.setString(7, ROLE_MEMBRE);
+            ps.setString(8, utilisateurs.getMotDePasse());
+            ps.setString(9, utilisateurs.getImage());
+            ps.setString(10, utilisateurs.getToken()); // Token généré dans le constructeur Utilisateurs
+            ps.setBoolean(11, utilisateurs.isConfirmed()); // False par défaut
 
-            ps.executeUpdate();
-            System.out.println("Membre ajouté avec succès !");
+            int rowsInserted = ps.executeUpdate();
+            if (rowsInserted > 0) {
+                try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        utilisateurs.setId(generatedKeys.getInt(1));
+                        System.out.println("Membre ajouté avec succès, ID : " + utilisateurs.getId());
+                    }
+                }
 
-            // Récupérer l'ID généré
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next()) {
-                membre.setId(rs.getInt(1)); // Mettre à jour l'ID dans l'objet membre
+                // Envoyer un email d'activation
+                try {
+                    String activationLink = "http://localhost:8080/activate?token=" + utilisateurs.getToken();
+                    String emailContent = "<h1>Bienvenue " + utilisateurs.getPrenom() + " !</h1>"
+                            + "<p>Votre compte a été créé avec succès. Cliquez sur le lien suivant pour activer votre compte :</p>"
+                            + "<a href=\"" + activationLink + "\">Activer mon compte</a>";
+                    emailSender.sendEmail(utilisateurs.getEmail(), "Activez votre compte", emailContent);
+                    System.out.println("Email d'activation envoyé avec succès à " + utilisateurs.getEmail());
+                } catch (Exception emailException) {
+                    System.err.println("Erreur lors de l'envoi de l'email : " + emailException.getMessage());
+                }
+            } else {
+                throw new SQLException("Échec de l'insertion dans la base de données.");
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l'ajout du membre : " + e.getMessage());
+            System.err.println("Erreur SQL lors de l'ajout du membre : " + e.getMessage());
             e.printStackTrace();
+            throw new RuntimeException("Erreur SQL lors de l'ajout du membre", e);
+        }
+    }
+
+    // Nouvelle méthode pour activer un compte via le token
+    public boolean activateAccount(String token) {
+        String req = "UPDATE membres SET isConfirmed = TRUE, token = NULL WHERE token = ? AND isConfirmed = FALSE";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, token);
+            int rowsUpdated = ps.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("Compte activé avec succès pour le token : " + token);
+                return true;
+            } else {
+                System.out.println("Aucun compte trouvé ou déjà activé pour le token : " + token);
+                return false;
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de l'activation du compte : " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
     }
 
     @Override
     public void ModifierMem(Utilisateurs membre) {
-        String req = "UPDATE membres SET Nom = ?, Prénom = ?, Email = ?, CIN = ?, Adresse = ?, NumTel = ?, Role = ?, MotDePasse = ?, image = ? WHERE Id = ?";
+        String req = "UPDATE membres SET Nom = ?, Prenom = ?, Email = ?, CIN = ?, Adresse = ?, NumTel = ?, Role = ?, MotDePasse = ?, Image = ?, isConfirmed = ?, token = ? WHERE Id = ?";
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(req);
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setString(1, membre.getNom());
             ps.setString(2, membre.getPrenom());
             ps.setString(3, membre.getEmail());
             ps.setString(4, membre.getCin());
             ps.setString(5, membre.getAdresse());
             ps.setString(6, membre.getNumTel());
-            ps.setString(7, membre.getRole().toString()); // Utiliser le rôle fourni par l'utilisateur
+            ps.setString(7, membre.getRole().toString());
             ps.setString(8, membre.getMotDePasse());
-            ps.setString(9, membre.getImage()); // Ajout du champ image
-            ps.setInt(10, membre.getId());
+            ps.setString(9, membre.getImage());
+            ps.setBoolean(10, membre.isConfirmed());
+            ps.setString(11, membre.getToken());
+            ps.setInt(12, membre.getId());
 
             int rowsUpdated = ps.executeUpdate();
             if (rowsUpdated > 0) {
@@ -67,16 +107,16 @@ public class MembresService implements Imembres<Utilisateurs> {
                 System.out.println("Aucun membre trouvé avec cet ID !");
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la mise à jour du membre : " + e.getMessage());
+            System.err.println("Erreur lors de la mise à jour du membre : " + e.getMessage());
             e.printStackTrace();
         }
     }
+
     @Override
     public void SupprimerMem(Utilisateurs membre) {
         String req = "DELETE FROM membres WHERE Id = ?";
 
-        try {
-            PreparedStatement ps = connection.prepareStatement(req);
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, membre.getId());
 
             int rowsDeleted = ps.executeUpdate();
@@ -86,7 +126,7 @@ public class MembresService implements Imembres<Utilisateurs> {
                 System.out.println("Aucun membre trouvé avec cet ID !");
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la suppression du membre : " + e.getMessage());
+            System.err.println("Erreur lors de la suppression du membre : " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -96,26 +136,15 @@ public class MembresService implements Imembres<Utilisateurs> {
         String req = "SELECT * FROM membres";
         List<Utilisateurs> membres = new ArrayList<>();
 
-        try {
-            Statement st = connection.createStatement();
-            ResultSet rs = st.executeQuery(req);
+        try (Statement st = connection.createStatement();
+             ResultSet rs = st.executeQuery(req)) {
 
             while (rs.next()) {
-                Utilisateurs m = new Utilisateurs();
-                m.setId(rs.getInt("Id"));
-                m.setNom(rs.getString("Nom"));
-                m.setPrenom(rs.getString("Prénom"));
-                m.setEmail(rs.getString("Email"));
-                m.setCin(rs.getString("CIN"));
-                m.setAdresse(rs.getString("Adresse"));
-                m.setNumTel(rs.getString("NumTel"));
-                m.setRole(parseRole(rs.getString("Role"))); // Convertir la chaîne en énumération Role
-                m.setMotDePasse(rs.getString("MotDePasse"));
-                m.setImage(rs.getString("image")); // Ajout du champ image
+                Utilisateurs m = extraireMembre(rs);
                 membres.add(m);
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des membres : " + e.getMessage());
+            System.err.println("Erreur lors de la récupération des membres : " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -124,38 +153,39 @@ public class MembresService implements Imembres<Utilisateurs> {
 
     public Utilisateurs rechercherMem(int id) {
         String req = "SELECT * FROM membres WHERE Id = ?";
-        Utilisateurs membre = null;
-
-        try {
-            PreparedStatement ps = connection.prepareStatement(req);
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                membre = new Utilisateurs();
-                membre.setId(rs.getInt("Id"));
-                membre.setNom(rs.getString("Nom"));
-                membre.setPrenom(rs.getString("Prénom"));
-                membre.setEmail(rs.getString("Email"));
-                membre.setCin(rs.getString("CIN"));
-                membre.setAdresse(rs.getString("Adresse"));
-                membre.setNumTel(rs.getString("NumTel"));
-                membre.setRole(parseRole(rs.getString("Role"))); // Convertir la chaîne en énumération Role
-                membre.setMotDePasse(rs.getString("MotDePasse"));
-                membre.setImage(rs.getString("image")); // Ajout du champ image
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extraireMembre(rs);
+                }
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la recherche du membre par ID : " + e.getMessage());
+            System.err.println("Erreur lors de la recherche du membre par ID : " + e.getMessage());
             e.printStackTrace();
         }
-
-        return membre;
+        return null;
     }
 
-    public Utilisateurs rechercherMemParNom(String username) {
-        String req = "SELECT * FROM membres WHERE Nom = ?";
+    public Utilisateurs rechercherMemParNom(String email) {
+        String req = "SELECT * FROM membres WHERE Email = ?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
-            ps.setString(1, username);
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return extraireMembre(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la recherche par nom : " + e.getMessage());
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public Utilisateurs rechercherMemParEmail(String email) {
+        String req = "SELECT * FROM membres WHERE Email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     Utilisateurs utilisateur = new Utilisateurs();
@@ -166,9 +196,11 @@ public class MembresService implements Imembres<Utilisateurs> {
                     utilisateur.setCin(rs.getString("CIN"));
                     utilisateur.setAdresse(rs.getString("Adresse"));
                     utilisateur.setNumTel(rs.getString("NumTel"));
-                    utilisateur.setRole(parseRole(rs.getString("Role"))); // Convertir la chaîne en énumération Role
+                    utilisateur.setRole(Role.valueOf(rs.getString("Role"))); // Récupérer le rôle
                     utilisateur.setMotDePasse(rs.getString("MotDePasse"));
-                    utilisateur.setImage(rs.getString("image")); // Ajout du champ image
+                    utilisateur.setImage(rs.getString("Image"));
+                    utilisateur.setToken(rs.getString("token"));
+                    utilisateur.setConfirmed(rs.getBoolean("isConfirmed"));
                     return utilisateur;
                 }
             }
@@ -181,8 +213,8 @@ public class MembresService implements Imembres<Utilisateurs> {
     @Override
     public int getIdByNomPrenom(String nomPrenom) {
         int id = -1;
-        String[] parts = nomPrenom.split(" "); // Sépare nom et prénom
-        if (parts.length == 2) { // Assurez-vous d'avoir les deux parties
+        String[] parts = nomPrenom.split(" ");
+        if (parts.length == 2) {
             String nom = parts[0];
             String prenom = parts[1];
             String query = "SELECT Id FROM membres WHERE Nom = ? AND Prénom = ?";
@@ -195,6 +227,7 @@ public class MembresService implements Imembres<Utilisateurs> {
                     }
                 }
             } catch (SQLException e) {
+                System.err.println("Erreur lors de la récupération de l'ID : " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -204,6 +237,7 @@ public class MembresService implements Imembres<Utilisateurs> {
     public List<String> getAllUserEmails() {
         List<String> emails = new ArrayList<>();
         String query = "SELECT Email FROM membres";
+
         try (PreparedStatement ps = connection.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
@@ -213,21 +247,112 @@ public class MembresService implements Imembres<Utilisateurs> {
                 }
             }
         } catch (SQLException e) {
-            System.out.println("Erreur lors de la récupération des emails des utilisateurs : " + e.getMessage());
+            System.err.println("Erreur lors de la récupération des emails : " + e.getMessage());
             e.printStackTrace();
         }
         return emails;
     }
 
-    // Méthode pour parser une chaîne en énumération Role
+    private Utilisateurs extraireMembre(ResultSet rs) throws SQLException {
+        return new Utilisateurs(
+                rs.getInt("Id"),
+                rs.getString("Nom"),
+                rs.getString("Prénom"),
+                rs.getString("CIN"),
+                rs.getString("Email"),
+                rs.getString("Adresse"),
+                rs.getString("NumTel"),
+                parseRole(rs.getString("Role")),
+                rs.getString("MotDePasse"),
+                rs.getString("Image"),
+                rs.getString("token"),
+                rs.getBoolean("isConfirmed")
+        );
+    }
+
     private Role parseRole(String roleStr) {
         if (roleStr == null || roleStr.trim().isEmpty()) {
-            return Role.MEMBRE; // Valeur par défaut
+            return Role.MEMBRE;
         }
         try {
-            return Role.valueOf(roleStr.toUpperCase()); // Convertir en majuscules pour correspondre à l'énumération
+            return Role.valueOf(roleStr.toUpperCase());
         } catch (IllegalArgumentException e) {
-            System.out.println("Rôle inconnu dans la base de données : " + roleStr + " - Utilisation de MEMBRE par défaut.");
-            return Role.MEMBRE;}
+            System.err.println("Rôle inconnu : " + roleStr + " - Utilisation de MEMBRE par défaut.");
+            return Role.MEMBRE;
+        }
     }
+    public String getUserNameById(int userId) {
+        String req = "SELECT nom FROM users WHERE id = ?"; // Ajustez selon votre structure (par exemple, "username" au lieu de "nom")
+        try (PreparedStatement ps = connection.prepareStatement(req)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("nom");
+            } else {
+                return "Utilisateur inconnu"; // Valeur par défaut si l'utilisateur n'est pas trouvé
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la récupération du nom de l'utilisateur : " + e.getMessage());
+            e.printStackTrace();
+            return "Erreur utilisateur";
+        }
+    }
+
+
+
+
+
+    public String generatePasswordResetToken(String email) {
+        String token = UUID.randomUUID().toString();
+        Utilisateurs utilisateur = rechercherMemParEmail(email);
+        if (utilisateur == null) return null;
+
+        String sql = "INSERT INTO password_reset_tokens (user_id, token, expires_at) VALUES (?, ?, DATE_ADD(NOW(), INTERVAL 1 HOUR))";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, utilisateur.getId());
+            ps.setString(2, token);
+            ps.executeUpdate();
+            return token;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Utilisateurs validateResetToken(String token) {
+        String sql = "SELECT user_id FROM password_reset_tokens WHERE token = ? AND expires_at > NOW() AND used = FALSE";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, token);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int userId = rs.getInt("user_id");
+                    Utilisateurs utilisateur = rechercherMem(userId);
+                    if (utilisateur != null) {
+                        String updateSql = "UPDATE password_reset_tokens SET used = TRUE WHERE token = ?";
+                        try (PreparedStatement updatePs = connection.prepareStatement(updateSql)) {
+                            updatePs.setString(1, token);
+                            updatePs.executeUpdate();
+                        }
+                        return utilisateur;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void updatePassword(Utilisateurs utilisateur, String newPassword) {
+        String sql = "UPDATE membres SET MotDePasse = ? WHERE id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newPassword); // Should be hashed in production
+            ps.setInt(2, utilisateur.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

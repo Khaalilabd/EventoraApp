@@ -15,6 +15,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <AnchorPane  stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+             prefWidth="1920.0"
+             prefHeight="1080.0"
             fx:controller="Gui.Reclamation.Controllers.AfficheRec">
 
     <!-- Navbar horizontale en haut -->
@@ -32,7 +34,7 @@
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
             <Button text="🔧 Paramètres" styleClass="nav-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button" onAction="#deconnexion"/>
         </HBox>
     </HBox>
 
@@ -76,8 +78,8 @@
         </HBox>
 
         <!-- Conteneur des cartes en grille -->
-        <ScrollPane prefHeight="575.0" prefWidth="999.0">
-            <GridPane fx:id="reclamationGrid" hgap="20" vgap="20" alignment="CENTER" styleClass="grid-list"/>
+        <ScrollPane prefHeight="575.0" prefWidth="999.0" styleClass="transparent-scroll-pane">
+            <GridPane fx:id="reclamationGrid" hgap="20" vgap="20" alignment="CENTER" styleClass="grid-list,transparent-grid"/>
         </ScrollPane>
     </VBox>
 </AnchorPane>

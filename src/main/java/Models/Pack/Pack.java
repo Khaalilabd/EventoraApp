@@ -13,15 +13,17 @@ public class Pack {
     private Location location;
     private Evenement type;
     private int nbrGuests;
-    private List<Service> nomServices; // Changed to List<Service>
+    private List<Service> nomServices;
+    private String imagePath;
 
     // Default constructor
     public Pack() {
         this.nomServices = new ArrayList<>();
+        this.imagePath = null;
     }
 
     // Constructor with id
-    public Pack(int id, String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, List<Service> nomServices) {
+    public Pack(int id, String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, List<Service> nomServices, String imagePath) {
         this.id = id;
         this.nomPack = nomPack;
         this.description = description;
@@ -30,10 +32,11 @@ public class Pack {
         this.type = type;
         this.nbrGuests = nbrGuests;
         this.nomServices = nomServices != null ? nomServices : new ArrayList<>();
+        this.imagePath = imagePath;
     }
 
     // Constructor without id
-    public Pack(String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, List<Service> nomServices) {
+    public Pack(String nomPack, String description, double prix, Location location, Evenement type, int nbrGuests, List<Service> nomServices, String imagePath) {
         this.nomPack = nomPack;
         this.description = description;
         this.prix = prix;
@@ -41,6 +44,7 @@ public class Pack {
         this.type = type;
         this.nbrGuests = nbrGuests;
         this.nomServices = nomServices != null ? nomServices : new ArrayList<>();
+        this.imagePath = imagePath;
     }
 
     // Getters and Setters
@@ -100,12 +104,20 @@ public class Pack {
         this.nbrGuests = nbrGuests;
     }
 
-    public List<Service> getNomServices() { // Updated getter
+    public List<Service> getNomServices() {
         return nomServices;
     }
 
-    public void setNomServices(List<Service> nomServices) { // Updated setter
+    public void setNomServices(List<Service> nomServices) {
         this.nomServices = nomServices != null ? nomServices : new ArrayList<>();
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override
@@ -119,6 +131,7 @@ public class Pack {
                 ", type=" + type +
                 ", nbrGuests=" + nbrGuests +
                 ", nomServices=" + nomServices +
+                ", imagePath='" + imagePath + '\'' +
                 '}';
     }
 }

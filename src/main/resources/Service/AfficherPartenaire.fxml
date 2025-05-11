@@ -14,8 +14,10 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane  stylesheets="/style.css"
+<AnchorPane stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             fx:controller="Gui.Service.Controllers.AfficherPartenaire">
 
     <!-- Navbar horizontale en haut -->
@@ -38,58 +40,60 @@
     </HBox>
 
     <!-- Contenu principal -->
-    <VBox alignment="CENTER" styleClass="main-content"
+    <HBox spacing="20" styleClass="main-content"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
 
-        <!-- Titre principal -->
-        <Label text="⛔ Liste des Partenaires ⛔" styleClass="main-title"/>
+        <!-- Partie gauche : Tableau des partenaires -->
+        <VBox alignment="CENTER" spacing="20" HBox.hgrow="ALWAYS">
+            <!-- Titre principal -->
+            <Label text="⛔ Liste des Partenaires ⛔" styleClass="main-title"/>
 
-        <!-- Sous-titre descriptif -->
-        <Label wrapText="true" styleClass="main-description"
-               text="Consultez, ajoutez ou gérez vos partenaires en toute simplicité."/>
+            <!-- Sous-titre descriptif -->
+            <Label wrapText="true" styleClass="main-description"
+                   text="Consultez, ajoutez ou gérez vos partenaires en toute simplicité."/>
 
-        <!-- Barre d'outils (Ajout, Actualisation, Recherche) -->
-        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
-            <Button fx:id="addPartenaire" text="➕ Ajouter" styleClass="card-button" onAction="#addPartenaire"/>
-            <Button fx:id="refreshList" text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
-            <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
-        </HBox>
-
-        <!-- Tableau des partenaires -->
-        <TableView fx:id="tableView" prefHeight="250.0" prefWidth="999.0" styleClass="custom-table">
-            <columns>
-                <TableColumn fx:id="idColumn" prefWidth="46.0" text="ID"/>
-                <TableColumn fx:id="nomColumn" prefWidth="108.0" text="Nom"/>
-                <TableColumn fx:id="emailColumn" prefWidth="131.0" text="Email"/>
-                <TableColumn fx:id="adresseColumn" prefWidth="129.2" text="Adresse"/>
-                <TableColumn fx:id="site_webColumn" prefWidth="117.0" text="Site Web"/>
-                <TableColumn fx:id="typeColumn" prefWidth="207.0" text="Type de partenariat"/>
-                <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions"/>
-            </columns>
-        </TableView>
-
-        <!-- Section météo actuelle et future pour l'adresse du partenaire -->
-        <VBox spacing="10" alignment="CENTER">
-            <Label text="Météo pour l'adresse du partenaire :" styleClass="main-description"/>
-            <!-- Météo actuelle -->
-            <HBox fx:id="currentWeatherBox" spacing="10" alignment="CENTER" styleClass="weather-box">
-                <ImageView fx:id="currentWeatherIcon" fitHeight="50.0" fitWidth="50.0" preserveRatio="true"/>
-                <Label fx:id="currentWeatherLabel" text="Météo: Chargement..." styleClass="weather-text"/>
+            <!-- Barre d'outils (Ajout, Actualisation, Recherche) -->
+            <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+                <Button fx:id="addPartenaire" text="➕ Ajouter" styleClass="card-button" onAction="#addPartenaire"/>
+                <Button fx:id="refreshList" text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
+                <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
             </HBox>
-            <!-- Prévision -->
-            <HBox fx:id="forecastWeatherBox" spacing="10" alignment="CENTER" styleClass="weather-box">
-                <ImageView fx:id="forecastWeatherIcon" fitHeight="50.0" fitWidth="50.0" preserveRatio="true"/>
-                <Label fx:id="forecastWeatherLabel" text="Prévision (5 jours) : Chargement..." styleClass="weather-text"/>
-            </HBox>
+
+            <!-- Tableau des partenaires -->
+            <TableView fx:id="tableView" prefHeight="400.0" prefWidth="600.0" styleClass="custom-table" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="idColumn" prefWidth="46.0" text="ID"/>
+                    <TableColumn fx:id="nomColumn" prefWidth="108.0" text="Nom"/>
+                    <TableColumn fx:id="emailColumn" prefWidth="131.0" text="Email"/>
+                    <TableColumn fx:id="adresseColumn" prefWidth="129.2" text="Adresse"/>
+                    <TableColumn fx:id="site_webColumn" prefWidth="117.0" text="Site Web"/>
+                    <TableColumn fx:id="typeColumn" prefWidth="207.0" text="Type de partenariat"/>
+                    <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions"/>
+                </columns>
+            </TableView>
+
+            <!-- Section météo actuelle et future pour l'adresse du partenaire -->
+            <VBox spacing="10" alignment="CENTER">
+                <Label text="Météo pour l'adresse du partenaire :" styleClass="main-description"/>
+                <!-- Météo actuelle -->
+                <HBox fx:id="currentWeatherBox" spacing="10" alignment="CENTER" styleClass="weather-box">
+                    <ImageView fx:id="currentWeatherIcon" fitHeight="50.0" fitWidth="50.0" preserveRatio="true"/>
+                    <Label fx:id="currentWeatherLabel" text="Météo: Chargement..." styleClass="weather-text"/>
+                </HBox>
+                <!-- Prévision -->
+                <HBox fx:id="forecastWeatherBox" spacing="10" alignment="CENTER" styleClass="weather-box">
+                    <ImageView fx:id="forecastWeatherIcon" fitHeight="50.0" fitWidth="50.0" preserveRatio="true"/>
+                    <Label fx:id="forecastWeatherLabel" text="Prévision (5 jours) : Chargement..." styleClass="weather-text"/>
+                </HBox>
+            </VBox>
         </VBox>
 
-        <!-- Section localisation GPS -->
-        <VBox spacing="10" alignment="CENTER">
-            <Label text="Localisation GPS de l'adresse :" styleClass="main-description"/>
-            <Label fx:id="locationLabel" text="Coordonnées: Chargement..." styleClass="main-description"/>
-            <!-- Carte OpenStreetMap -->
-            <WebView fx:id="mapView" prefHeight="150.0" prefWidth="999.0"/>
+        <!-- Partie droite : Cadre pour la localisation GPS -->
+        <VBox spacing="20" alignment="CENTER" prefWidth="400.0" styleClass="location-frame" HBox.hgrow="NEVER">
+            <Label text="Localisation GPS du partenaire sélectionné :" styleClass="main-description"/>
+            <Label fx:id="locationLabel" text="Coordonnées: Sélectionnez un partenaire..." styleClass="main-description"/>
+            <WebView fx:id="mapView" prefHeight="400.0" prefWidth="400.0" minHeight="150.0" minWidth="400.0" VBox.vgrow="ALWAYS"/>
         </VBox>
-    </VBox>
+    </HBox>
 </AnchorPane>

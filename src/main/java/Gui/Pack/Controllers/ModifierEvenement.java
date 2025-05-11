@@ -1,13 +1,11 @@
 package Gui.Pack.Controllers;
 
-
 import Models.Pack.Evenement;
 import Services.Pack.Crud.EvenementService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -30,11 +28,8 @@ public class ModifierEvenement {
 
     @FXML
     public void initialize() {
-
-
-        // Désactivation du bouton tant qu'un pack n'est pas défini
+        // Désactivation du bouton tant qu'un événement n'est pas défini
         submitButton.setDisable(true);
-
     }
 
     public void setEvenementToEdit(Evenement evenement) {
@@ -42,7 +37,6 @@ public class ModifierEvenement {
 
         // Remplissage des champs avec les données existantes
         NomTypeField.setText(evenement.getTypeEvenement());
-
 
         // Activation du bouton une fois que les données sont chargées
         submitButton.setDisable(false);
@@ -52,8 +46,8 @@ public class ModifierEvenement {
     private void modifierEvenement(ActionEvent event) {
         try {
             String type = NomTypeField.getText();
-            if (type.isEmpty()  ) {
-                showAlert("Erreur", "les champs doivent être remplis.");
+            if (type.isEmpty()) {
+                showAlert("Erreur", "Les champs doivent être remplis.");
                 return;
             }
             if (!type.matches("^[A-Za-zÀ-ÖØ-öø-ÿ ]+$")) {
@@ -61,10 +55,9 @@ public class ModifierEvenement {
                 return;
             }
             this.evenementToEdit.setTypeEvenement(type);
-            Evenement evenementToEdit = this.evenementToEdit;
-            EvenementService.modifier(evenementToEdit);
+            EvenementService.modifier(this.evenementToEdit);
             showAlert("Succès", "Type modifié avec succès !");
-            goToAfficheEvenement(event);
+            switchScene(event, "/Pack/AfficheEvenement.fxml");
 
         } catch (Exception e) {
             showAlert("Erreur", "Une erreur est survenue lors de la modification du type.");
@@ -74,86 +67,62 @@ public class ModifierEvenement {
 
     @FXML
     private void annuler(ActionEvent event) {
-        goToAfficheEvenement(event);
+        switchScene(event, "/Pack/AfficheEvenement.fxml");
     }
 
     private void showAlert(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        Alert alert = new Alert(title.equals("Erreur") ? Alert.AlertType.ERROR : Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
     }
 
-    private void goToAfficheEvenement(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/AfficheEvenement.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            System.out.println("Erreur lors du chargement de la page d'affichage des Type : " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     @FXML
     private void goToPack(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Packs.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            System.out.println("Erreur lors du chargement de la page Pack : " + e.getMessage());
-            e.printStackTrace();
-        }
+        switchScene(event, "/Pack/Packs.fxml"); // Corrigé le chemin de "/Packs.fxml" à "/Pack/Packs.fxml"
     }
+
     @FXML
-    private void goToReclamation(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
-        AnchorPane reclamationLayout = loader.load();
-        Scene reclamationScene = new Scene(reclamationLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(reclamationScene);
-        currentStage.show();
+    private void goToReclamation(ActionEvent event) {
+        switchScene(event, "/Reclamation/Reclamation.fxml");
     }
+
     @FXML
-    private void goToReservation(ActionEvent event) throws IOException {
+    private void goToReservation(ActionEvent event) {
+        switchScene(event, "/Reservation/Reservation.fxml");
+    }
+
+    @FXML
+    private void goToService(ActionEvent event) {
+        switchScene(event, "/Service/Service.fxml");
+    }
+
+    @FXML
+    private void goToFeedback(ActionEvent event) {
+        switchScene(event, "/Reclamation/Feedback.fxml");
+    }
+
+    // Méthode switchScene suivant le style mémorisé
+    private void switchScene(ActionEvent event, String fxmlPath) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            AnchorPane layout = loader.load();
+            Scene scene = new Scene(layout);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(scene);
+            stage.setMaximized(true);
             stage.show();
         } catch (IOException e) {
+            showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
             e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
         }
     }
-    @FXML
-    private void goToService(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
-        Parent root = loader.load();
-        Scene newScene = new Scene(root);
 
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.close();
-        Stage newStage = new Stage();
-        newStage.setScene(newScene);
-        newStage.show();
+    private void showError(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
-    @FXML
-    private void goToFeedback(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
-        AnchorPane feedbackLayout = loader.load();
-        Scene feedbackScene = new Scene(feedbackLayout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(feedbackScene);
-        currentStage.show();
-    }
-
 }

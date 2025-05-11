@@ -1,0 +1,4 @@
+package Models.Utilisateur.Utilisateurs;
+
+public class SessionManager {
+}

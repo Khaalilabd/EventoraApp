@@ -9,6 +9,8 @@
             stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             fx:controller="Gui.Utilisateurs.Controllers.ModifierUtilisateur">
     <!-- ScrollPane pour permettre le défilement -->
     <ScrollPane fitToWidth="true" vbarPolicy="AS_NEEDED" pannable="true"

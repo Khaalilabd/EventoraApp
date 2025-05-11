@@ -2,13 +2,6 @@ package Gui.Reservation.Controllers;
 
 import Models.Reservation.ReservationPack;
 import Services.Reservation.Crud.ReservationPackService;
-<<<<<<< HEAD
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import java.sql.Date;
-import java.time.LocalDate;
-=======
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -31,79 +24,27 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
->>>>>>> 045bb7bc8abc11f947fe3eaa6f96081c22d0f87e
 
 public class AjouterReservationPack {
-
     @FXML
-<<<<<<< HEAD
-    private AnchorPane rootPane;
-
-    @FXML
-    private ComboBox<String> idoffrefield;
-
-=======
     private ComboBox<String> idPackfield;
->>>>>>> 045bb7bc8abc11f947fe3eaa6f96081c22d0f87e
     @FXML
     private TextField nomfield;
-
     @FXML
     private TextField prenomfield;
-
     @FXML
     private TextField emailfield;
-
     @FXML
     private TextField numtelfield;
-
     @FXML
     private TextArea descriptionfield;
-
     @FXML
     private DatePicker datefield;
-
     @FXML
     private Button submitButton;
-
     @FXML
     private Button cancelButton;
 
-<<<<<<< HEAD
-    private final ReservationPackService reservationPackService = new ReservationPackService();
-
-    @FXML
-    public void initialize() {
-        submitButton.setOnAction(event -> handleSubmit());
-        cancelButton.setOnAction(event -> handleCancel());
-    }
-
-    private void handleSubmit() {
-        try {
-            int idPack = 1;
-            String nom = nomfield.getText();
-            String prenom = prenomfield.getText();
-            String email = emailfield.getText();
-            String numTel = numtelfield.getText();
-            String description = descriptionfield.getText();
-            LocalDate localDate = datefield.getValue();
-            Date sqlDate = (localDate != null) ? Date.valueOf(localDate) : null;
-
-            if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || numTel.isEmpty() || sqlDate == null) {
-                showAlert(Alert.AlertType.ERROR, "Erreur", "Veuillez remplir tous les champs obligatoires.");
-                return;
-            }
-
-            ReservationPack reservationPack = new ReservationPack(idPack, nom, prenom, email, numTel, description, sqlDate);
-            reservationPackService.ajouterReservationPack(reservationPack);
-
-            showAlert(Alert.AlertType.INFORMATION, "Succès", "Réservation ajoutée avec succès.");
-            handleCancel(); // Réinitialiser les champs après l'ajout
-
-        } catch (Exception e) {
-            showAlert(Alert.AlertType.ERROR, "Erreur", "Une erreur est survenue : " + e.getMessage());
-        }
-=======
     private ReservationPackService reservationservice = new ReservationPackService();
     private PackService packService = new PackService();
     private ObservableList<String> packNames = FXCollections.observableArrayList();
@@ -246,11 +187,9 @@ public class AjouterReservationPack {
 
     private void annuler() {
         clearFields();
->>>>>>> 045bb7bc8abc11f947fe3eaa6f96081c22d0f87e
     }
 
-    private void handleCancel() {
-        idoffrefield.setValue(null);
+    private void clearFields() {
         nomfield.clear();
         prenomfield.clear();
         emailfield.clear();
@@ -260,15 +199,13 @@ public class AjouterReservationPack {
         idPackfield.setValue(null); // Clear ComboBox
     }
 
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
-        alert.setContentText(message);
+        alert.setContentText(content);
         alert.showAndWait();
     }
-<<<<<<< HEAD
-=======
 
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
@@ -336,5 +273,4 @@ public class AjouterReservationPack {
         stage.setScene(scene);
         stage.show();
     }
->>>>>>> 045bb7bc8abc11f947fe3eaa6f96081c22d0f87e
 }
