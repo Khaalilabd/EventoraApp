@@ -34,7 +34,7 @@
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
             <Button text="🔧 Paramètres" styleClass="nav-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button" onAction="#deconnexion"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button" />
         </HBox>
     </HBox>
 

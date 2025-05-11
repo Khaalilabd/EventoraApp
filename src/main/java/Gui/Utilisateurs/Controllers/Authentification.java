@@ -2,6 +2,7 @@ package Gui.Utilisateurs.Controllers;
 
 import Models.Utilisateur.Utilisateurs;
 import Services.Utilisateur.Crud.MembresService;
+import Utils.SessionManager; // Importer SessionManager
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,19 +29,22 @@ public class Authentification {
 
     @FXML
     private void seConnecter(ActionEvent event) throws IOException, SQLException {
-        String email = emailField.getText();
+        String email = emailField.getText().trim();
         String password = passwordField.getText();
 
         if (email.isEmpty() || password.isEmpty()) {
-            showError("Erreur", "Veuillez saisir votre nom d'utilisateur et votre mot de passe.");
+            showError("Erreur", "Veuillez saisir votre email et votre mot de passe.");
             return;
         }
 
-        Utilisateurs utilisateur = membresService.rechercherMemParNom(email);
+        // Utiliser rechercherMemParEmail au lieu de rechercherMemParNom
+        Utilisateurs utilisateur = membresService.rechercherMemParEmail(email);
         if (utilisateur != null && verifierMotDePasse(password, utilisateur.getMotDePasse())) {
+            // Stocker l'utilisateur connecté dans SessionManager
+            SessionManager.getInstance().setUtilisateurConnecte(utilisateur);
             switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
         } else {
-            showError("Erreur", "Nom d'utilisateur ou mot de passe incorrect.");
+            showError("Erreur", "Email ou mot de passe incorrect.");
         }
     }
 
@@ -53,7 +57,7 @@ public class Authentification {
         }
 
         String normalizedEmail = email.toLowerCase();
-        Utilisateurs utilisateur = membresService.rechercherMemParNom(normalizedEmail);
+        Utilisateurs utilisateur = membresService.rechercherMemParEmail(normalizedEmail); // Utiliser rechercherMemParEmail
         if (utilisateur == null) {
             showError("Erreur", "Email non trouvé.");
             return;
@@ -144,7 +148,6 @@ public class Authentification {
         switchScene(event, "/EventoraAPP/Acceuil.fxml");
     }
 
-    // Méthode switchScene suivant le style mémorisé
     private void switchScene(ActionEvent event, String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -161,7 +164,6 @@ public class Authentification {
         }
     }
 
-    // Surcharge pour gérer directement un layout déjà chargé
     private void switchScene(ActionEvent event, AnchorPane layout) {
         try {
             Scene scene = new Scene(layout);
