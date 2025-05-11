@@ -14,8 +14,8 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void ajouterReservationPersonalise(ReservationPersonalise reservationPersonalise) {
-        String insertReservation = "INSERT INTO reservationpersonnalise (nom, prenom, email, numtel, description, date) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
+        String insertReservation = "INSERT INTO reservationpersonnalise (idMembre, nom, prenom, email, numtel, description, date, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         String insertServiceLink = "INSERT INTO reservation_personalise_service (reservation_id, service_id) VALUES (?, ?)";
 
         try {
@@ -23,12 +23,14 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
             // Insérer la réservation
             try (PreparedStatement ps = connection.prepareStatement(insertReservation, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, reservationPersonalise.getNom());
-                ps.setString(2, reservationPersonalise.getPrenom());
-                ps.setString(3, reservationPersonalise.getEmail());
-                ps.setString(4, reservationPersonalise.getNumtel());
-                ps.setString(5, reservationPersonalise.getDescription());
-                ps.setDate(6, new java.sql.Date(reservationPersonalise.getDate().getTime()));
+                ps.setInt(1, 1); // idMembre par défaut = 1
+                ps.setString(2, reservationPersonalise.getNom());
+                ps.setString(3, reservationPersonalise.getPrenom());
+                ps.setString(4, reservationPersonalise.getEmail());
+                ps.setString(5, reservationPersonalise.getNumtel());
+                ps.setString(6, reservationPersonalise.getDescription());
+                ps.setDate(7, new java.sql.Date(reservationPersonalise.getDate().getTime()));
+                ps.setString(8, "En attente"); // status par défaut
                 ps.executeUpdate();
 
                 ResultSet generatedKeys = ps.getGeneratedKeys();
@@ -67,7 +69,7 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
     @Override
     public void modifierReservationPersonalise(ReservationPersonalise reservationPersonalise) {
-        String updateReservation = "UPDATE reservationpersonnalise SET nom=?, prenom=?, email=?, numtel=?, description=?, date=? " +
+        String updateReservation = "UPDATE reservationpersonnalise SET idMembre=?, nom=?, prenom=?, email=?, numtel=?, description=?, date=?, status=? " +
                 "WHERE idReservationPersonalise=?";
         String deleteServices = "DELETE FROM reservation_personalise_service WHERE reservation_id=?";
         String insertServiceLink = "INSERT INTO reservation_personalise_service (reservation_id, service_id) VALUES (?, ?)";
@@ -77,13 +79,15 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
 
             // Mettre à jour la réservation
             try (PreparedStatement ps = connection.prepareStatement(updateReservation)) {
-                ps.setString(1, reservationPersonalise.getNom());
-                ps.setString(2, reservationPersonalise.getPrenom());
-                ps.setString(3, reservationPersonalise.getEmail());
-                ps.setString(4, reservationPersonalise.getNumtel());
-                ps.setString(5, reservationPersonalise.getDescription());
-                ps.setDate(6, new java.sql.Date(reservationPersonalise.getDate().getTime()));
-                ps.setInt(7, reservationPersonalise.getIdReservationPersonalise());
+                ps.setInt(1, reservationPersonalise.getIdMembre());
+                ps.setString(2, reservationPersonalise.getNom());
+                ps.setString(3, reservationPersonalise.getPrenom());
+                ps.setString(4, reservationPersonalise.getEmail());
+                ps.setString(5, reservationPersonalise.getNumtel());
+                ps.setString(6, reservationPersonalise.getDescription());
+                ps.setDate(7, new java.sql.Date(reservationPersonalise.getDate().getTime()));
+                ps.setString(8, reservationPersonalise.getStatus());
+                ps.setInt(9, reservationPersonalise.getIdReservationPersonalise());
                 ps.executeUpdate();
             }
 
@@ -147,12 +151,14 @@ public class ReservationPersonaliseService implements IReservationPersonalise<Re
             while (rs.next()) {
                 ReservationPersonalise reservation = new ReservationPersonalise(
                         rs.getInt("idReservationPersonalise"),
+                        rs.getInt("idMembre"),
                         rs.getString("nom"),
                         rs.getString("prenom"),
                         rs.getString("email"),
                         rs.getString("numtel"),
                         rs.getString("description"),
                         rs.getDate("date"),
+                        rs.getString("status"),
                         parseServiceIds(rs.getString("service_ids"))
                 );
                 reservations.add(reservation);

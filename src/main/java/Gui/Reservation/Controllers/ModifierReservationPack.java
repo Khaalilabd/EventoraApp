@@ -11,16 +11,21 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.Initializable;
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-public class ModifierReservationPack {
+public class ModifierReservationPack implements Initializable {
     @FXML
-    private ComboBox idPackfield;
+    private ComboBox<String> idPackfield;
     @FXML
     private TextField nomfield;
     @FXML
@@ -34,6 +39,8 @@ public class ModifierReservationPack {
     @FXML
     private DatePicker datefield;
     @FXML
+    private ComboBox<String> statusComboBox;
+    @FXML
     private Button submitButton;
     @FXML
     private Button cancelButton;
@@ -41,14 +48,27 @@ public class ModifierReservationPack {
     private ReservationPack reservationToEdit;
     private ReservationPackService reservationservice=new ReservationPackService();
 
-    @FXML
-    public void initialize() {
-        // Ajoute tous les types de réclamation à la liste du ComboBox
-
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         submitButton.setOnAction(this::modifierReservationPack);
-        cancelButton.setOnAction(event -> annuler());
+        cancelButton.setOnAction(event -> {
+            try {
+                annuler(event);
+            } catch (IOException e) {
+                e.printStackTrace();
+                showAlert("Erreur", "Erreur lors de la navigation : " + e.getMessage());
+            }
+        });
+
+        // Initialiser le ComboBox de statut
+        ObservableList<String> statusOptions = FXCollections.observableArrayList(
+            "En attente",
+            "Validé",
+            "Refusé"
+        );
+        statusComboBox.setItems(statusOptions);
     }
-    // Méthode pour pré-remplir les champs avec les données de la réclamation à modifier
+
     public void setReservationToEdit(ReservationPack reservation) {
         this.reservationToEdit = reservation;
 
@@ -59,8 +79,10 @@ public class ModifierReservationPack {
         numtelfield.setText(reservation.getNumtel());
         descriptionfield.setText(reservation.getDescription());
         datefield.setValue(LocalDate.ofInstant(Instant.ofEpochMilli(reservation.getDate().getTime()), ZoneId.systemDefault()));
-
+        statusComboBox.setValue(reservation.getStatus());
     }
+
+    @FXML
     private void modifierReservationPack(ActionEvent event) {
         String nom = nomfield.getText().trim();
         String prenom = prenomfield.getText().trim();
@@ -68,9 +90,11 @@ public class ModifierReservationPack {
         String numTel = numtelfield.getText().trim();
         String description = descriptionfield.getText().trim();
         LocalDate date = datefield.getValue();
+        String status = statusComboBox.getValue();
 
         // Vérification des champs vides
-        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || numTel.isEmpty() || description.isEmpty() || date == null) {
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || numTel.isEmpty() || 
+            description.isEmpty() || date == null || status == null) {
             showAlert("Erreur", "Veuillez remplir tous les champs !");
             return;
         }
@@ -100,6 +124,7 @@ public class ModifierReservationPack {
         reservationToEdit.setNumtel(numTel);
         reservationToEdit.setDescription(description);
         reservationToEdit.setDate(Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        reservationToEdit.setStatus(status);
 
         // Appel à la méthode ModifierRec du service
         reservationservice.modifierReservationPack(reservationToEdit);
@@ -109,9 +134,12 @@ public class ModifierReservationPack {
         goToReservationPack();
     }
 
-    private void annuler() {
+    @FXML
+    private void annuler(ActionEvent event) throws IOException {
         clearFields();
+        goToReservationPack();
     }
+
     private void clearFields() {
         nomfield.clear();
         prenomfield.clear();
@@ -119,6 +147,7 @@ public class ModifierReservationPack {
         numtelfield.clear();
         descriptionfield.clear();
         datefield.setValue(null);
+        statusComboBox.setValue(null);
     }
 
     private void showAlert(String title, String content) {

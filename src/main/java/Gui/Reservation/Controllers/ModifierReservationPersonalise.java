@@ -14,6 +14,8 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -38,6 +40,8 @@ public class ModifierReservationPersonalise {
     @FXML
     private DatePicker datefield;
     @FXML
+    private ComboBox<String> statusComboBox;
+    @FXML
     private Button submitButton;
     @FXML
     private Button cancelButton;
@@ -49,8 +53,16 @@ public class ModifierReservationPersonalise {
     @FXML
     public void initialize() {
         submitButton.setOnAction(this::modifierReservationPersonalise);
-        cancelButton.setOnAction(event -> annuler());
+        cancelButton.setOnAction(this::annuler);
         loadServicesAsCheckboxes();
+
+        // Initialiser le ComboBox de statut
+        ObservableList<String> statusOptions = FXCollections.observableArrayList(
+            "En attente",
+            "Validé",
+            "Refusé"
+        );
+        statusComboBox.setItems(statusOptions);
 
         // Désactiver les dates passées dans le DatePicker
         datefield.setDayCellFactory(picker -> new DateCell() {
@@ -80,6 +92,7 @@ public class ModifierReservationPersonalise {
         emailfield.setText(reservation.getEmail());
         numtelfield.setText(reservation.getNumtel());
         descriptionfield.setText(reservation.getDescription());
+        statusComboBox.setValue(reservation.getStatus());
 
         // Convertir java.util.Date ou java.sql.Date en LocalDate pour le DatePicker
         Date date = reservation.getDate();
@@ -130,6 +143,7 @@ public class ModifierReservationPersonalise {
         reservationToEdit.setDescription(descriptionfield.getText().trim());
         reservationToEdit.setDate(Date.from(datefield.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
         reservationToEdit.setServiceIds(selectedServiceIds);
+        reservationToEdit.setStatus(statusComboBox.getValue());
 
         // Appeler la méthode du service pour modifier la réservation
         reservationService.modifierReservationPersonalise(reservationToEdit);
@@ -142,7 +156,8 @@ public class ModifierReservationPersonalise {
     private boolean validateFields() {
         if (nomfield.getText().trim().isEmpty() || prenomfield.getText().trim().isEmpty() ||
                 emailfield.getText().trim().isEmpty() || numtelfield.getText().trim().isEmpty() ||
-                descriptionfield.getText().trim().isEmpty() || datefield.getValue() == null) {
+                descriptionfield.getText().trim().isEmpty() || datefield.getValue() == null ||
+                statusComboBox.getValue() == null) {
             showAlert("Erreur", "Tous les champs doivent être remplis !");
             return false;
         }
@@ -161,8 +176,10 @@ public class ModifierReservationPersonalise {
         return true;
     }
 
-    private void annuler() {
+    @FXML
+    public void annuler(ActionEvent event) {
         clearFields();
+        goToReservationListePersonalise();
     }
 
     private void clearFields() {
@@ -172,6 +189,7 @@ public class ModifierReservationPersonalise {
         numtelfield.clear();
         descriptionfield.clear();
         datefield.setValue(null);
+        statusComboBox.setValue(null);
         serviceCheckboxes.getChildren().forEach(node -> {
             if (node instanceof CheckBox checkBox) checkBox.setSelected(false);
         });

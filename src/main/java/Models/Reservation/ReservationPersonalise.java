@@ -6,33 +6,39 @@ import java.util.List;
 
 public class ReservationPersonalise {
     private int idReservationPersonalise;
+    private int idMembre;
     private String nom;
     private String prenom;
     private String email;
     private String numtel;
     private String description;
     private Date date;
+    private String status;
     private List<Integer> serviceIds; // Nouvelle liste pour stocker plusieurs IDs de services
 
     // Constructeurs (incluant serviceIds)
-    public ReservationPersonalise(int idReservationPersonalise, String nom, String prenom, String email, String numtel, String description, Date date, List<Integer> serviceIds) {
+    public ReservationPersonalise(int idReservationPersonalise, int idMembre, String nom, String prenom, String email, String numtel, String description, Date date, String status, List<Integer> serviceIds) {
         this.idReservationPersonalise = idReservationPersonalise;
+        this.idMembre = idMembre;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.numtel = numtel;
         this.description = description;
         this.date = date;
+        this.status = status;
         this.serviceIds = serviceIds != null ? new ArrayList<>(serviceIds) : new ArrayList<>(); // Copie défensive
     }
 
-    public ReservationPersonalise(String nom, String prenom, String email, String numtel, String description, Date date, List<Integer> serviceIds) {
+    public ReservationPersonalise(int idMembre, String nom, String prenom, String email, String numtel, String description, Date date, String status, List<Integer> serviceIds) {
+        this.idMembre = idMembre;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.numtel = numtel;
         this.description = description;
         this.date = date;
+        this.status = status;
         this.serviceIds = serviceIds != null ? new ArrayList<>(serviceIds) : new ArrayList<>(); // Copie défensive
     }
 
@@ -63,6 +69,14 @@ public class ReservationPersonalise {
 
     public void setIdReservationPersonalise(int idReservationPersonalise) {
         this.idReservationPersonalise = idReservationPersonalise;
+    }
+
+    public int getIdMembre() {
+        return idMembre;
+    }
+
+    public void setIdMembre(int idMembre) {
+        this.idMembre = idMembre;
     }
 
     public String getNom() {
@@ -113,6 +127,14 @@ public class ReservationPersonalise {
         this.date = date;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public List<Integer> getServiceIds() {
         return serviceIds != null ? new ArrayList<>(serviceIds) : new ArrayList<>(); // Retourner une copie défensive
     }
@@ -132,12 +154,14 @@ public class ReservationPersonalise {
     public String toString() {
         return "ReservationPersonalise{" +
                 "idReservationPersonalise=" + idReservationPersonalise +
+                ", idMembre=" + idMembre +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
                 ", email='" + email + '\'' +
                 ", numtel='" + numtel + '\'' +
                 ", description='" + description + '\'' +
                 ", date=" + date +
+                ", status='" + status + '\'' +
                 ", serviceIds=" + serviceIds + // Mise à jour pour afficher la liste des IDs
                 '}';
     }

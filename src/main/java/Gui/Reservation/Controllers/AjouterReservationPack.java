@@ -135,7 +135,17 @@ public class AjouterReservationPack {
 
         try {
             // Création de l'objet ReservationPack
-            ReservationPack reservation = new ReservationPack(idPack, nom, prenom, email, numTel, description, reservationDate);
+            ReservationPack reservation = new ReservationPack(
+                idPack,
+                1, // idMembre par défaut
+                nom,
+                prenom,
+                email,
+                numTel,
+                description,
+                reservationDate,
+                "En attente" // status par défaut
+            );
             reservationservice.ajouterReservationPack(reservation);
 
             showAlert("Succès", "Réservation ajoutée avec succès !");
@@ -178,8 +188,19 @@ public class AjouterReservationPack {
         }
     }
 
+    @FXML
     private void annuler() {
-        clearFields();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
+            AnchorPane reservationLayout = loader.load();
+            Scene scene = new Scene(reservationLayout);
+            Stage stage = (Stage) cancelButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du retour à la page de réservation : " + e.getMessage());
+        }
     }
 
     private void clearFields() {

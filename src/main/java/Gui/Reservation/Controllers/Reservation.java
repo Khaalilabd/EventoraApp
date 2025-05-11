@@ -26,7 +26,7 @@ public class Reservation {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AjouterReservationPack.fxml"));
             AnchorPane addRecLayout = loader.load();
             Scene addRecScene = new Scene(addRecLayout);
-            Stage currentStage = (Stage) ajouterButton.getScene().getWindow();
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             currentStage.setScene(addRecScene);
             currentStage.show();
         } catch (Exception e) {
@@ -41,7 +41,7 @@ public class Reservation {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AfficheReservationPack.fxml"));
             AnchorPane viewResLayout = loader.load();
             Scene viewResScene = new Scene(viewResLayout);
-            Stage currentStage = (Stage) viewButton.getScene().getWindow();
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             currentStage.setScene(viewResScene);
             currentStage.show();
         } catch (Exception e) {
@@ -51,10 +51,10 @@ public class Reservation {
     @FXML
     private void handleViewActionService(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AfficherReservationPersonalise.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AfficheReservationPersonalise.fxml"));
             AnchorPane viewResLayout = loader.load();
             Scene viewResScene = new Scene(viewResLayout);
-            Stage currentStage = (Stage) viewButton.getScene().getWindow();
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             currentStage.setScene(viewResScene);
             currentStage.show();
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class Reservation {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AjouterReservationPersonalise.fxml"));
             AnchorPane viewResLayout = loader.load();
             Scene viewResScene = new Scene(viewResLayout);
-            Stage currentStage = (Stage) viewButton.getScene().getWindow();
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             currentStage.setScene(viewResScene);
             currentStage.show();
         } catch (Exception e) {

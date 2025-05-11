@@ -30,6 +30,8 @@ public class AfficheReservationPack {
     @FXML
     private TextField searchField;
     @FXML
+    private ComboBox<String> statusFilter;
+    @FXML
     private TableView<ReservationPack> tableView;
 
     @FXML
@@ -77,6 +79,10 @@ public class AfficheReservationPack {
         colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
         colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
         addActionsColumn();
+        
+        // Initialize status filter
+        statusFilter.getItems().addAll("En attente", "Validée", "Annulée");
+        
         // Charger les données dans le TableView
         loadReservations();
         // Ajout du filtre de recherche
@@ -318,5 +324,119 @@ public class AfficheReservationPack {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         stage.setScene(scene);
         stage.show();
+    }
+
+    @FXML
+    private void searchReservations(ActionEvent event) {
+        String searchText = searchField.getText().trim();
+        String selectedStatus = statusFilter.getValue();
+        
+        if (searchText.isEmpty() && selectedStatus == null) {
+            loadReservations();
+            return;
+        }
+
+        tableView.getItems().setAll(
+            reservationservice.rechercherReservationPack().stream()
+                .filter(res -> {
+                    boolean matchesSearch = searchText.isEmpty() ||
+                        res.getNom().toLowerCase().contains(searchText.toLowerCase()) ||
+                        res.getPrenom().toLowerCase().contains(searchText.toLowerCase()) ||
+                        res.getEmail().toLowerCase().contains(searchText.toLowerCase());
+                    
+                    boolean matchesStatus = selectedStatus == null ||
+                        (res.getStatus() != null && res.getStatus().equals(selectedStatus));
+                    
+                    return matchesSearch && matchesStatus;
+                })
+                .toList()
+        );
+    }
+
+    @FXML
+    private void resetFilters(ActionEvent event) {
+        searchField.clear();
+        statusFilter.setValue(null);
+        loadReservations();
+    }
+
+    @FXML
+    private void showStatistics(ActionEvent event) {
+        // Calculate statistics
+        long totalReservations = tableView.getItems().size();
+        long validatedReservations = tableView.getItems().stream()
+            .filter(res -> "Validée".equals(res.getStatus()))
+            .count();
+        long pendingReservations = tableView.getItems().stream()
+            .filter(res -> "En attente".equals(res.getStatus()))
+            .count();
+        long cancelledReservations = tableView.getItems().stream()
+            .filter(res -> "Annulée".equals(res.getStatus()))
+            .count();
+
+        // Show statistics in an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Statistiques des Réservations");
+        alert.setHeaderText("Aperçu des Réservations de Packs");
+        alert.setContentText(
+            String.format("Total des réservations: %d\n" +
+                        "Réservations validées: %d\n" +
+                        "Réservations en attente: %d\n" +
+                        "Réservations annulées: %d",
+                totalReservations, validatedReservations, pendingReservations, cancelledReservations)
+        );
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void exportData(ActionEvent event) {
+        try {
+            // Define the file path
+            String homeDir = System.getProperty("user.home");
+            String filePath = homeDir + File.separator + "ReservationsPack_Export.pdf";
+            
+            // Initialize PDF writer and document
+            PdfWriter writer = new PdfWriter(filePath);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Add title
+            document.add(new Paragraph("Liste des Réservations de Packs")
+                    .setFontSize(18)
+                    .setBold());
+
+            // Add each reservation
+            for (ReservationPack reservation : tableView.getItems()) {
+                document.add(new Paragraph("\nRéservation #" + reservation.getIdReservationPack())
+                        .setFontSize(14)
+                        .setBold());
+                document.add(new Paragraph("Pack ID: " + reservation.getIdPack()));
+                document.add(new Paragraph("Nom: " + reservation.getNom() + " " + reservation.getPrenom()));
+                document.add(new Paragraph("Email: " + reservation.getEmail()));
+                document.add(new Paragraph("Téléphone: " + reservation.getNumtel()));
+                document.add(new Paragraph("Description: " + reservation.getDescription()));
+                document.add(new Paragraph("Date: " + reservation.getDate()));
+                document.add(new Paragraph("Statut: " + reservation.getStatus()));
+                document.add(new Paragraph("----------------------------------------"));
+            }
+
+            // Close the document
+            document.close();
+
+            // Show success message
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Export Réussi");
+            alert.setHeaderText(null);
+            alert.setContentText("Les données ont été exportées vers : " + filePath);
+            alert.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur d'Export");
+            alert.setHeaderText(null);
+            alert.setContentText("Une erreur est survenue lors de l'export : " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 }
