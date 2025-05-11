@@ -51,7 +51,7 @@ public class AjouterReservationPack {
 
     // Twilio credentials (replace with your actual values)
     private static final String ACCOUNT_SID = "ACc57c0b58eff936708b3208d34fd03469";
-    private static final String AUTH_TOKEN = "c041aac0a4b6c54d0280b74c416f2f89";
+    private static final String AUTH_TOKEN = "b2a441186c89d703043342fcd40b372a";
     private static final String TWILIO_PHONE_NUMBER = "+12513125202"; // Your Twilio number
 
     @FXML
@@ -86,13 +86,6 @@ public class AjouterReservationPack {
         List<Pack> packs = packService.rechercher();
         for (Pack pack : packs) {
             packNames.add(pack.getNomPack());
-        }
-    }
-    public void setSelectedPack(String packName) {
-        if (packNames.contains(packName)) {
-            idPackfield.setValue(packName);
-        } else {
-            System.out.println("Pack not found: " + packName);
         }
     }
 

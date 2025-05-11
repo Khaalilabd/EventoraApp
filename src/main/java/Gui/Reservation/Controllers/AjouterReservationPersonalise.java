@@ -38,8 +38,8 @@ public class AjouterReservationPersonalise {
     private final ReservationPersonaliseService reservationService = new ReservationPersonaliseService();
     private final ServiceService serviceService = new ServiceService();
     private static final String ACCOUNT_SID = "ACc57c0b58eff936708b3208d34fd03469";
-    private static final String AUTH_TOKEN = "c041aac0a4b6c54d0280b74c416f2f89";
-    private static final String TWILIO_PHONE_NUMBER = "+12513125202"; // Your Twilio number
+    private static final String AUTH_TOKEN = "b2a441186c89d703043342fcd40b372a";
+    private static final String TWILIO_PHONE_NUMBER = "+12513125202";
 
     @FXML
     public void initialize() {

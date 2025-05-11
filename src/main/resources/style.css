@@ -97,6 +97,11 @@
     -fx-cursor: hand;
 }
 
+.image-view {
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 10, 0 , 0 , 0 );
+    -fx-background-radius: 10px;
+}
+
 .main-title {
     -fx-font-size: 36px; /* Taille du titre principal */
     -fx-font-weight: bold;
@@ -110,13 +115,13 @@
     -fx-padding: 10px; /* Marge autour du paragraphe descriptif */
     -fx-text-alignment: center; /* Alignement du texte au centre */
 }
-
 .card:hover {
     -fx-translate-y: -10px; /* Déplacement vers le haut */
     -fx-scale-x: 1.05; /* Agrandissement horizontal */
     -fx-scale-y: 1.05; /* Agrandissement vertical */
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 0); /* Ombre au survol */
 }
+
 
 /* Formulaire */
 .form-container {
@@ -136,6 +141,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 5, 0, 0, 3);
 }
 
+
 /* Boutons (Soumettre, Annuler) */
 .submit-button, .cancel-button {
     -fx-background-color: #C8102E; /* Fond rouge */
@@ -145,6 +151,7 @@
     -fx-background-radius: 5px; /* Bords arrondis */
     -fx-cursor: hand; /* Curseur main au survol */
     -fx-pref-width: 150px; /* Largeur préférée */
+
 }
 
 .submit-button:hover, .cancel-button:hover {
@@ -159,13 +166,15 @@
     -fx-pref-width: 500px;
     -fx-alignment: center;
     -fx-spacing: 20px;
+
 }
+
 
 /* Conteneur HBox pour les boutons */
 .hbox-buttons {
     -fx-spacing: 20px; /* Espacement entre les boutons */
-}
 
+}
 .table-view {
     -fx-background-color: #FFFFFF;
     -fx-border-color: #E6E6E6;
@@ -173,7 +182,6 @@
     -fx-padding: 10px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 5);
 }
-
 /* HBox (for Buttons in the content area) */
 .hbox-buttons {
     -fx-spacing: 20px;
@@ -211,8 +219,8 @@
     -fx-background-radius: 5px; /* Bords arrondis */
     -fx-cursor: hand; /* Curseur main au survol */
     -fx-pref-width: 280px; /* Largeur préférée */
-}
 
+}
 .feedback-container {
     -fx-background-color: white;
     -fx-border-color: #ddd;
@@ -221,7 +229,6 @@
     -fx-padding: 20px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 2);
 }
-
 .statut-resolue {
     -fx-background-color: #2ecc71 !important; /* Vert */
     -fx-text-fill: white !important;
@@ -245,7 +252,6 @@
     -fx-text-fill: white !important;
     -fx-padding: 5 !important;
 }
-
 .weather-box {
     -fx-background-color: #ffffff;
     -fx-background-radius: 10;
@@ -269,7 +275,6 @@
     -fx-font-weight: bold;
     -fx-text-fill: #555555;
 }
-
 /* Style pour la section météo (conteneur) */
 .weather-box {
     -fx-background-color: #ffffff; /* Fond blanc */
@@ -457,7 +462,6 @@
     -fx-border-color: #e0e0e0;
     -fx-border-radius: 5;
 }
-
 /* style.css */
 .main-container {
     -fx-background-color: linear-gradient(to bottom right, #C8102E, #333333, #F5E1C0);
@@ -555,7 +559,6 @@
     -fx-font-size: 12px;
     -fx-padding: 20 0 0 0;
 }
-
 .transparent-scroll-pane {
     -fx-background: transparent;
     -fx-background-color: transparent;
@@ -626,7 +629,6 @@
     -fx-background-color: #e3f2fd;
     -fx-cursor: hand;
 }
-
 .transparent-scroll-pane {
     -fx-background: transparent;
     -fx-background-color: transparent;
@@ -674,30 +676,3 @@
     -fx-cursor: hand;
 }
 
-/* Styles pour les bulles flottantes */
-.bubble {
-    -fx-background-color: #4CAF50; /* Couleur de la bulle */
-    -fx-background-radius: 20; /* Coins arrondis pour une apparence ovale */
-    -fx-border-radius: 20;
-    -fx-border-color: #388E3C;
-    -fx-border-width: 2;
-    -fx-padding: 15; /* Plus d'espace pour le contenu */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 15, 0, 0, 5); /* Ombre pour effet flottant */
-    -fx-alignment: center;
-    -fx-max-width: 250; /* Largeur maximale pour éviter une bulle trop large */
-}
-
-.bubble:hover {
-    -fx-background-color: #45A049; /* Légère modification de couleur au survol */
-    -fx-scale-x: 1.05; /* Légère agrandissement au survol */
-    -fx-scale-y: 1.05;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 20, 0, 0, 8); /* Ombre plus prononcée au survol */
-}
-
-.bubble-label {
-    -fx-font-size: 12px; /* Taille plus petite pour s'adapter à la bulle */
-    -fx-text-fill: white; /* Texte blanc pour contraste */
-    -fx-font-weight: bold;
-    -fx-wrap-text: true; /* Permet le retour à la ligne pour les longs textes */
-    -fx-max-width: 200; /* Limite la largeur pour que le texte reste lisible */
-}
