@@ -454,16 +454,6 @@ public class AfficheRec {
         switchScene("/EventoraAPP/EventoraAPP.fxml", event);
     }
 
-    @FXML
-    private void goToUser(ActionEvent event) throws IOException {
-        switchScene("/Utilisateurs/AfficherUtilisateur.fxml", event);
-    }
-
-    @FXML
-    private void goToParams(ActionEvent event) throws IOException {
-        switchScene("/Utilisateurs/Parametres.fxml", event);
-    }
-
     private void switchScene(String fxmlFile, ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent layout = loader.load();

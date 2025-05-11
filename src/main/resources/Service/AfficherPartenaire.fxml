@@ -27,15 +27,15 @@
             <Label text="Eventora Menu" styleClass="nav-title"/>
         </HBox>
         <HBox spacing="20" alignment="CENTER_RIGHT">
-            <Button text="🏠 Accueil" styleClass="nav-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil" />
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" onAction="#goToUser"/>
             <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
             <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
             <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
-            <Button text="🔧 Paramètres" styleClass="nav-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button" onAction="#goToParams"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button" onAction="#deconnexion"/>
         </HBox>
     </HBox>
 
@@ -44,7 +44,7 @@
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
 
-        <!-- Partie gauche : Tableau des partenaires -->
+        <!-- Partie gauche : Liste des partenaires -->
         <VBox alignment="CENTER" spacing="20" HBox.hgrow="ALWAYS">
             <!-- Titre principal -->
             <Label text="⛔ Liste des Partenaires ⛔" styleClass="main-title"/>
@@ -60,16 +60,16 @@
                 <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
             </HBox>
 
-            <!-- Tableau des partenaires -->
-            <TableView fx:id="tableView" prefHeight="400.0" prefWidth="600.0" styleClass="custom-table" VBox.vgrow="ALWAYS">
+            <!-- TableView pour afficher les partenaires -->
+            <TableView fx:id="tableView" prefWidth="600.0" prefHeight="400.0" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="idColumn" prefWidth="46.0" text="ID"/>
-                    <TableColumn fx:id="nomColumn" prefWidth="108.0" text="Nom"/>
-                    <TableColumn fx:id="emailColumn" prefWidth="131.0" text="Email"/>
-                    <TableColumn fx:id="adresseColumn" prefWidth="129.2" text="Adresse"/>
-                    <TableColumn fx:id="site_webColumn" prefWidth="117.0" text="Site Web"/>
-                    <TableColumn fx:id="typeColumn" prefWidth="207.0" text="Type de partenariat"/>
-                    <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions"/>
+                    <TableColumn fx:id="idColumn" text="ID" prefWidth="50.0"/>
+                    <TableColumn fx:id="nomColumn" text="Nom" prefWidth="150.0"/>
+                    <TableColumn fx:id="emailColumn" text="Email" prefWidth="150.0"/>
+                    <TableColumn fx:id="adresseColumn" text="Adresse" prefWidth="150.0"/>
+                    <TableColumn fx:id="site_webColumn" text="Site Web" prefWidth="150.0"/>
+                    <TableColumn fx:id="typeColumn" text="Type" prefWidth="100.0"/>
+                    <TableColumn fx:id="colActions" text="Actions" prefWidth="100.0"/>
                 </columns>
             </TableView>
 

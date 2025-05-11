@@ -10,13 +10,13 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.GridPane?>
-
 <?import java.lang.String?>
 <?import javafx.scene.control.ScrollPane?>
-<AnchorPane  stylesheets="/style.css"
+
+<AnchorPane stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
-             prefWidth="1920.0"
-             prefHeight="1080.0"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
             fx:controller="Gui.Reclamation.Controllers.AfficheRec">
 
     <!-- Navbar horizontale en haut -->
@@ -26,14 +26,14 @@
             <Label text="Eventora Menu" styleClass="nav-title"/>
         </HBox>
         <HBox spacing="20" alignment="CENTER_RIGHT">
-            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil" />
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" onAction="#goToUser"/>
             <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
             <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
             <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
-            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button" onAction="#goToParams"/>
             <Button text="🛑 Déconnexion" styleClass="logout-button" onAction="#deconnexion"/>
         </HBox>
     </HBox>

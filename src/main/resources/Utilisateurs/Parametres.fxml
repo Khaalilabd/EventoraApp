@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
+            fx:controller="Gui.Utilisateurs.Controllers.ParametresController"
+            stylesheets="/style.css">
+
+    <!-- Navbar horizontale -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" onAction="#goToUtilisateur"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button" onAction="#deconnexion"/>
+        </HBox>
+    </HBox>
+
+    <!-- Contenu principal -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+
+        <!-- Titre principal -->
+        <Label text="🔧 Paramètres & Historique" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Gérez vos informations personnelles, consultez vos réclamations, feedbacks et réservations."/>
+
+        <!-- TabPane pour les sections -->
+        <TabPane fx:id="tabPane" prefWidth="1200.0" prefHeight="600.0">
+            <tabs>
+                <Tab text="Membre" closable="false">
+                    <content>
+                        <ScrollPane prefHeight="600.0" prefWidth="1200.0" styleClass="transparent-scroll-pane">
+                            <GridPane fx:id="membreGrid" hgap="15" vgap="15" alignment="CENTER" styleClass="transparent-grid"/>
+                        </ScrollPane>
+                    </content>
+                </Tab>
+                <Tab text="Réclamations" closable="false">
+                    <content>
+                        <ScrollPane prefHeight="600.0" prefWidth="1200.0" styleClass="transparent-scroll-pane">
+                            <VBox fx:id="reclamationContainer" alignment="TOP_CENTER" spacing="10.0" styleClass="transparent-grid"/>
+                        </ScrollPane>
+                    </content>
+                </Tab>
+                <Tab text="Feedbacks" closable="false">
+                    <content>
+                        <ScrollPane prefHeight="600.0" prefWidth="1200.0" styleClass="transparent-scroll-pane">
+                            <VBox fx:id="feedbackContainer" alignment="TOP_CENTER" spacing="10.0" styleClass="transparent-grid"/>
+                        </ScrollPane>
+                    </content>
+                </Tab>
+                <Tab text="Réservations" closable="false">
+                    <content>
+                        <ScrollPane prefHeight="600.0" prefWidth="1200.0" styleClass="transparent-scroll-pane">
+                            <VBox fx:id="reservationContainer" alignment="TOP_CENTER" spacing="10.0" styleClass="transparent-grid"/>
+                        </ScrollPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+
+        <!-- Bouton de navigation -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="backButton" text="🏠 Retour à l'accueil" styleClass="card-button" onAction="#goToAccueil"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

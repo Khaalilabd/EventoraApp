@@ -180,4 +180,36 @@ public class AjouterRec {
             e.printStackTrace();
         }
     }
+    @FXML
+    private void goToParams(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/Parametres.fxml");
+    }
+
+    @FXML
+    private void goToUser(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
+    }
+    private void switchScene(ActionEvent event, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            AnchorPane layout = loader.load();
+            Scene scene = new Scene(layout);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+
+        } catch (IOException e) {
+            showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
+    // Afficher une alerte en cas d'erreur
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }

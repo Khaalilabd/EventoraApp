@@ -6,13 +6,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane  stylesheets="/style.css"
+<AnchorPane stylesheets="/style.css"
             xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
-             prefWidth="1920.0"
-             prefHeight="1080.0"
+            prefWidth="1920.0" prefHeight="1080.0"
             fx:controller="Gui.Service.Controllers.AjouterPartenaire">
 
     <!-- Navbar horizontale en haut -->
@@ -22,44 +22,50 @@
             <Label text="Eventora Menu" styleClass="nav-title"/>
         </HBox>
         <HBox spacing="20" alignment="CENTER_RIGHT">
-            <Button text="🏠 Accueil" styleClass="nav-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil" />
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" onAction="#goToUser"/>
             <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
             <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
             <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
-            <Button text="🔧 Paramètres" styleClass="nav-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button" onAction="#goToParams"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button" onAction="#deconnexion"/>
         </HBox>
     </HBox>
 
     <!-- Contenu principal -->
     <VBox alignment="CENTER" styleClass="main-content"
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
-          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="30">
 
         <!-- Titre principal -->
         <Label text="Ajouter un Partenaire" styleClass="main-title"/>
 
         <!-- Sous-titre descriptif -->
         <Label wrapText="true" styleClass="main-description"
-               text="Remplissez le formulaire ci-dessous pour ajouter un nouveau partenaire."/>
+               text="Remplissez ce formulaire avec des informations précises pour ajouter un nouveau partenaire."/>
 
-        <!-- Formulaire -->
-        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
-            <TextField fx:id="nomField" promptText="Nom du partenaire" styleClass="input-field"/>
-            <TextField fx:id="emailField" promptText="Email du partenaire" styleClass="input-field"/>
-            <TextField fx:id="telephoneField" promptText="Téléphone du partenaire" styleClass="input-field"/>
-            <TextField fx:id="adresseField" promptText="Adresse du partenaire" styleClass="input-field"/>
-            <TextField fx:id="site_webField" promptText="Site web du partenaire" styleClass="input-field"/>
-            <ComboBox fx:id="typefield" promptText="Type de partenariat" styleClass="input-field"/>
-        </VBox>
+        <!-- Formulaire avec GridPane -->
+        <GridPane alignment="CENTER" styleClass="form-card" hgap="20" vgap="15">
+            <Label text="Nom :" styleClass="form-label" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <TextField fx:id="nomField" promptText="Entrez le nom" styleClass="input-field" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Email :" styleClass="form-label" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="emailField" promptText="Entrez l'email" styleClass="input-field" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Téléphone :" styleClass="form-label" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <TextField fx:id="telephoneField" promptText="Entrez le téléphone" styleClass="input-field" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Adresse :" styleClass="form-label" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <TextField fx:id="adresseField" promptText="Entrez l'adresse" styleClass="input-field" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Site Web :" styleClass="form-label" GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextField fx:id="site_webField" promptText="Entrez le site web" styleClass="input-field" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label text="Type de Partenariat :" styleClass="form-label" GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="typefield" promptText="Sélectionnez un type" styleClass="input-field" GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        </GridPane>
 
         <!-- Boutons avec icônes -->
-        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
-            <Button fx:id="submitButton" text="✔ Soumettre" styleClass="card-button"/>
-            <Button fx:id="cancelButton" text="❌ Annuler" styleClass="card-button"/>
+        <HBox spacing="15" alignment="CENTER" styleClass="button-container">
+            <Button fx:id="submitButton" text="✔ Soumettre" styleClass="primary-button"/>
+            <Button fx:id="cancelButton" text="❌ Annuler" styleClass="secondary-button"/>
         </HBox>
     </VBox>
 </AnchorPane>

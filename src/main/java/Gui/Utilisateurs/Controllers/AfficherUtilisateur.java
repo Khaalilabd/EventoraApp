@@ -3,8 +3,8 @@ package Gui.Utilisateurs.Controllers;
 import Models.Utilisateur.Role;
 import Models.Utilisateur.Utilisateurs;
 import Services.Utilisateur.Crud.MembresService;
+import Utils.SessionManager;
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.oned.Code128Writer;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -28,8 +28,8 @@ import javafx.util.StringConverter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,9 +50,16 @@ public class AfficherUtilisateur {
     private final MembresService membresService = new MembresService();
     private ObservableList<Utilisateurs> utilisateurs;
     private Utilisateurs selectedUtilisateur;
+    private Utilisateurs utilisateurConnecte; // Utilisateur connecté
 
     @FXML
     public void initialize() {
+        // Récupérer l'utilisateur connecté via SessionManager
+        utilisateurConnecte = SessionManager.getInstance().getUtilisateurConnecte();
+        if (utilisateurConnecte == null) {
+            showError("Erreur", "Aucun utilisateur connecté. Veuillez vous connecter.");
+            return;
+        }
         chargerUtilisateurs();
         updateStats();
 
@@ -76,113 +83,162 @@ public class AfficherUtilisateur {
 
     private void chargerUtilisateurs() {
         List<Utilisateurs> listeUtilisateurs = membresService.RechercherMem();
+
+        // Filtrer les utilisateurs selon le rôle de l'utilisateur connecté
+        if (utilisateurConnecte.getRole() == Role.MEMBRE) {
+            // Si l'utilisateur est un Membre, ne charger que sa propre carte
+            listeUtilisateurs = listeUtilisateurs.stream()
+                    .filter(u -> u.getId() == utilisateurConnecte.getId())
+                    .collect(Collectors.toList());
+        } else if (utilisateurConnecte.getRole() == Role.ADMIN) {
+            // Si l'utilisateur est un Admin, charger tous les utilisateurs
+            // Pas de filtrage, on garde toute la liste
+        } else {
+            // Par défaut, aucune carte si le rôle n'est pas reconnu
+            listeUtilisateurs = List.of();
+        }
+
         utilisateurs = FXCollections.observableArrayList(listeUtilisateurs);
         afficherCartes();
     }
 
     private void afficherCartes() {
         utilisateurGrid.getChildren().clear();
+        utilisateurGrid.getColumnConstraints().clear();
         int column = 0;
         int row = 0;
 
-        for (Utilisateurs utilisateur : utilisateurs) {
-            // Utilisation d'un VBox comme conteneur principal de la carte
-            VBox card = new VBox(10);
-            card.getStyleClass().add("user-card");
-            card.setAlignment(Pos.CENTER);
+        if (utilisateurs.isEmpty()) {
+            // Afficher un message si aucune carte n'est disponible
+            Label emptyLabel = new Label("Aucun utilisateur trouvé.");
+            emptyLabel.getStyleClass().add("page-description");
+            utilisateurGrid.add(emptyLabel, 0, 0, 6, 1);
+        } else {
+            for (Utilisateurs utilisateur : utilisateurs) {
+                // Conteneur principal de la carte
+                VBox card = new VBox(8);
+                card.getStyleClass().add("user-card");
+                // Ajouter la classe spécifique au rôle
+                String roleClass = "user-card-" + (utilisateur.getRole() != null ? utilisateur.getRole().toString().toLowerCase() : "unknown");
+                card.getStyleClass().add(roleClass);
+                card.setAlignment(Pos.CENTER);
+                card.setPrefWidth(200);
+                card.setPrefHeight(250);
+                card.setPadding(new Insets(10));
 
-            // Conteneur pour la photo (HBox pour centrer)
-            HBox photoContainer = new HBox();
-            photoContainer.setAlignment(Pos.CENTER);
+                // Photo de l'utilisateur
+                ImageView userPhoto = new ImageView();
+                userPhoto.setFitHeight(60);
+                userPhoto.setFitWidth(60);
+                userPhoto.getStyleClass().add("user-photo");
 
-            // Photo de l'utilisateur (cercle)
-            ImageView userPhoto = new ImageView();
-            userPhoto.setFitHeight(80); // Taille par défaut
-            userPhoto.setFitWidth(80);  // Taille par défaut
-            userPhoto.getStyleClass().add("user-photo");
+                try {
+                    String imagePath = utilisateur.getImage();
+                    System.out.println("Tentative de chargement de l'image pour l'utilisateur " + utilisateur.getId() + " : " + imagePath);
+                    if (imagePath != null && !imagePath.isEmpty()) {
+                        InputStream imageStream = getClass().getResourceAsStream(imagePath);
+                        if (imageStream != null) {
+                            userPhoto.setImage(new Image(imageStream));
+                        } else {
+                            System.err.println("Image introuvable dans les ressources : " + imagePath);
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println("Exception lors du chargement de l'image pour l'utilisateur " + utilisateur.getId() + " : " + e.getMessage());
+                }
 
-            boolean hasImage = false;
-            try {
-                String imagePath = utilisateur.getImage();
-                System.out.println("Tentative de chargement de l'image pour l'utilisateur " + utilisateur.getId() + " : " + imagePath);
-                if (imagePath != null && !imagePath.isEmpty()) {
-                    String absolutePath = "src/main/resources" + imagePath;
-                    File imageFile = new File(absolutePath);
-                    if (imageFile.exists()) {
-                        userPhoto.setImage(new Image(imageFile.toURI().toString()));
-                        hasImage = true;
+                if (userPhoto.getImage() == null) {
+                    InputStream defaultImageStream = getClass().getResourceAsStream("/Images/user-icon.png");
+                    if (defaultImageStream != null) {
+                        try {
+                            userPhoto.setImage(new Image(defaultImageStream));
+                        } catch (Exception e) {
+                            System.err.println("Exception lors du chargement de l'image par défaut : " + e.getMessage());
+                        }
                     } else {
-                        System.err.println("Fichier image introuvable : " + absolutePath);
+                        System.err.println("Image par défaut introuvable : /Images/user-icon.png");
+                        userPhoto.setImage(null); // Laisser l'ImageView vide
                     }
                 }
-            } catch (Exception e) {
-                System.err.println("Exception lors du chargement de l'image pour l'utilisateur " + utilisateur.getId() + " : " + e.getMessage());
-                e.printStackTrace();
+
+                // Nom de l'utilisateur
+                Label nomLabel = new Label(utilisateur.getNom() + " " + utilisateur.getPrenom());
+                nomLabel.getStyleClass().add("card-name");
+                nomLabel.setWrapText(true);
+                nomLabel.setMaxWidth(180);
+
+                // Rôle de l'utilisateur
+                Label roleLabel = new Label(getRoleDisplayName(utilisateur.getRole()));
+                roleLabel.getStyleClass().add("card-role");
+
+                // Code-barres
+                ImageView barcodeView = generateBarcode(utilisateur);
+                barcodeView.setFitHeight(30);
+                barcodeView.setFitWidth(160);
+                barcodeView.setOnMouseClicked(e -> showUserDetails(utilisateur));
+
+                // Boutons d'action (seulement pour les Admins)
+                HBox actionButtons = new HBox(8);
+                actionButtons.setAlignment(Pos.CENTER);
+
+                if (utilisateurConnecte.getRole() == Role.ADMIN) {
+                    Button modifierButton = createIconButton("/Images/edit.png", () -> modifierUtilisateur(utilisateur));
+                    Button supprimerButton = createIconButton("/Images/delete.png", () -> supprimerUtilisateur(utilisateur));
+                    actionButtons.getChildren().addAll(modifierButton, supprimerButton);
+                }
+
+                // Ajouter tous les éléments à la carte
+                card.getChildren().addAll(userPhoto, nomLabel, roleLabel, barcodeView, actionButtons);
+
+                // Sélection de la carte
+                card.setOnMouseClicked(e -> {
+                    selectedUtilisateur = utilisateur;
+                    this.supprimerButton.setDisable(false);
+                    this.modifierButton.setDisable(false);
+                    utilisateurGrid.getChildren().forEach(node -> node.getStyleClass().remove("card-selected"));
+                    card.getStyleClass().add("card-selected");
+                });
+
+                utilisateurGrid.add(card, column, row);
+                column++;
+                if (column >= 6) { // 6 cartes par ligne
+                    column = 0;
+                    row++;
+                }
             }
+        }
 
-            // Si aucune image, utiliser une icône par défaut
-            if (!hasImage) {
-                userPhoto.setImage(new Image(getClass().getResourceAsStream("/Images/user-icon.png")));
-            }
-
-            photoContainer.getChildren().add(userPhoto);
-
-            // Nom de l'utilisateur
-            Label nomLabel = new Label(utilisateur.getNom() + " " + utilisateur.getPrenom());
-            nomLabel.getStyleClass().add("card-label");
-
-            // Code-barres (Code 128)
-            VBox barcodeContainer = new VBox(5);
-            barcodeContainer.setAlignment(Pos.CENTER);
-
-            ImageView barcodeView = generateBarcode(utilisateur);
-            barcodeView.setFitHeight(40); // Taille par défaut
-            barcodeView.setFitWidth(180); // Taille par défaut
-            barcodeView.setOnMouseClicked(e -> showUserDetails(utilisateur));
-
-            // Rôle au lieu de l'ID sous le code-barres
-            Label roleLabel = new Label(getRoleDisplayName(utilisateur.getRole()));
-            roleLabel.getStyleClass().add("barcode-number");
-
-            barcodeContainer.getChildren().addAll(barcodeView, roleLabel);
-
-            // Boutons d'action
-            HBox actionButtons = new HBox(10);
-            actionButtons.setPadding(new Insets(5, 0, 0, 0));
-            actionButtons.setAlignment(Pos.CENTER);
-
-            Button modifierButton = new Button("✏️ Modifier");
-            modifierButton.getStyleClass().add("action-button");
-            modifierButton.setOnAction(e -> modifierUtilisateur(utilisateur));
-
-            Button supprimerButton = new Button("🗑️ Supprimer");
-            supprimerButton.getStyleClass().add("action-button");
-            supprimerButton.setOnAction(e -> supprimerUtilisateur(utilisateur));
-
-            actionButtons.getChildren().addAll(modifierButton, supprimerButton);
-
-            // Ajouter tous les éléments à la carte
-            card.getChildren().addAll(photoContainer, nomLabel, barcodeContainer, actionButtons);
-
-            // Sélection de la carte
-            card.setOnMouseClicked(e -> {
-                selectedUtilisateur = utilisateur;
-                this.supprimerButton.setDisable(false);
-                this.modifierButton.setDisable(false);
-                utilisateurGrid.getChildren().forEach(node -> node.getStyleClass().remove("card-selected"));
-                card.getStyleClass().add("card-selected");
-            });
-
-            utilisateurGrid.add(card, column, row);
-            column++;
-            if (column == 5) { // Retour à 5 colonnes par défaut
-                column = 0;
-                row++;
-            }
+        // Définir les contraintes de colonnes pour une grille responsive
+        for (int i = 0; i < 6; i++) {
+            ColumnConstraints colConst = new ColumnConstraints();
+            colConst.setPercentWidth(100.0 / 6);
+            utilisateurGrid.getColumnConstraints().add(colConst);
         }
     }
 
-    // Nouvelle méthode pour obtenir un nom lisible du rôle
+    private Button createIconButton(String iconPath, Runnable action) {
+        Button button = new Button();
+        button.getStyleClass().add("action-button");
+        button.setOnAction(e -> action.run());
+
+        try {
+            InputStream stream = getClass().getResourceAsStream(iconPath);
+            if (stream != null) {
+                Image image = new Image(stream);
+                ImageView icon = new ImageView(image);
+                icon.setFitHeight(16);
+                icon.setFitWidth(16);
+                button.setGraphic(icon);
+            } else {
+                button.setText(iconPath.contains("edit") ? "✏️" : "🗑️");
+            }
+        } catch (Exception e) {
+            button.setText(iconPath.contains("edit") ? "✏️" : "🗑️");
+        }
+
+        return button;
+    }
+
     private String getRoleDisplayName(Role role) {
         if (role == null) return "Inconnu";
         switch (role) {
@@ -199,23 +255,17 @@ public class AfficherUtilisateur {
 
     private ImageView generateBarcode(Utilisateurs utilisateur) {
         try {
-            // Utiliser l'ID de l'utilisateur comme contenu du code-barres
             String barcodeData = String.valueOf(utilisateur.getId());
-
-            // Générer le code-barres (Code 128)
             Code128Writer barcodeWriter = new Code128Writer();
-            BitMatrix bitMatrix = barcodeWriter.encode(barcodeData, BarcodeFormat.CODE_128, 150, 40);
-
-            // Convertir le BitMatrix en image
+            BitMatrix bitMatrix = barcodeWriter.encode(barcodeData, BarcodeFormat.CODE_128, 150, 30);
             ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
             MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(pngOutputStream.toByteArray());
             Image barcodeImage = new Image(byteArrayInputStream);
-
             return new ImageView(barcodeImage);
         } catch (IOException e) {
             e.printStackTrace();
-            return new ImageView(); // Retourner une ImageView vide en cas d'erreur
+            return new ImageView();
         }
     }
 
@@ -226,7 +276,7 @@ public class AfficherUtilisateur {
 
         VBox content = new VBox(10);
         content.setPadding(new Insets(15));
-        content.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cccccc; -fx-border-radius: 5; -fx-background-radius: 5;");
+        content.getStyleClass().add("popup-content");
 
         content.getChildren().addAll(
                 new Label("ID: " + utilisateur.getId()),
@@ -245,6 +295,7 @@ public class AfficherUtilisateur {
         content.getChildren().add(closeButton);
 
         Scene scene = new Scene(content, 300, 350);
+        scene.getStylesheets().add(getClass().getResource("/style.css").toExternalForm());
         popup.setScene(scene);
         popup.showAndWait();
     }
@@ -257,8 +308,8 @@ public class AfficherUtilisateur {
 
         totalLabel.setText("Total: " + total);
         adminLabel.setText("Admins: " + admins);
-        clientLabel.setText("Agents: " + agents); // Mise à jour pour refléter "Agent"
-        blockedLabel.setText("Membres: " + membres); // Mise à jour pour refléter "Membre"
+        clientLabel.setText("Agents: " + agents);
+        blockedLabel.setText("Membres: " + membres);
     }
 
     private void filterUtilisateurs() {
@@ -272,6 +323,13 @@ public class AfficherUtilisateur {
                         u.getEmail().toLowerCase().contains(searchText)))
                 .filter(u -> (selectedRole == null || "Tous".equals(selectedRole) || getRoleDisplayName(u.getRole()).equals(selectedRole)))
                 .collect(Collectors.toList());
+
+        // Appliquer le filtre selon le rôle de l'utilisateur connecté
+        if (utilisateurConnecte.getRole() == Role.MEMBRE) {
+            filteredList = filteredList.stream()
+                    .filter(u -> u.getId() == utilisateurConnecte.getId())
+                    .collect(Collectors.toList());
+        }
 
         utilisateurs.setAll(filteredList);
         afficherCartes();
@@ -413,5 +471,32 @@ public class AfficherUtilisateur {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+
+    @FXML
+    private void goToParams(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/Parametres.fxml");
+    }
+
+    @FXML
+    private void goToUser(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
+    }
+    @FXML
+    private void deconnexion(ActionEvent event) {
+        // Effacer la session
+        SessionManager.getInstance().clearSession();
+        // Rediriger vers la page de connexion
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Authentification.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Erreur lors du chargement de la page de connexion : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

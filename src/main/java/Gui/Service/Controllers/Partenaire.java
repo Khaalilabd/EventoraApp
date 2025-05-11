@@ -1,9 +1,11 @@
 package Gui.Service.Controllers;
 
+import Utils.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -34,6 +36,10 @@ public class Partenaire {
     @FXML
     private void goToService(ActionEvent event) {
         switchScene(event, "/Service/Service.fxml");
+    }
+    @FXML
+    private void goToAccueil(ActionEvent event) {
+        switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
     }
 
     @FXML
@@ -77,5 +83,30 @@ public class Partenaire {
         alert.setTitle(title);
         alert.setContentText(message);
         alert.showAndWait();
+    }
+    @FXML
+    private void deconnexion(ActionEvent event) {
+        // Effacer la session
+        SessionManager.getInstance().clearSession();
+        // Rediriger vers la page de connexion
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Authentification.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Erreur lors du chargement de la page de connexion : " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    private void goToParams(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/Parametres.fxml");
+    }
+
+    @FXML
+    private void goToUser(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
     }
 }

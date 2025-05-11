@@ -326,11 +326,6 @@ public class AfficheFeedback {
     }
 
     @FXML
-    private void goToParams(ActionEvent event) throws IOException {
-        switchScene("/Utilisateurs/Parametres.fxml", event);
-    }
-
-    @FXML
     private void goToService(ActionEvent event) throws IOException {
         switchScene("/Service/Service.fxml", event);
     }

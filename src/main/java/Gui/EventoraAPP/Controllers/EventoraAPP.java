@@ -1,5 +1,6 @@
 package Gui.EventoraAPP.Controllers;
 
+import Utils.SessionManager;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -8,7 +9,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -62,6 +65,15 @@ public class EventoraAPP {
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
         changeScene(event, "/Reclamation/Reclamation.fxml", "Eventora - Réclamations");
+    }
+    @FXML
+    private void goToParams(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/Parametres.fxml");
+    }
+
+    @FXML
+    private void goToUser(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
     }
 
     @FXML
@@ -142,6 +154,47 @@ public class EventoraAPP {
             slideOut.setToX(350);
             slideOut.setOnFinished(event -> chatContainer.setVisible(false));
             slideOut.play();
+        }
+    }
+    private void switchScene(ActionEvent event, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            AnchorPane layout = loader.load();
+            Scene scene = new Scene(layout);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+
+        } catch (IOException e) {
+            showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
+
+
+    // Afficher une alerte en cas d'erreur
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+    @FXML
+    private void deconnexion(ActionEvent event) {
+        // Effacer la session
+        SessionManager.getInstance().clearSession();
+        // Rediriger vers la page de connexion
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Authentification.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Erreur lors du chargement de la page de connexion : " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

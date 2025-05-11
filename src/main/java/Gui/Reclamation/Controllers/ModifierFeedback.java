@@ -5,6 +5,7 @@ import Services.Utilisateur.Crud.MembresService;
 import Models.Reclamation.Feedback;
 import Models.Reclamation.Recommend;
 import Models.Utilisateur.Utilisateurs;
+import Utils.SessionManager;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -166,5 +167,21 @@ public class ModifierFeedback {
         layout.setBody(new Label(message));
         alert.setContent(layout);
         alert.show();
+    }
+    @FXML
+    private void deconnexion(ActionEvent event) {
+        // Effacer la session
+        SessionManager.getInstance().clearSession();
+        // Rediriger vers la page de connexion
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Authentification.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Erreur lors du chargement de la page de connexion : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

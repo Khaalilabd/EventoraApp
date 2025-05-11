@@ -7,16 +7,19 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import java.net.URL?>
 <AnchorPane stylesheets="/style.css"
-            xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-            prefWidth="1920.0"
-            prefHeight="1080.0"
-            fx:controller="Gui.Service.Controllers.ModifierService">
+        xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0" prefHeight="1080.0"
+            fx:controller="Gui.Service.Controllers.ModifierService"
+            style=" -fx-font-family: 'Inter', sans-serif; -fx-font-size: 14px;">
 
-    <!-- Navbar horizontale en haut -->
+
+
     <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
           AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <HBox alignment="CENTER_LEFT">
@@ -40,27 +43,71 @@
           AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
 
-        <!-- Titre principal -->
-        <Label text="Modifier un Service" styleClass="main-title"/>
+    <!-- Titre principal -->
+        <Label text="Modifier un Service"
+               style="-fx-font-size: 32px; -fx-font-weight: 700; -fx-text-fill: #2C3E50; -fx-padding: 0 0 15px 0;"/>
 
         <!-- Sous-titre descriptif -->
-        <Label wrapText="true" styleClass="main-description"
+        <Label wrapText="true"
+               style="-fx-font-size: 16px; -fx-font-weight: 400; -fx-text-fill: #7F8C8D; -fx-padding: 0 0 30px 0; -fx-max-width: 600px; -fx-text-alignment: center;"
                text="Modifiez les détails du service ci-dessous."/>
 
-        <!-- Formulaire -->
-        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
-            <ComboBox fx:id="idPartenaireField" promptText="Sélectionner un partenaire" styleClass="input-field"/>
-            <TextField fx:id="titleField" promptText="Titre du service" styleClass="input-field"/>
-            <ComboBox fx:id="locationfield" promptText="Sélectionner un lieu" styleClass="input-field"/>
-            <ComboBox fx:id="type_servicefield" promptText="Sélectionner un type de service" styleClass="input-field"/>
-            <TextArea fx:id="descriptionField" promptText="Description du service..." styleClass="input-field"/>
-            <TextField fx:id="prixField" promptText="Prix du service" styleClass="input-field"/>
-        </VBox>
+        <!-- Formulaire avec GridPane -->
+        <GridPane fx:id="formGrid" alignment="CENTER"
+                  style="-fx-background-color: rgba(255, 255, 255, 0.7); -fx-padding: 30px; -fx-border-radius: 12px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 5); -fx-max-width: 600px;"
+                  hgap="20" vgap="15">
+            <Label text="Partenaire :"
+                   style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;"
+                   GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="idPartenaireField" promptText="Sélectionnez un partenaire"
+                      style="-fx-background-color: #F9FAFB; -fx-border-color: #D1D5DB; -fx-border-radius: 6px; -fx-padding: 10px; -fx-pref-width: 300px; -fx-font-size: 14px;"
+
+                      GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+            <Label text="Titre :"
+                   style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;"
+                   GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+            <TextField fx:id="titleField" promptText="Entrez le titre"
+                       style="-fx-background-color: #F9FAFB; -fx-border-color: #D1D5DB; -fx-border-radius: 6px; -fx-padding: 10px; -fx-pref-width: 300px; -fx-font-size: 14px;"
+
+                       GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+            <Label text="Lieu :"
+                   style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;"
+                   GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="locationfield" promptText="Sélectionnez un lieu"
+                      style="-fx-background-color: #F9FAFB; -fx-border-color: #D1D5DB; -fx-border-radius: 6px; -fx-padding: 10px; -fx-pref-width: 300px; -fx-font-size: 14px;"
+
+                      GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+            <Label text="Type de Service :"
+                   style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;"
+                   GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+            <ComboBox fx:id="type_servicefield" promptText="Sélectionnez un type"
+                      style="-fx-background-color: #F9FAFB; -fx-border-color: #D1D5DB; -fx-border-radius: 6px; -fx-padding: 10px; -fx-pref-width: 300px; -fx-font-size: 14px;"
+
+                      GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            <Label text="Description :"
+                   style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;"
+                   GridPane.rowIndex="4" GridPane.columnIndex="0"/>
+            <TextArea fx:id="descriptionField" promptText="Entrez la description"
+                      style="-fx-background-color: #F9FAFB; -fx-border-color: #D1D5DB; -fx-border-radius: 6px; -fx-padding: 10px; -fx-pref-width: 300px; -fx-pref-height: 100px; -fx-font-size: 14px;"
+
+                      GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            <Label text="Prix :"
+                   style="-fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #2C3E50;"
+                   GridPane.rowIndex="5" GridPane.columnIndex="0"/>
+            <TextField fx:id="prixField" promptText="Entrez le prix (ex. 100dt)"
+                       style="-fx-background-color: #F9FAFB; -fx-border-color: #D1D5DB; -fx-border-radius: 6px; -fx-padding: 10px; -fx-pref-width: 300px; -fx-font-size: 14px;"
+
+                       GridPane.rowIndex="5" GridPane.columnIndex="1"/>
+        </GridPane>
 
         <!-- Boutons avec icônes -->
-        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
-            <Button fx:id="submitButton" text="✔ Sauvegarder" styleClass="card-button"/>
-            <Button fx:id="cancelButton" text="❌ Annuler" styleClass="card-button"/>
+        <HBox spacing="15" alignment="CENTER">
+            <Button fx:id="submitButton" text="✔ Sauvegarder"
+                    style="-fx-background-color: #3B82F6; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 10px 20px; -fx-border-radius: 6px; -fx-background-radius: 6px; -fx-cursor: hand;"
+               />
+            <Button fx:id="cancelButton" text="❌ Annuler"
+                    style="-fx-background-color: #EF4444; -fx-text-fill: #FFFFFF; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 10px 20px; -fx-border-radius: 6px; -fx-background-radius: 6px; -fx-cursor: hand;"
+                    />
         </HBox>
     </VBox>
 </AnchorPane>

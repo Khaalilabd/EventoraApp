@@ -2,10 +2,10 @@ package Models.Service;
 
 public enum TypePartenaire {
     DECORATION("Decoration"),
-    PHOTOGRAPHIE("Photographie"),
+    PHOTOGRAPHE("Photographe"),
     TRAITEUR("Traiteur"), // Ajout de l'option "Média"
     SONO("Sono"),
-    AUTRE("Autre");
+    AUTRES("Autres");
 
     private final String label;
 

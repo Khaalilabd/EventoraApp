@@ -1,27 +1,32 @@
 package Models.Reclamation;
 
+import java.time.LocalDateTime;
+
 public class Feedback {
     private int id;
     private int idUser;
     private int vote;
     private String description;
     private Recommend recommend;
+    private LocalDateTime date;
 
     public Feedback(String description, int vote, Recommend recommend) {
         this.description = description;
         this.vote = vote;
         this.recommend = recommend;
+        this.date = LocalDateTime.now(); // Date de soumission par défaut
     }
 
-    // Constructeur par défaut
     public Feedback() {
+        this.date = LocalDateTime.now(); // Date par défaut pour le constructeur vide
     }
 
-    public Feedback(int id, String description, int vote, Recommend recommend) {
+    public Feedback(int id, String description, int vote, Recommend recommend, LocalDateTime date) {
         this.id = id;
         this.description = description;
         this.vote = vote;
         this.recommend = recommend;
+        this.date = date;
     }
 
     // Getters et setters
@@ -63,5 +68,13 @@ public class Feedback {
 
     public void setRecommend(Recommend recommend) {
         this.recommend = recommend;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }

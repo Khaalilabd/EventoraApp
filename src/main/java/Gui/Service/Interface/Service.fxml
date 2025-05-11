@@ -1,83 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-
-<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
-<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Service.Controllers.Service"
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-    prefHeight="600.0" prefWidth="900.0"
-    stylesheets="style.css">
+<AnchorPane stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="1920.0"
+            prefHeight="1080.0"
+            fx:controller="Gui.Service.Controllers.Service">
 
-    <!-- Barre de navigation latérale -->
-    <VBox prefWidth="220" prefHeight="600"
-          style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
-        <!-- Logo -->
-        <ImageView fitWidth="100" fitHeight="100" preserveRatio="true">
-            <image>
-                <Image url="@/Images/EVENTORA.png"/>
-            </image>
-        </ImageView>
-
-        <!-- Titre -->
-        <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
-
-        <VBox spacing="10">
-            <Button text="🏠 Accueil" styleClass="menu-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
-            <Button text="📲 Réservation" styleClass="menu-button"/>
-            <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
-            <Button text="⭐ FeedBack" styleClass="menu-button"/>
-            <Button styleClass="menu-button" text="🚨 Réclamations"  />
-            <Button text="🔧 Paramètres" styleClass="menu-button"/>
+    <!-- Navbar horizontale en haut -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
             <Button text="🛑 Déconnexion" styleClass="logout-button"/>
-        </VBox>
-    </VBox>
-
+        </HBox>
+    </HBox>
 
     <!-- Contenu principal -->
-    <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
 
-        <!-- Texte -->
-        <Label wrapText="true" prefWidth="500" styleClass="main-text"
-               text="Vous avez besoin d'un service ? Ne vous inquiétez pas, Eventora est là pour vous aider. Avec nos services, vous pouvez facilement trouver un service qui répond à vos besoins ." />
+        <!-- Titre principal -->
+        <Label text="Nos Services" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Vous avez besoin d’un service ? Eventora est là pour vous aider avec des solutions adaptées à vos besoins."/>
 
         <!-- Image d'illustration -->
-        <ImageView fitWidth="500" fitHeight="500" preserveRatio="true">
+        <ImageView fitWidth="500.0" fitHeight="300.0" preserveRatio="true">
             <image>
-                <Image url="/Images/service.gif"/> <!-- Remplacez par le chemin vers votre GIF -->
+                <Image url="/Images/service.gif"/>
             </image>
         </ImageView>
 
+        <!-- Cartes pour les options -->
+        <HBox spacing="20" alignment="CENTER" styleClass="card-container">
+            <!-- Carte pour Services -->
+            <VBox styleClass="card">
+                <Label text="Services" styleClass="card-title"/>
+                <Label text="Ajoutez ou consultez nos services disponibles." styleClass="card-description"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="ajouterButton" text="➕ Ajouter" styleClass="card-button" onAction="#handleAddAction"/>
+                    <Button fx:id="viewButton" text="📋 Consulter" styleClass="card-button" onAction="#handleViewAction"/>
+                </HBox>
+            </VBox>
 
-        <!-- Boutons -->
-        <HBox spacing="20" alignment="CENTER">
-            <Button fx:id="ajouterButton"
-                    text="Ajouter un service"
-                    styleClass="add-button"
-                    onAction="#handleAddAction"/>
-            <Button fx:id="viewButton"
-                    text="Voir les services"
-                    styleClass="view-button"
-                    onAction="#handleViewAction"/>
+            <!-- Carte pour Partenaires -->
+            <VBox styleClass="card">
+                <Label text="Partenaires" styleClass="card-title"/>
+                <Label text="Ajoutez ou consultez nos partenaires." styleClass="card-description"/>
+                <HBox spacing="10" alignment="CENTER">
+                    <Button fx:id="ajouterButton_partenaire" text="➕ Ajouter" styleClass="card-button" onAction="#handleAddAction_partenaire"/>
+                    <Button fx:id="viewButton_partenaire" text="📋 Consulter" styleClass="card-button" onAction="#handleViewAction_partenaire"/>
+                </HBox>
+            </VBox>
         </HBox>
-        <HBox spacing="20" alignment="CENTER">
-            <Button fx:id="ajouterButton_partenaire"
-                    text="Ajouter un partenaire"
-                    styleClass="add-button_partenaire"
-                    onAction="#handleAddAction_partenaire"/>
-            <Button fx:id="viewButton_partenaire"
-                    text="Voir les partenaires"
-                    styleClass="view-button_partenaire"
-                    onAction="#handleViewAction_partenaire"/>
-        </HBox>
-
     </VBox>
-
 </AnchorPane>

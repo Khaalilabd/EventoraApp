@@ -89,7 +89,7 @@ public class Feedback {
 
     @FXML
     private void goToAccueil(ActionEvent event) throws IOException {
-        switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
+        switchScene("/EventoraAPP/EventoraAPP.fxml", event);
     }
 
     @FXML

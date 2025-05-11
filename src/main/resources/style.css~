@@ -180,7 +180,7 @@
 
 /* Cartes d'utilisateurs */
 .user-card {
-    -fx-background-color: #ffffff; /* Fond par défaut pour rôle inconnu */
+    -fx-background-color: #ffffff;
     -fx-background-radius: 12px;
     -fx-border-radius: 12px;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.15), 8, 0, 0, 2);
@@ -194,18 +194,6 @@
     -fx-transition: -fx-scale-x 0.2s ease, -fx-scale-y 0.2s ease, -fx-effect 0.2s ease;
 }
 
-.user-card-admin {
-    -fx-background-color: #e7f1ff; /* Bleu clair pour Admin */
-}
-
-.user-card-agent {
-    -fx-background-color: #fff3cd; /* Jaune pâle pour Agent */
-}
-
-.user-card-membre {
-    -fx-background-color: #d4edda; /* Vert clair pour Membre */
-}
-
 .user-card:hover {
     -fx-scale-x: 1.03;
     -fx-scale-y: 1.03;
@@ -213,7 +201,7 @@
 }
 
 .card-selected {
-    -fx-background-color: rgba(0, 123, 255, 0.2); /* Fond bleuté pour sélection */
+    -fx-background-color: rgba(0, 123, 255, 0.1);
     -fx-border-color: #007bff;
     -fx-border-width: 2px;
     -fx-border-radius: 12px;

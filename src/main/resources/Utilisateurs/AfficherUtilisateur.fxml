@@ -19,15 +19,15 @@
             <Label text="Eventora Menu" styleClass="nav-title"/>
         </HBox>
         <HBox spacing="20" alignment="CENTER_RIGHT">
-            <Button text="🏠 Accueil" styleClass="nav-button"/>
-            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="🏠 Accueil" styleClass="nav-button" onAction="#goToAccueil" />
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button" onAction="#goToUser"/>
             <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
             <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
             <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
             <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
             <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
-            <Button text="🔧 Paramètres" styleClass="nav-button"/>
-            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button" onAction="#goToParams"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button" onAction="#deconnexion"/>
         </HBox>
     </HBox>
 
@@ -47,8 +47,8 @@
         <HBox spacing="20" alignment="CENTER" styleClass="stats-panel">
             <Label fx:id="totalLabel" text="Total: 0" styleClass="stat-label"/>
             <Label fx:id="adminLabel" text="Admins: 0" styleClass="stat-label"/>
-            <Label fx:id="clientLabel" text="Clients: 0" styleClass="stat-label"/>
-            <Label fx:id="blockedLabel" text="Bloqués: 0" styleClass="stat-label"/>
+            <Label fx:id="clientLabel" text="Agents: 0" styleClass="stat-label"/>
+            <Label fx:id="blockedLabel" text="Membres: 0" styleClass="stat-label"/>
         </HBox>
 
         <!-- Barre d'outils -->
@@ -61,16 +61,16 @@
                     <FXCollections fx:factory="observableArrayList">
                         <String fx:value="Tous"/>
                         <String fx:value="Admin"/>
-                        <String fx:value="Client"/>
-                        <String fx:value="Bloqué"/>
+                        <String fx:value="Agent"/>
+                        <String fx:value="Membre"/>
                     </FXCollections>
                 </items>
             </ComboBox>
         </HBox>
 
         <!-- Grille des cartes dans un ScrollPane -->
-        <ScrollPane prefHeight="575.0" prefWidth="999.0" styleClass="transparent-scroll-pane">
-            <GridPane fx:id="utilisateurGrid" hgap="20" vgap="20" alignment="CENTER" styleClass="transparent-grid"/>
+        <ScrollPane prefHeight="600.0" prefWidth="1200.0" styleClass="transparent-scroll-pane">
+            <GridPane fx:id="utilisateurGrid" hgap="15" vgap="15" alignment="CENTER" styleClass="transparent-grid"/>
         </ScrollPane>
 
         <!-- Boutons d’action -->
