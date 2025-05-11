@@ -32,10 +32,13 @@ public class ReservationPackService implements IReservationPack<ReservationPack>
         }
     }
 
+
     @Override
     public void modifierReservationPack(ReservationPack reservationPack) {
         String req = "UPDATE reservationpack SET idPack=?, nom=?, prenom=?, email=?, numtel=?, description=?, date=? WHERE idReservationPack=?";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(req);
             ps.setInt(1, reservationPack.getIdPack());
             ps.setString(2, reservationPack.getNom());
             ps.setString(3, reservationPack.getPrenom());
@@ -49,18 +52,36 @@ public class ReservationPackService implements IReservationPack<ReservationPack>
             System.out.println("Réservation de pack modifiée avec succès !");
         } catch (SQLException e) {
             System.err.println("Erreur lors de la modification de la réservation de pack : " + e.getMessage());
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    System.err.println("Erreur lors de la fermeture du PreparedStatement : " + e.getMessage());
+                }
+            }
         }
     }
 
     @Override
     public void supprimerReservationPack(ReservationPack reservationPack) {
         String req = "DELETE FROM reservationpack WHERE idReservationPack=?";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement(req);
             ps.setInt(1, reservationPack.getIdReservationPack());
             ps.executeUpdate();
             System.out.println("Réservation de pack supprimée avec succès !");
         } catch (SQLException e) {
             System.err.println("Erreur lors de la suppression de la réservation de pack : " + e.getMessage());
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    System.err.println("Erreur lors de la fermeture du PreparedStatement : " + e.getMessage());
+                }
+            }
         }
     }
 
@@ -68,9 +89,11 @@ public class ReservationPackService implements IReservationPack<ReservationPack>
     public List<ReservationPack> rechercherReservationPack() {
         String req = "SELECT * FROM reservationpack";
         List<ReservationPack> reservationPacks = new ArrayList<>();
-        try (PreparedStatement ps = connection.prepareStatement(req);
-             ResultSet rs = ps.executeQuery()) {
-
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = connection.prepareStatement(req);
+            rs = ps.executeQuery();
             while (rs.next()) {
                 ReservationPack reservationPack = new ReservationPack();
                 reservationPack.setIdReservationPack(rs.getInt("idReservationPack"));
@@ -87,6 +110,21 @@ public class ReservationPackService implements IReservationPack<ReservationPack>
             System.out.println(reservationPacks);
         } catch (SQLException e) {
             System.err.println("Erreur lors de la récupération des réservations de pack : " + e.getMessage());
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    System.err.println("Erreur lors de la fermeture du ResultSet : " + e.getMessage());
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    System.err.println("Erreur lors de la fermeture du PreparedStatement : " + e.getMessage());
+                }
+            }
         }
         return reservationPacks;
     }

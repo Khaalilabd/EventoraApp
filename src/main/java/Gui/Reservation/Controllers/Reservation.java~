@@ -22,7 +22,7 @@ public class Reservation {
     @FXML
     private void handleAddAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservationPack.fxml"));
             AnchorPane addRecLayout = loader.load();
             Scene addRecScene = new Scene(addRecLayout);
             Stage currentStage = (Stage) ajouterButton.getScene().getWindow();
@@ -37,7 +37,7 @@ public class Reservation {
     @FXML
     private void handleViewAction(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservation.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/AfficheReservation.fxml"));
             AnchorPane viewRecLayout = loader.load();
             Scene viewRecScene = new Scene(viewRecLayout);
             Stage currentStage = (Stage) viewButton.getScene().getWindow();

@@ -11,11 +11,9 @@ import java.io.IOException;
 public class FXMain extends Application {
     @Override
     public void start(Stage stage)  {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/AjouterReservation.fxml"));
         try {
             Parent root = loader.load();
-
-
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.setTitle("Ajouter");

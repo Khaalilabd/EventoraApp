@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.paint.Color?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Reservation.Controllers.AjoutReservPack"
+            prefHeight="600.0" prefWidth="900.0"
+            stylesheets="style.css"
+            style="-fx-background-color: #ECF0F1;">
+
+    <!-- Barre de navigation latérale -->
+    <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
+        <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
+        <VBox spacing="10">
+            <Button text="🏠 Accueil" styleClass="menu-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
+            <Button text="📲 Réservation" styleClass="menu-button"/>
+            <Button text="🎁 Services" styleClass="menu-button"/>
+            <Button text="💎 Packs" styleClass="menu-button"/>
+            <Button text="⭐ FeedBack" styleClass="menu-button"/>
+            <Button text="🚨 Réclamations" styleClass="menu-button"/>
+            <Button text="🔧 Paramètres" styleClass="menu-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </VBox>
+    </VBox>
+
+    <!-- Contenu principal -->
+    <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
+        <Label text="Ajouter une Réservation" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2C3E50;"/>
+
+        <!-- Card pour le formulaire -->
+        <VBox spacing="15" alignment="CENTER" style="-fx-background-color: white; -fx-padding: 20px; -fx-border-radius: 10px; -fx-background-radius: 10px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 5);">
+            <TextField fx:id="nomField" promptText="Nom" styleClass="input-field"/>
+            <TextField fx:id="prenomField" promptText="Prénom" styleClass="input-field"/>
+            <TextField fx:id="adresseField" promptText="Adresse" styleClass="input-field"/>
+            <TextField fx:id="emailField" promptText="Email" styleClass="input-field"/>
+            <TextField fx:id="numTelField" promptText="Numéro de téléphone" styleClass="input-field"/>
+            <TextArea fx:id="descriptionField" promptText="Description de la réservation..." styleClass="input-field"/>
+            <DatePicker fx:id="dateField" promptText="Sélectionner une date" styleClass="input-field"/>
+
+            <!-- Sélection du Pack -->
+            <ComboBox fx:id="packField" promptText="Sélectionner un Pack" styleClass="input-field"/>
+
+            <HBox spacing="20" alignment="CENTER">
+                <Button text="➕ Ajouter Réservation" fx:id="ajouterButton" styleClass="submit-button"/>
+                <Button text="❌ Annuler" fx:id="cancelButton" styleClass="cancel-button"/>
+            </HBox>
+        </VBox>
+    </VBox>
+</AnchorPane>

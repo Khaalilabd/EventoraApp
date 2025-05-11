@@ -9,5 +9,6 @@ public interface IReservationPack<T> {
     void supprimerReservationPack(T t);
     List<T> rechercherReservationPack();
 
+    List<T> getAllReservations(); // Nouvelle méthode ajoutée
 
 }
