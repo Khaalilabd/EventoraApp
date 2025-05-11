@@ -10,20 +10,24 @@ import com.twilio.type.PhoneNumber;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
-public class AjouterReservationPersonalise {
+public class AjouterReservationPersonalise implements Initializable {
     @FXML
     private VBox serviceCheckboxes;
     @FXML
@@ -34,15 +38,17 @@ public class AjouterReservationPersonalise {
     private DatePicker datefield;
     @FXML
     private Button submitButton, cancelButton;
+    @FXML
+    private ComboBox<String> idServicefield;
 
     private final ReservationPersonaliseService reservationService = new ReservationPersonaliseService();
     private final ServiceService serviceService = new ServiceService();
     private static final String ACCOUNT_SID = "ACc57c0b58eff936708b3208d34fd03469";
-    private static final String AUTH_TOKEN = "c041aac0a4b6c54d0280b74c416f2f89";
-    private static final String TWILIO_PHONE_NUMBER = "+12513125202"; // Your Twilio number
+    private static final String AUTH_TOKEN = "b2a441186c89d703043342fcd40b372a";
+    private static final String TWILIO_PHONE_NUMBER = "+12513125202";
 
-    @FXML
-    public void initialize() {
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         submitButton.setOnAction(this::ajouterReservationPersonalise);
         cancelButton.setOnAction(event -> clearFields());
         loadServicesAsCheckboxes();
@@ -82,9 +88,17 @@ public class AjouterReservationPersonalise {
         }
 
         Date date = Date.from(datefield.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        ReservationPersonalise reservation = new ReservationPersonalise(nomfield.getText().trim(),
-                prenomfield.getText().trim(), emailfield.getText().trim(), numtelfield.getText().trim(),
-                descriptionfield.getText().trim(), date, selectedServiceIds);
+        ReservationPersonalise reservation = new ReservationPersonalise(
+                1, // idMembre par défaut
+                nomfield.getText().trim(),
+                prenomfield.getText().trim(),
+                emailfield.getText().trim(),
+                numtelfield.getText().trim(),
+                descriptionfield.getText().trim(),
+                date,
+                "En attente", // status par défaut
+                selectedServiceIds
+        );
 
         reservationService.ajouterReservationPersonalise(reservation);
         sendSMSConfirmation(reservation);
@@ -173,16 +187,66 @@ public class AjouterReservationPersonalise {
 
     @FXML
     private void goToReservation(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
+        AnchorPane reservationLayout = loader.load();
+        Scene scene = new Scene(reservationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
+        Parent root = loader.load();
+        Scene newScene = new Scene(root);
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        Stage newStage = new Stage();
+        newStage.setScene(newScene);
+        newStage.show();
+    }
+
+    @FXML
+    private void goToPack(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
+        AnchorPane packLayout = loader.load();
+        Scene scene = new Scene(packLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    private void goToFeedback(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
+        AnchorPane feedbackLayout = loader.load();
+        Scene feedbackScene = new Scene(feedbackLayout);
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.setScene(feedbackScene);
+        currentStage.show();
+    }
+
+    @FXML
+    private void goToReclamation(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
+        AnchorPane reclamationLayout = loader.load();
+        Scene scene = new Scene(reclamationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    private void annuler(ActionEvent event) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
-            AnchorPane reservationLayout = loader.load();
-            Scene scene = new Scene(reservationLayout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AfficherReservationPersonalise.fxml"));
+            AnchorPane layout = loader.load();
+            Stage stage = (Stage) cancelButton.getScene().getWindow();
+            stage.setScene(new Scene(layout));
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
+            showAlert("Erreur", "Erreur lors de la navigation : " + e.getMessage());
         }
     }
 }

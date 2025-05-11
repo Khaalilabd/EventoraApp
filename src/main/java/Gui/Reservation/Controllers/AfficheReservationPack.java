@@ -2,39 +2,64 @@ package Gui.Reservation.Controllers;
 
 import Models.Reservation.ReservationPack;
 import Services.Reservation.Crud.ReservationPackService;
-import Gui.Reservation.Controllers.PdfTemplateUtil;
-import javafx.animation.TranslateTransition;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.stage.Modality;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.Date;
 
 public class AfficheReservationPack {
 
     @FXML
     private TextField searchField;
     @FXML
-    private GridPane reservationGrid;
+    private ComboBox<String> statusFilter;
     @FXML
-    private Label totalLabel;
+    private TableView<ReservationPack> tableView;
+
+    @FXML
+    private TableColumn<ReservationPack, Integer> colId;
+
+    @FXML
+    private TableColumn<ReservationPack, Integer> colIdPack;
+
+    @FXML
+    private TableColumn<ReservationPack, String> colNom;
+
+    @FXML
+    private TableColumn<ReservationPack, String> colPrenom;
+
+    @FXML
+    private TableColumn<ReservationPack, String> colEmail;
+
+    @FXML
+    private TableColumn<ReservationPack, String> colnumTel;
+
+    @FXML
+    private TableColumn<ReservationPack, String> colDescription;
+
+    @FXML
+    private TableColumn<ReservationPack, Date> colDate;
+
+    @FXML
+    private TableColumn<ReservationPack, String> colActions;
 
     private final ReservationPackService reservationservice;
 
@@ -44,220 +69,143 @@ public class AfficheReservationPack {
 
     @FXML
     public void initialize() {
+        // Liaison des colonnes avec les propriétés de la classe Reservation
+        colId.setCellValueFactory(new PropertyValueFactory<>("idReservationPack"));
+        colIdPack.setCellValueFactory(new PropertyValueFactory<>("idPack"));
+        colNom.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        colPrenom.setCellValueFactory(new PropertyValueFactory<>("prenom"));
+        colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        colnumTel.setCellValueFactory(new PropertyValueFactory<>("numtel"));
+        colDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colDate.setCellValueFactory(new PropertyValueFactory<>("date"));
+        addActionsColumn();
+        
+        // Initialize status filter
+        statusFilter.getItems().addAll("En attente", "Validée", "Annulée");
+        
+        // Charger les données dans le TableView
         loadReservations();
+        // Ajout du filtre de recherche
         searchField.textProperty().addListener((observable, oldValue, newValue) -> filterReservations(newValue));
     }
 
-    private void loadReservations() {
-        try {
-            reservationGrid.getChildren().clear();
-            List<ReservationPack> reservations = reservationservice.rechercherReservationPack();
-            populateGrid(reservations);
-            updateStatistics(reservations);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showErrorAlert("Impossible de charger les réservations", e.getMessage());
-        }
-    }
-
-    private void populateGrid(List<ReservationPack> reservations) {
-        reservationGrid.getChildren().clear();
-        reservationGrid.getColumnConstraints().clear();
-        int column = 0;
-        int row = 0;
-        for (ReservationPack reservation : reservations) {
-            VBox bubble = createBubble(reservation);
-            reservationGrid.add(bubble, column, row);
-            column++;
-            if (column >= 3) { // Limite à 3 bulles par ligne
-                column = 0;
-                row++;
-            }
-        }
-        for (int i = 0; i < 3; i++) { // Définit 3 colonnes
-            ColumnConstraints colConst = new ColumnConstraints();
-            colConst.setPercentWidth(33.33); // Chaque colonne prend 1/3 de la largeur
-            reservationGrid.getColumnConstraints().add(colConst);
-        }
-    }
-
-    private void updateStatistics(List<ReservationPack> reservations) {
-        long total = reservations.size();
-        totalLabel.setText("Total: " + total);
-    }
-
-    private VBox createBubble(ReservationPack reservation) {
-        VBox bubble = new VBox(10);
-        bubble.getStyleClass().add("bubble");
-        bubble.setAlignment(Pos.CENTER);
-        bubble.setPrefWidth(200);
-        bubble.setPrefHeight(300);
-
-        Label idLabel = new Label("ID: " + reservation.getIdReservationPack());
-        idLabel.getStyleClass().add("bubble-label");
-        Label packLabel = new Label("Pack ID: " + reservation.getIdPack());
-        packLabel.getStyleClass().add("bubble-label");
-        Label nomLabel = new Label("Nom: " + reservation.getNom());
-        nomLabel.getStyleClass().add("bubble-label");
-        Label prenomLabel = new Label("Prénom: " + reservation.getPrenom());
-        prenomLabel.getStyleClass().add("bubble-label");
-        Label emailLabel = new Label("Email: " + reservation.getEmail());
-        emailLabel.getStyleClass().add("bubble-label");
-        emailLabel.setWrapText(true);
-        Label numTelLabel = new Label("Num. Téléphone: " + reservation.getNumtel());
-        numTelLabel.getStyleClass().add("bubble-label");
-        Label descLabel = new Label("Description: " + reservation.getDescription());
-        descLabel.getStyleClass().add("bubble-label");
-        descLabel.setWrapText(true);
-        descLabel.setMaxHeight(50);
-        Label dateLabel = new Label("Date: " + reservation.getDate().toString());
-        dateLabel.getStyleClass().add("bubble-label");
-
-        HBox actionButtons = new HBox(5);
-        actionButtons.setAlignment(Pos.CENTER);
-        Button editButton = createIconButton("/Images/modif.png", () -> handleEdit(reservation));
-        Button deleteButton = createIconButton("/Images/supp.png", () -> handleDelete(reservation));
-        Button exportButton = createIconButton("/Images/pdf.png", () -> handleExport(reservation));
-        actionButtons.getChildren().addAll(editButton, deleteButton, exportButton);
-
-        bubble.getChildren().addAll(idLabel, packLabel, nomLabel, prenomLabel, emailLabel, numTelLabel, descLabel, dateLabel, actionButtons);
-
-        bubble.setOnMouseClicked(event -> showDetailsWindow(reservation));
-
-        TranslateTransition floatAnimation = new TranslateTransition(Duration.seconds(2), bubble);
-        floatAnimation.setByY(-10);
-        floatAnimation.setAutoReverse(true);
-        floatAnimation.setCycleCount(TranslateTransition.INDEFINITE);
-        floatAnimation.play();
-
-        return bubble;
-    }
-
-    private Button createIconButton(String iconPath, Runnable action) {
-        ImageView icon = new ImageView(new Image(getClass().getResourceAsStream(iconPath)));
-        icon.setFitHeight(20);
-        icon.setFitWidth(20);
-        Button button = new Button();
-        button.setGraphic(icon);
-        button.getStyleClass().add("action-button");
-        button.setOnAction(e -> action.run());
-        return button;
-    }
-
-    private void showDetailsWindow(ReservationPack reservation) {
-        Stage detailsStage = new Stage();
-        detailsStage.initModality(Modality.APPLICATION_MODAL);
-        detailsStage.setTitle("Détails de la réservation");
-
-        VBox detailsLayout = new VBox(10);
-        detailsLayout.setAlignment(Pos.CENTER);
-        detailsLayout.setStyle("-fx-padding: 20; -fx-background-color: #f4f4f4;");
-
-        Label titleLabel = new Label("Détails de la réservation");
-        titleLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        Label idLabel = new Label("ID: " + reservation.getIdReservationPack());
-        Label packLabel = new Label("Pack ID: " + reservation.getIdPack());
-        Label nomLabel = new Label("Nom: " + reservation.getNom());
-        Label prenomLabel = new Label("Prénom: " + reservation.getPrenom());
-        Label emailLabel = new Label("Email: " + reservation.getEmail());
-        Label numTelLabel = new Label("Num. Téléphone: " + reservation.getNumtel());
-        Label descLabel = new Label("Description: " + reservation.getDescription());
-        descLabel.setWrapText(true);
-        Label dateLabel = new Label("Date: " + reservation.getDate().toString());
-
-        HBox buttonBox = new HBox(10);
-        buttonBox.setAlignment(Pos.CENTER);
-
-        Button exportButton = new Button("Exporter");
-        exportButton.setOnAction(e -> handleExport(reservation));
-
-        Button closeButton = new Button("Fermer");
-        closeButton.setOnAction(e -> detailsStage.close());
-
-        buttonBox.getChildren().addAll(exportButton, closeButton);
-
-        detailsLayout.getChildren().addAll(
-                titleLabel, idLabel, packLabel, nomLabel, prenomLabel,
-                emailLabel, numTelLabel, descLabel, dateLabel, buttonBox
-        );
-
-        Scene scene = new Scene(detailsLayout, 400, 500);
-        detailsStage.setScene(scene);
-        detailsStage.showAndWait();
-    }
-
     private void filterReservations(String keyword) {
-        try {
-            reservationGrid.getChildren().clear();
-            List<ReservationPack> reservations;
-            if (keyword == null || keyword.trim().isEmpty()) {
-                reservations = reservationservice.rechercherReservationPack();
-            } else {
-                String lowerCaseKeyword = keyword.toLowerCase();
-                reservations = reservationservice.rechercherReservationPack().stream()
+        if (keyword == null || keyword.trim().isEmpty()) {
+            loadReservations(); // Recharge toutes les réservations si la recherche est vide
+            return;
+        }
+
+        String lowerCaseKeyword = keyword.toLowerCase();
+        tableView.getItems().setAll(
+                reservationservice.rechercherReservationPack().stream()
                         .filter(res -> res.getNom().toLowerCase().contains(lowerCaseKeyword) ||
-                                res.getPrenom().toLowerCase().contains(lowerCaseKeyword) ||
-                                res.getEmail().toLowerCase().contains(lowerCaseKeyword))
-                        .collect(Collectors.toList());
+                                res.getPrenom().toLowerCase().contains(lowerCaseKeyword))
+                        .toList()
+        );
+    }
+
+    private void addActionsColumn() {
+        colActions.setCellValueFactory(cellData -> new SimpleStringProperty("Actions"));
+
+        colActions.setCellFactory(param -> new TableCell<ReservationPack, String>() {
+            final Button editButton = new Button();
+            final Button deleteButton = new Button();
+            final Button exportReservationButton = new Button();
+            final HBox hBox = new HBox(10);
+
+            {
+                // Chargement des icônes dans les boutons
+                Image editIcon = new Image(getClass().getResourceAsStream("/Images/modif.png"));
+                Image deleteIcon = new Image(getClass().getResourceAsStream("/Images/supp.png"));
+                Image exportReservationIcon = new Image(getClass().getResourceAsStream("/Images/pdf.png"));
+
+                // Icônes pour les boutons
+                ImageView editImageView = new ImageView(editIcon);
+                ImageView deleteImageView = new ImageView(deleteIcon);
+                ImageView exportReservationImageView = new ImageView(exportReservationIcon);
+
+                editImageView.setFitHeight(20);
+                editImageView.setFitWidth(20);
+                deleteImageView.setFitHeight(20);
+                deleteImageView.setFitWidth(20);
+                exportReservationImageView.setFitHeight(20);
+                exportReservationImageView.setFitWidth(20);
+
+                // Ajout des icônes dans les boutons
+                editButton.setGraphic(editImageView);
+                deleteButton.setGraphic(deleteImageView);
+                exportReservationButton.setGraphic(exportReservationImageView);
+
+                // Style des boutons
+                editButton.getStyleClass().add("table-button");
+                deleteButton.getStyleClass().addAll("table-button", "delete");
+                exportReservationButton.getStyleClass().add("table-button");
+
+                // Add all buttons to the HBox
+                hBox.getChildren().addAll(editButton, deleteButton, exportReservationButton);
             }
-            populateGrid(reservations);
-            updateStatistics(reservations);
-        } catch (Exception e) {
-            showErrorAlert("Impossible de filtrer les réservations", e.getMessage());
-        }
-    }
 
-    private void handleEdit(ReservationPack reservation) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/ModifierReservationPack.fxml"));
-            AnchorPane modifReservationLayout = loader.load();
-            ModifierReservationPack controller = loader.getController();
-            controller.setReservationToEdit(reservation);
-            Scene currentScene = reservationGrid.getScene();
-            currentScene.setRoot(modifReservationLayout);
-        } catch (IOException e) {
-            e.printStackTrace();
-            showErrorAlert("Erreur lors du chargement de la modification", e.getMessage());
-        }
-    }
-
-    private void handleDelete(ReservationPack reservation) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Confirmation de suppression");
-        alert.setHeaderText(null);
-        alert.setContentText("Êtes-vous sûr de vouloir supprimer cette réservation ?");
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                try {
-                    reservationservice.supprimerReservationPack(reservation);
-                    loadReservations();
-                } catch (Exception e) {
-                    showErrorAlert("Impossible de supprimer la réservation", e.getMessage());
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setGraphic(null);
+                } else {
+                    editButton.setOnAction(event -> handleEdit(getTableRow().getItem()));
+                    deleteButton.setOnAction(event -> handleDelete(getTableRow().getItem()));
+                    exportReservationButton.setOnAction(event -> handleExport(getTableRow().getItem()));
+                    setGraphic(hBox);
                 }
             }
         });
     }
 
+    private void handleEdit(ReservationPack reservation) {
+        try {
+            // Charger le fichier FXML de la vue ModifierReservation
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/ModifierReservationPack.fxml"));
+            AnchorPane modifReservationLayout = loader.load();
+
+            // Obtenez le contrôleur du fichier FXML
+            ModifierReservationPack controller = loader.getController();
+            controller.setReservationToEdit(reservation);  // Utilisation correcte du contrôleur
+
+            // Charger la nouvelle scène
+            Scene currentScene = tableView.getScene();
+            currentScene.setRoot(modifReservationLayout);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void handleExport(ReservationPack reservation) {
         try {
+            // Define the file path (e.g., save to the user's home directory)
             String homeDir = System.getProperty("user.home");
             String filePath = homeDir + File.separator + "ReservationPack_" + reservation.getIdReservationPack() + ".pdf";
+            // Initialize PDF writer and document
+            PdfWriter writer = new PdfWriter(filePath);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
 
-            List<Map<String, String>> data = new ArrayList<>();
-            Map<String, String> reservationData = new LinkedHashMap<>();
-            reservationData.put("ID", String.valueOf(reservation.getIdReservationPack()));
-            reservationData.put("Pack ID", String.valueOf(reservation.getIdPack()));
-            reservationData.put("Name", reservation.getNom() + " " + reservation.getPrenom());
-            reservationData.put("Email", reservation.getEmail());
-            reservationData.put("Phone Number", reservation.getNumtel());
-            reservationData.put("Description", reservation.getDescription());
-            reservationData.put("Date", reservation.getDate().toString());
-            data.add(reservationData);
+            // Add title
+            document.add(new Paragraph("Reservation Pack Details")
+                    .setFontSize(18)
+                    .setBold());
 
-            String logoPath = "/Images/EVENTORA.png";
+            // Add reservation details
+            document.add(new Paragraph("ID: " + reservation.getIdReservationPack()));
+            document.add(new Paragraph("Pack ID: " + reservation.getIdPack()));
+            document.add(new Paragraph("Name: " + reservation.getNom() + " " + reservation.getPrenom()));
+            document.add(new Paragraph("Email: " + reservation.getEmail()));
+            document.add(new Paragraph("Phone Number: " + reservation.getNumtel()));
+            document.add(new Paragraph("Description: " + reservation.getDescription()));
+            document.add(new Paragraph("Date: " + reservation.getDate().toString()));
 
-            PdfTemplateUtil.generatePdf(filePath, "Reservation Pack Details", data, logoPath);
+            // Close the document
+            document.close();
 
+            // Show success message
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Export Successful");
             alert.setHeaderText(null);
@@ -266,70 +214,229 @@ public class AfficheReservationPack {
 
         } catch (IOException e) {
             e.printStackTrace();
-            showErrorAlert("Erreur lors de l'exportation", e.getMessage());
+
+            // Show error message if something goes wrong
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Export Failed");
+            alert.setHeaderText(null);
+            alert.setContentText("An error occurred while exporting the reservation: " + e.getMessage());
+            alert.showAndWait();
         }
     }
 
-    private void showErrorAlert(String header, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Erreur");
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void handleDelete(ReservationPack reservation) {
+        System.out.println("Supprimer la réclamation avec ID : " + reservation.getIdReservationPack());
+        reservationservice.supprimerReservationPack(reservation);
+        loadReservations();
+    }
+
+    private void loadReservations() {
+        // Récupérer les réservations depuis le service et les ajouter au TableView
+        tableView.getItems().setAll(reservationservice.rechercherReservationPack());
     }
 
     @FXML
     private void addReservationPack() {
         try {
+            // Vérifier le chemin correct du fichier FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AjouterReservationPack.fxml"));
             Scene scene = new Scene(loader.load());
             Stage stage = new Stage();
             stage.setScene(scene);
-            stage.setTitle("Ajouter une réservation");
+            stage.setTitle("Ajouter une reservation");
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace();
-            showErrorAlert("Erreur lors du chargement de l'ajout", e.getMessage());
+            e.printStackTrace(); // Afficher l'erreur dans la console
+            System.out.println("Erreur lors du chargement de AjouterReservationPack.fxml : " + e.getMessage());
         }
     }
 
     @FXML
     private void refreshList() {
-        searchField.clear();
+        // Recharger les réservations
         loadReservations();
     }
 
     @FXML
+    private void tableRowFactory(TableView<ReservationPack> tableView) {
+        tableView.setRowFactory(tv -> {
+            TableRow<ReservationPack> row = new TableRow<>();
+            row.setOnMouseEntered(event -> row.setStyle("-fx-background-color: #BDC3C7;"));
+            row.setOnMouseExited(event -> row.setStyle("-fx-background-color: transparent;"));
+            return row;
+        });
+    }
+
+    @FXML
     private void goToReservation(ActionEvent event) throws IOException {
-        switchScene("/Reservation/Reservation.fxml", event);
+        try {
+            // Vérifier le chemin correct du fichier FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
+            AnchorPane reservationLayout = loader.load();
+            Scene scene = new Scene(reservationLayout);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors du chargement de Reservation.fxml : " + e.getMessage());
+        }
     }
 
     @FXML
     private void goToReclamation(ActionEvent event) throws IOException {
-        switchScene("/Reclamation/Reclamation.fxml", event);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
+        AnchorPane reclamationLayout = loader.load();
+        Scene scene = new Scene(reclamationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
     private void goToFeedback(ActionEvent event) throws IOException {
-        switchScene("/Reclamation/Feedback.fxml", event);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
+        AnchorPane feedbackLayout = loader.load();
+        Scene feedbackScene = new Scene(feedbackLayout);
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.setScene(feedbackScene);
+        currentStage.show();
     }
 
     @FXML
     private void goToService(ActionEvent event) throws IOException {
-        switchScene("/Service/Service.fxml", event);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
+        Parent root = loader.load();
+        Scene newScene = new Scene(root);
+
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        Stage newStage = new Stage();
+        newStage.setScene(newScene);
+        newStage.show();
     }
 
     @FXML
     private void goToPack(ActionEvent event) throws IOException {
-        switchScene("/Pack/Packs.fxml", event);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
+        AnchorPane packLayout = loader.load();
+        Scene scene = new Scene(packLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
     }
 
-    private void switchScene(String fxmlFile, ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-        Parent layout = loader.load();
-        Scene newScene = new Scene(layout);
-        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        currentStage.setScene(newScene);
-        currentStage.show();
+    @FXML
+    private void searchReservations(ActionEvent event) {
+        String searchText = searchField.getText().trim();
+        String selectedStatus = statusFilter.getValue();
+        
+        if (searchText.isEmpty() && selectedStatus == null) {
+            loadReservations();
+            return;
+        }
+
+        tableView.getItems().setAll(
+            reservationservice.rechercherReservationPack().stream()
+                .filter(res -> {
+                    boolean matchesSearch = searchText.isEmpty() ||
+                        res.getNom().toLowerCase().contains(searchText.toLowerCase()) ||
+                        res.getPrenom().toLowerCase().contains(searchText.toLowerCase()) ||
+                        res.getEmail().toLowerCase().contains(searchText.toLowerCase());
+                    
+                    boolean matchesStatus = selectedStatus == null ||
+                        (res.getStatus() != null && res.getStatus().equals(selectedStatus));
+                    
+                    return matchesSearch && matchesStatus;
+                })
+                .toList()
+        );
+    }
+
+    @FXML
+    private void resetFilters(ActionEvent event) {
+        searchField.clear();
+        statusFilter.setValue(null);
+        loadReservations();
+    }
+
+    @FXML
+    private void showStatistics(ActionEvent event) {
+        // Calculate statistics
+        long totalReservations = tableView.getItems().size();
+        long validatedReservations = tableView.getItems().stream()
+            .filter(res -> "Validée".equals(res.getStatus()))
+            .count();
+        long pendingReservations = tableView.getItems().stream()
+            .filter(res -> "En attente".equals(res.getStatus()))
+            .count();
+        long cancelledReservations = tableView.getItems().stream()
+            .filter(res -> "Annulée".equals(res.getStatus()))
+            .count();
+
+        // Show statistics in an alert
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Statistiques des Réservations");
+        alert.setHeaderText("Aperçu des Réservations de Packs");
+        alert.setContentText(
+            String.format("Total des réservations: %d\n" +
+                        "Réservations validées: %d\n" +
+                        "Réservations en attente: %d\n" +
+                        "Réservations annulées: %d",
+                totalReservations, validatedReservations, pendingReservations, cancelledReservations)
+        );
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void exportData(ActionEvent event) {
+        try {
+            // Define the file path
+            String homeDir = System.getProperty("user.home");
+            String filePath = homeDir + File.separator + "ReservationsPack_Export.pdf";
+            
+            // Initialize PDF writer and document
+            PdfWriter writer = new PdfWriter(filePath);
+            PdfDocument pdf = new PdfDocument(writer);
+            Document document = new Document(pdf);
+
+            // Add title
+            document.add(new Paragraph("Liste des Réservations de Packs")
+                    .setFontSize(18)
+                    .setBold());
+
+            // Add each reservation
+            for (ReservationPack reservation : tableView.getItems()) {
+                document.add(new Paragraph("\nRéservation #" + reservation.getIdReservationPack())
+                        .setFontSize(14)
+                        .setBold());
+                document.add(new Paragraph("Pack ID: " + reservation.getIdPack()));
+                document.add(new Paragraph("Nom: " + reservation.getNom() + " " + reservation.getPrenom()));
+                document.add(new Paragraph("Email: " + reservation.getEmail()));
+                document.add(new Paragraph("Téléphone: " + reservation.getNumtel()));
+                document.add(new Paragraph("Description: " + reservation.getDescription()));
+                document.add(new Paragraph("Date: " + reservation.getDate()));
+                document.add(new Paragraph("Statut: " + reservation.getStatus()));
+                document.add(new Paragraph("----------------------------------------"));
+            }
+
+            // Close the document
+            document.close();
+
+            // Show success message
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Export Réussi");
+            alert.setHeaderText(null);
+            alert.setContentText("Les données ont été exportées vers : " + filePath);
+            alert.showAndWait();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Erreur d'Export");
+            alert.setHeaderText(null);
+            alert.setContentText("Une erreur est survenue lors de l'export : " + e.getMessage());
+            alert.showAndWait();
+        }
     }
 }

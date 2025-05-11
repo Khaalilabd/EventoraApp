@@ -14,17 +14,19 @@ public class ReservationPackService implements IReservationPack<ReservationPack>
 
     @Override
     public void ajouterReservationPack(ReservationPack reservationPack) {
-        String req = "INSERT INTO reservationpack (idPack, nom, prenom, email, numtel, description, date) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String req = "INSERT INTO reservationpack (idPack, idMembre, nom, prenom, email, numtel, description, date, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(req);
             ps.setInt(1, reservationPack.getIdPack());
-            ps.setString(2, reservationPack.getNom());
-            ps.setString(3, reservationPack.getPrenom());
-            ps.setString(4, reservationPack.getEmail());
-            ps.setString(5, reservationPack.getNumtel());
-            ps.setString(6, reservationPack.getDescription());
-            ps.setDate(7, new java.sql.Date(reservationPack.getDate().getTime()));
+            ps.setInt(2, 1); // idMembre par défaut = 1
+            ps.setString(3, reservationPack.getNom());
+            ps.setString(4, reservationPack.getPrenom());
+            ps.setString(5, reservationPack.getEmail());
+            ps.setString(6, reservationPack.getNumtel());
+            ps.setString(7, reservationPack.getDescription());
+            ps.setDate(8, new java.sql.Date(reservationPack.getDate().getTime()));
+            ps.setString(9, "En attente"); // status par défaut
 
             ps.executeUpdate();
             System.out.println("Réservation de pack ajoutée avec succès !");
@@ -43,18 +45,20 @@ public class ReservationPackService implements IReservationPack<ReservationPack>
 
     @Override
     public void modifierReservationPack(ReservationPack reservationPack) {
-        String req = "UPDATE reservationpack SET idPack=?, nom=?, prenom=?, email=?, numtel=?, description=?, date=? WHERE idReservationPack=?";
+        String req = "UPDATE reservationpack SET idPack=?, idMembre=?, nom=?, prenom=?, email=?, numtel=?, description=?, date=?, status=? WHERE idReservationPack=?";
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement(req);
             ps.setInt(1, reservationPack.getIdPack());
-            ps.setString(2, reservationPack.getNom());
-            ps.setString(3, reservationPack.getPrenom());
-            ps.setString(4, reservationPack.getEmail());
-            ps.setString(5, reservationPack.getNumtel());
-            ps.setString(6, reservationPack.getDescription());
-            ps.setDate(7, new java.sql.Date(reservationPack.getDate().getTime()));
-            ps.setInt(8, reservationPack.getIdReservationPack());
+            ps.setInt(2, reservationPack.getIdMembre());
+            ps.setString(3, reservationPack.getNom());
+            ps.setString(4, reservationPack.getPrenom());
+            ps.setString(5, reservationPack.getEmail());
+            ps.setString(6, reservationPack.getNumtel());
+            ps.setString(7, reservationPack.getDescription());
+            ps.setDate(8, new java.sql.Date(reservationPack.getDate().getTime()));
+            ps.setString(9, reservationPack.getStatus());
+            ps.setInt(10, reservationPack.getIdReservationPack());
 
             ps.executeUpdate();
             System.out.println("Réservation de pack modifiée avec succès !");
@@ -106,12 +110,14 @@ public class ReservationPackService implements IReservationPack<ReservationPack>
                 ReservationPack reservationPack = new ReservationPack();
                 reservationPack.setIdReservationPack(rs.getInt("idReservationPack"));
                 reservationPack.setIdPack(rs.getInt("idPack"));
+                reservationPack.setIdMembre(rs.getInt("idMembre"));
                 reservationPack.setNom(rs.getString("nom"));
                 reservationPack.setPrenom(rs.getString("prenom"));
                 reservationPack.setEmail(rs.getString("email"));
                 reservationPack.setNumtel(rs.getString("numtel"));
                 reservationPack.setDescription(rs.getString("description"));
                 reservationPack.setDate(rs.getDate("date"));
+                reservationPack.setStatus(rs.getString("status"));
 
                 reservationPacks.add(reservationPack);
             }

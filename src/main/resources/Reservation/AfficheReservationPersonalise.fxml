@@ -7,7 +7,7 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="Gui.Reservation.Controllers.AfficheReservationPack"
+            fx:controller="Gui.Reservation.Controllers.AfficheReservationPersonalise"
             prefHeight="600.0" prefWidth="900.0"
             stylesheets="/style.css">
 
@@ -36,11 +36,11 @@
           AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
 
         <!-- Titre principal -->
-        <Label text="Liste des Réservations de Packs" styleClass="main-title"/>
+        <Label text="Liste des Réservations Personnalisées" styleClass="main-title"/>
 
         <!-- Sous-titre descriptif -->
         <Label wrapText="true" styleClass="main-description"
-               text="Consultez et gérez toutes vos réservations de packs d'événements."/>
+               text="Consultez et gérez toutes vos réservations personnalisées d'événements."/>
 
         <!-- Barre de recherche et filtres -->
         <HBox spacing="20" alignment="CENTER" styleClass="search-container">
@@ -54,22 +54,20 @@
         <TableView fx:id="tableView" VBox.vgrow="ALWAYS" styleClass="data-table">
             <columns>
                 <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-                <TableColumn fx:id="colIdPack" text="Pack" prefWidth="150"/>
                 <TableColumn fx:id="colNom" text="Nom" prefWidth="100"/>
                 <TableColumn fx:id="colPrenom" text="Prénom" prefWidth="100"/>
                 <TableColumn fx:id="colEmail" text="Email" prefWidth="150"/>
-                <TableColumn fx:id="colnumTel" text="Téléphone" prefWidth="100"/>
+                <TableColumn fx:id="colNumTel" text="Téléphone" prefWidth="100"/>
                 <TableColumn fx:id="colDescription" text="Description" prefWidth="200"/>
                 <TableColumn fx:id="colDate" text="Date" prefWidth="100"/>
+                <TableColumn fx:id="colStatus" text="Statut" prefWidth="100"/>
                 <TableColumn fx:id="colActions" text="Actions" prefWidth="150"/>
             </columns>
         </TableView>
 
         <!-- Boutons d'action -->
         <HBox spacing="20" alignment="CENTER" styleClass="card-container">
-            <Button text="➕ Ajouter" styleClass="card-button" onAction="#addReservationPack"/>
-            <Button text="📊 Statistiques" styleClass="card-button" onAction="#showStatistics"/>
-            <Button text="📥 Exporter" styleClass="card-button" onAction="#exportData"/>
+            <Button text="➕ Ajouter" styleClass="card-button" onAction="#addReservationPersonalise"/>
         </HBox>
     </VBox>
-</AnchorPane>
+</AnchorPane> 
