@@ -1,11 +1,11 @@
 package Gui.Service.Controllers;
 
 import Utils.SessionManager;
-import Models.Utilisateur.Utilisateurs;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -20,24 +20,6 @@ public class Service {
     @FXML private Button viewButton;
     @FXML private Button ajouterButton_partenaire;
     @FXML private Button viewButton_partenaire;
-
-    @FXML
-    public void initialize() {
-        // Récupérer l'utilisateur connecté
-        Utilisateurs utilisateurConnecte = SessionManager.getInstance().getUtilisateurConnecte();
-        if (utilisateurConnecte == null) {
-            showError("Erreur", "Aucun utilisateur connecté. Veuillez vous connecter.");
-            return;
-        }
-
-        // Masquer les boutons Ajouter (Service et Partenaire) si l'utilisateur a le rôle Membre
-        if (utilisateurConnecte.getRole().name().equalsIgnoreCase("MEMBRE")) {
-            ajouterButton.setVisible(false);
-            ajouterButton.setManaged(false); // Ne prend pas d'espace dans la mise en page
-            ajouterButton_partenaire.setVisible(false);
-            ajouterButton_partenaire.setManaged(false); // Ne prend pas d'espace dans la mise en page
-        }
-    }
 
     @FXML
     private void handleAddAction(ActionEvent event) {
@@ -93,7 +75,6 @@ public class Service {
     private void goToAccueil(ActionEvent event) {
         switchScene(event, "/EventoraAPP/Acceuil.fxml");
     }
-
     @FXML
     private void goToParams(ActionEvent event) {
         switchScene(event, "/Utilisateurs/Parametres.fxml");
@@ -103,15 +84,24 @@ public class Service {
     private void goToUser(ActionEvent event) {
         switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
     }
-
     @FXML
     private void deconnexion(ActionEvent event) {
         // Effacer la session
         SessionManager.getInstance().clearSession();
         // Rediriger vers la page de connexion
-        switchScene(event, "/Utilisateurs/Authentification.fxml");
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Authentification.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            System.out.println("Erreur lors du chargement de la page de connexion : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
+    // Méthode switchScene suivant le style mémorisé
     private void switchScene(ActionEvent event, String fxmlPath) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -135,4 +125,5 @@ public class Service {
         alert.setContentText(message);
         alert.showAndWait();
     }
+
 }

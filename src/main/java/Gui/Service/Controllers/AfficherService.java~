@@ -38,9 +38,9 @@ public class AfficherService {
     @FXML private TableColumn<Service, String> sponsorColumn;
     @FXML private TableColumn<Service, String> descriptionColumn;
     @FXML private TableColumn<Service, String> prixColumn;
-    @FXML private TableColumn<Service, Void> colActions; // Corrigé : Void au lieu de String
+    @FXML private TableColumn<Service, String> colActions;
     @FXML private TextField searchField;
-    @FXML private Button addService; // Bouton Ajouter, fx:id="addService" dans AfficherService.fxml
+    @FXML private Button addServiceButton; // Bouton Ajouter
 
     private final ServiceService serviceService;
     private final PartenaireService partenaireService;
@@ -60,27 +60,18 @@ public class AfficherService {
             return;
         }
 
-        // Débogage : Afficher le rôle de l'utilisateur et l'état du bouton
-        System.out.println("Utilisateur connecté : " + utilisateurConnecte.getEmail());
-        System.out.println("Rôle de l'utilisateur : " + utilisateurConnecte.getRole());
-
         // Masquer le bouton Ajouter si l'utilisateur a le rôle Membre
-        if (utilisateurConnecte.getRole() != null && utilisateurConnecte.getRole().name().equalsIgnoreCase("MEMBRE")) {
-            if (addService != null) {
-                addService.setVisible(false);
-                addService.setManaged(false); // Ne prend pas d'espace dans la mise en page
-                System.out.println("Bouton Ajouter masqué pour le rôle MEMBRE");
-            } else {
-                System.out.println("Erreur : addService est null, vérifier fx:id dans AfficherService.fxml");
+        if (utilisateurConnecte.getRole().name().equalsIgnoreCase("MEMBRE")) {
+            if (addServiceButton != null) {
+                addServiceButton.setVisible(false);
+                addServiceButton.setManaged(false); // Ne prend pas d'espace dans la mise en page
             }
-        } else {
-            System.out.println("Bouton Ajouter visible (rôle non MEMBRE ou rôle null)");
         }
 
         // Vérification des injections
         if (idColumn == null || id_partenaireColumn == null || titleColumn == null || locationColumn == null ||
                 sponsorColumn == null || descriptionColumn == null || prixColumn == null || colActions == null ||
-                tableView == null || searchField == null || addService == null) {
+                tableView == null || searchField == null) {
             System.err.println("Erreur : Une ou plusieurs colonnes ou composants ne sont pas injectés correctement.");
             return;
         }
@@ -173,7 +164,7 @@ public class AfficherService {
             }
 
             @Override
-            protected void updateItem(Void item, boolean empty) {
+            protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty) {
                     setGraphic(null);

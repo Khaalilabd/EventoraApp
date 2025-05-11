@@ -48,7 +48,7 @@ public class AfficherPartenaire {
     @FXML private TableColumn<Partenaire, String> typeColumn;
     @FXML private TableColumn<Partenaire, Void> colActions;
     @FXML private TextField searchField;
-    @FXML private Button addPartenaire; // Bouton Ajouter pour créer un nouveau partenaire, fx:id="addPartenaire" dans AfficherPartenaire.fxml
+    @FXML private Button addButton; // Bouton Ajouter pour créer un nouveau partenaire, vérifier fx:id="addButton" dans AfficherPartenaire.fxml
 
     @FXML private HBox currentWeatherBox;
     @FXML private ImageView currentWeatherIcon;
@@ -82,12 +82,12 @@ public class AfficherPartenaire {
 
         // Masquer le bouton Ajouter si l'utilisateur a le rôle Membre
         if (utilisateurConnecte.getRole() != null && utilisateurConnecte.getRole().name().equalsIgnoreCase("MEMBRE")) {
-            if (addPartenaire != null) {
-                addPartenaire.setVisible(false);
-                addPartenaire.setManaged(false); // Ne prend pas d'espace dans la mise en page
+            if (addButton != null) {
+                addButton.setVisible(false);
+                addButton.setManaged(false); // Ne prend pas d'espace dans la mise en page
                 System.out.println("Bouton Ajouter masqué pour le rôle MEMBRE");
             } else {
-                System.out.println("Erreur : addPartenaire est null, vérifier fx:id dans AfficherPartenaire.fxml");
+                System.out.println("Erreur : addButton est null, vérifier fx:id dans AfficherPartenaire.fxml");
             }
         } else {
             System.out.println("Bouton Ajouter visible (rôle non MEMBRE ou rôle null)");
@@ -410,15 +410,12 @@ public class AfficherPartenaire {
         }
 
         String encodedAddress = address.replace(" ", "+");
-        String url = "https://nominatim.openstreetmap.org/search?q=" + encodedAddress + "&format=json&limit=1";
         HttpClient client = HttpClient.newHttpClient();
+        String url = "https://nominatim.openstreetmap.org/search?q=" + encodedAddress + "&format=json&limit=1";
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("User-Agent", "EventoraApp/1.0 (contact: your-email@example.com)")
                 .build();
-
-        // Log de l'URL pour débogage
-        System.out.println("Requête Nominatim : " + url);
 
         try {
             Thread.sleep(1000); // Respecter la limite de requêtes de Nominatim
