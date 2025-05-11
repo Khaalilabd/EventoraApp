@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.web.WebView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane  stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Service.Controllers.AfficherPartenaire">
+
+    <!-- Navbar horizontale en haut -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
+    </HBox>
+
+    <!-- Contenu principal -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+
+        <!-- Titre principal -->
+        <Label text="⛔ Liste des Partenaires ⛔" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Consultez, ajoutez ou gérez vos partenaires en toute simplicité."/>
+
+        <!-- Barre d'outils (Ajout, Actualisation, Recherche) -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="addPartenaire" text="➕ Ajouter" styleClass="card-button" onAction="#addPartenaire"/>
+            <Button fx:id="refreshList" text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
+            <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
+        </HBox>
+
+        <!-- Tableau des partenaires -->
+        <TableView fx:id="tableView" prefHeight="250.0" prefWidth="999.0" styleClass="custom-table">
+            <columns>
+                <TableColumn fx:id="idColumn" prefWidth="46.0" text="ID"/>
+                <TableColumn fx:id="nomColumn" prefWidth="108.0" text="Nom"/>
+                <TableColumn fx:id="emailColumn" prefWidth="131.0" text="Email"/>
+                <TableColumn fx:id="adresseColumn" prefWidth="129.2" text="Adresse"/>
+                <TableColumn fx:id="site_webColumn" prefWidth="117.0" text="Site Web"/>
+                <TableColumn fx:id="typeColumn" prefWidth="207.0" text="Type de partenariat"/>
+                <TableColumn fx:id="colActions" prefWidth="100.0" text="Actions"/>
+            </columns>
+        </TableView>
+
+        <!-- Section météo actuelle et future pour l'adresse du partenaire -->
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Météo pour l'adresse du partenaire :" styleClass="main-description"/>
+            <!-- Météo actuelle -->
+            <HBox fx:id="currentWeatherBox" spacing="10" alignment="CENTER" styleClass="weather-box">
+                <ImageView fx:id="currentWeatherIcon" fitHeight="50.0" fitWidth="50.0" preserveRatio="true"/>
+                <Label fx:id="currentWeatherLabel" text="Météo: Chargement..." styleClass="weather-text"/>
+            </HBox>
+            <!-- Prévision -->
+            <HBox fx:id="forecastWeatherBox" spacing="10" alignment="CENTER" styleClass="weather-box">
+                <ImageView fx:id="forecastWeatherIcon" fitHeight="50.0" fitWidth="50.0" preserveRatio="true"/>
+                <Label fx:id="forecastWeatherLabel" text="Prévision (5 jours) : Chargement..." styleClass="weather-text"/>
+            </HBox>
+        </VBox>
+
+        <!-- Section localisation GPS -->
+        <VBox spacing="10" alignment="CENTER">
+            <Label text="Localisation GPS de l'adresse :" styleClass="main-description"/>
+            <Label fx:id="locationLabel" text="Coordonnées: Chargement..." styleClass="main-description"/>
+            <!-- Carte OpenStreetMap -->
+            <WebView fx:id="mapView" prefHeight="150.0" prefWidth="999.0"/>
+        </VBox>
+    </VBox>
+</AnchorPane>

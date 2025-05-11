@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Gui.Service.Controllers.Statistique">
+
+    <children>
+        <Label text="Statistiques des Services par Location" layoutX="20" layoutY="20" style="-fx-font-size: 18px;"/>
+
+        <!-- AreaChart pour les services par Location -->
+        <AreaChart fx:id="locationAreaChart" layoutX="20" layoutY="50" prefWidth="350" prefHeight="300">
+            <xAxis>
+                <CategoryAxis fx:id="locationXAxis" label="Location"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="locationYAxis" label="Nombre de Services"/>
+            </yAxis>
+        </AreaChart>
+
+        <Label text="Statistiques des Services par Type" layoutX="420" layoutY="20" style="-fx-font-size: 18px;"/>
+
+        <!-- AreaChart pour les services par Type -->
+        <AreaChart fx:id="typeServiceAreaChart" layoutX="420" layoutY="50" prefWidth="350" prefHeight="300">
+            <xAxis>
+                <CategoryAxis fx:id="typeServiceXAxis" label="Type de Service"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis fx:id="typeServiceYAxis" label="Nombre de Services"/>
+            </yAxis>
+        </AreaChart>
+    </children>
+</AnchorPane>

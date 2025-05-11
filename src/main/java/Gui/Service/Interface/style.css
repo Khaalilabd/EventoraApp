@@ -1,0 +1,388 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+/* Style global */
+.root {
+    -fx-font-family: 'Poppins', sans-serif;
+    -fx-background-color: #F4F6F8;
+}
+
+/* Titre du menu */
+.menu-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ECF0F1;
+    -fx-padding: 10px;
+}
+
+/* Boutons de la barre latérale */
+.menu-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-pref-height: 45px;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+    -fx-border-color: transparent;
+    -fx-padding: 10px;
+    -fx-font-weight: 500;
+}
+
+/* Contour coloré au survol */
+.menu-button:hover {
+    -fx-border-color: #1ABC9C;
+    -fx-border-width: 2px;
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Texte principal */
+.main-text {
+    -fx-font-size: 18px;
+    -fx-text-fill: #2C3E50;
+    -fx-font-weight: 600;
+    -fx-padding: 10px;
+    -fx-text-alignment: center;
+}
+
+/* Bouton de base */
+.add-button, .view-button {
+    -fx-background-color: #1ABC9C;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 20;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-transition: -fx-translate-y 0.3s ease-in-out, -fx-effect 0.3s ease-in-out;
+}
+.add-button_partenaire, .view-button_partenaire {
+    -fx-background-color: #FFC67D;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-padding: 10 20;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-transition: -fx-translate-y 0.3s ease-in-out, -fx-effect 0.3s ease-in-out;
+}
+
+/* Animation de survol */
+.add-button:hover, .view-button:hover {
+    -fx-translate-y: -3px; /* Le bouton flotte vers le haut */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 10); /* Ombre du bouton */
+}
+.add-button_partenaire:hover, .view-button_partenaire:hover {
+    -fx-translate-y: -3px; /* Le bouton flotte vers le haut */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 10); /* Ombre du bouton */
+}
+
+.add-button:hover {
+    -fx-background-color: #16A085;
+}
+
+/* Empêcher la modification des emojis */
+.menu-button {
+    -fx-font-family: "Segoe UI Emoji", "Apple Color Emoji", "Poppins";
+}
+
+/* Modification des boutons 'Soumettre' et 'Annuler' */
+.submit-button, .cancel-button {
+    -fx-background-color: #1ABC9C;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-padding: 12px 25px;
+}
+
+.submit-button:hover {
+    -fx-background-color: #16A085;
+}
+
+.cancel-button {
+    -fx-background-color: #E74C3C;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #C0392B;
+}
+
+/* Champs de saisie */
+.input-field {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #BDC3C7;
+    -fx-border-radius: 8px;
+    -fx-padding: 12px;
+    -fx-font-size: 16px;
+}
+
+.input-field:focused {
+    -fx-border-color: #1ABC9C;
+}
+
+/* Déconnexion */
+.logout-button {
+    -fx-text-fill: #E74C3C;
+    -fx-font-weight: bold;
+    -fx-border-color: #E74C3C;
+    -fx-border-radius: 8px;
+    -fx-background-color: transparent;
+    -fx-padding: 10px;
+    -fx-border-width: 1px;
+}
+
+/* Effet de survol pour Déconnexion */
+.logout-button:hover {
+    -fx-border-color: #E74C3C;
+    -fx-border-width: 2px;
+    -fx-background-color: rgba(231, 76, 60, 0.1);
+    -fx-text-fill: #E74C3C;
+}
+
+/* Style du tableau pour le rendre plus élégant */
+.table-view {
+    -fx-background-color: #FFFFFF;
+    -fx-border-radius: 10px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 10, 0.5, 0, 5);
+    -fx-font-family: 'Poppins', sans-serif;
+}
+
+.table-view .column-header {
+    -fx-background-color: #ECF0F1;
+    -fx-text-fill: #2C3E50;
+    -fx-font-weight: bold;
+    -fx-padding: 12px;
+    -fx-alignment: center;
+    -fx-font-size: 16px;
+    -fx-border-radius: 8px;
+}
+
+.table-view .table-row-cell {
+    -fx-border-color: #BDC3C7;
+    -fx-border-width: 1px;
+}
+
+.table-view .table-row-cell:hover {
+    -fx-background-color: rgba(26, 188, 156, 0.1);
+}
+
+.table-view .table-row-cell:selected {
+    -fx-background-color: #1ABC9C;
+    -fx-text-fill: white;
+}
+
+.table-view .table-column {
+    -fx-alignment: center;
+    -fx-font-size: 14px;
+}
+
+.table-view .table-column-header {
+    -fx-background-color: #BDC3C7;
+    -fx-text-fill: #2C3E50;
+    -fx-font-size: 16px;
+    -fx-font-weight: 600;
+    -fx-padding: 10px;
+}
+
+.table-view .table-cell {
+    -fx-font-size: 16px;
+    -fx-padding: 12px;
+}
+
+.table-view .table-cell:hover {
+    -fx-background-color: #F9F9F9;
+}
+
+.table-row-cell {
+    -fx-background-color: #E1E1E1;
+}
+
+.table-button {
+    background-color: #3498db;
+    color: white;
+}
+
+.delete {
+    background-color: #e74c3c;
+    color: white;
+}
+.main-text {
+    -fx-font-size: 12px; /* Taille de police augmentée */
+    -fx-font-weight: bold; /* Texte en gras */
+    -fx-font-family: "Arial", sans-serif; /* Police de caractères */
+    -fx-text-fill: #2C3E50; /* Couleur du texte */
+    -fx-padding: 10px; /* Espacement autour du texte */
+    -fx-line-spacing: 5px; /* Espacement entre les lignes */
+}
+/* Style général pour tous les labels */
+Label {
+    -fx-font-family: "Arial";
+    -fx-font-size: 11px;
+    -fx-text-fill: #2C3E50;
+    -fx-padding: 5px 10px;
+}
+.table-row-cell {
+    -fx-pref-height: 60; /* Ajuste la hauteur des lignes */
+}
+
+.table-cell {
+    -fx-padding: 10 10; /* Contrôle les marges */
+}
+
+/* Style spécifique pour le titre principal */
+.main-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495E;
+    -fx-underline: true;
+    -fx-padding: 20px 0;
+}
+
+/* Style pour le titre du menu latéral */
+.menu-title {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ECF0F1;
+}
+
+/* Style pour les labels dans les champs de formulaire */
+.form-label {
+    -fx-font-size: 10px;
+    -fx-font-weight: normal;
+    -fx-text-fill: #7F8C8D;
+}
+/* Global Styles */
+.root {
+    -fx-font-family: "Arial";
+    -fx-font-size: 14px;
+    -fx-background-color: #f5f5f5;
+}
+
+/* Styles pour les BarCharts */
+.bar-chart {
+    -fx-padding: 10;
+    -fx-background-color: #ffffff; /* Couleur d'arrière-plan du graphique */
+    -fx-border-color: #cccccc;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 5);
+}
+
+/* Couleur des barres dans le graphique */
+.default-color0.chart-bar {
+    -fx-bar-fill: #4caf50; /* Couleur verte */
+}
+
+.default-color1.chart-bar {
+    -fx-bar-fill: #2196f3; /* Couleur bleue */
+}
+
+.default-color2.chart-bar {
+    -fx-bar-fill: #ff9800; /* Couleur orange */
+}
+
+/* Légende */
+.chart-legend {
+    -fx-background-color: #ffffff;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+/* Axes du graphique */
+.axis {
+    -fx-tick-label-fill: #333333; /* Couleur du texte des axes */
+    -fx-tick-mark-length: 5; /* Longueur des ticks */
+    -fx-tick-label-font-size: 12px;
+}
+
+
+
+
+
+
+/* Effets pour rendre les graphiques plus dynamiques */
+.chart-bar:hover {
+    -fx-bar-fill: #66bb6a; /* Change la couleur au survol */
+}
+
+/* Style pour la section météo (conteneur) */
+.weather-box {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #dcdcdc;
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 3);
+    -fx-padding: 10;
+}
+
+/* Style pour le texte de la météo */
+.weather-text {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333;
+}
+
+/* Style pour le titre de la section météo */
+.main-description {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555555;
+}
+/* Style pour la section météo (conteneur) */
+.weather-box {
+    -fx-background-color: #ffffff; /* Fond blanc */
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-border-color: #ffa500; /* Bordure orange pour rappeler le thème */
+    -fx-border-width: 1;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 3); /* Ombre douce */
+    -fx-padding: 15;
+    -fx-transition: all 0.3s ease-in-out; /* Animation fluide */
+}
+
+/* Survol de la section météo */
+.weather-box:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 165, 0, 0.5), 15, 0.5, 0, 0); /* Ombre orange au survol */
+    -fx-border-color: #ff4500; /* Bordure rouge orangé au survol */
+}
+
+/* Style pour le texte de la météo */
+.weather-text {
+    -fx-font-size: 16px;
+    -fx-font-family: "Roboto", sans-serif; /* Typographie moderne */
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Texte gris foncé */
+}
+
+/* Style pour le titre de la section météo et localisation */
+.main-description {
+    -fx-font-size: 14px;
+    -fx-font-family: "Roboto", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555555; /* Gris moyen */
+}
+
+/* Style pour le label de localisation */
+#locationLabel {
+    -fx-font-size: 14px;
+    -fx-font-family: "Roboto", sans-serif;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ff4500; /* Rouge orangé pour rappeler le thème */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.1), 5, 0, 0, 0);
+}
+
+/* Style pour la carte */
+#mapView {
+    -fx-background-color: #f5f5f5; /* Fond gris très clair */
+    -fx-border-color: #ffa500; /* Bordure orange */
+    -fx-border-width: 1;
+    -fx-border-radius: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 3);
+}
+
+/* Importer la police Roboto */
+
+

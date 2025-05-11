@@ -1,0 +1,311 @@
+package Gui.Reservation.Controllers;
+
+import Models.Reservation.ReservationPack;
+import Services.Reservation.Crud.ReservationPackService;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import Models.Pack.Pack;
+import Services.Pack.Crud.PackService;
+
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import org.json.JSONObject;
+
+public class AjouterReservationPack {
+    @FXML
+    private ComboBox<String> idPackfield;
+    @FXML
+    private TextField nomfield;
+    @FXML
+    private TextField prenomfield;
+    @FXML
+    private TextField emailfield;
+    @FXML
+    private TextField numtelfield;
+    @FXML
+    private TextArea descriptionfield;
+    @FXML
+    private DatePicker datefield;
+    @FXML
+    private Button submitButton;
+    @FXML
+    private Button cancelButton;
+
+    private ReservationPackService reservationservice = new ReservationPackService();
+    private PackService packService = new PackService();
+    private ObservableList<String> packNames = FXCollections.observableArrayList();
+
+    // Twilio credentials (replace with your actual values)
+    private static final String ACCOUNT_SID = "ACc57c0b58eff936708b3208d34fd03469";
+    private static final String AUTH_TOKEN = "c041aac0a4b6c54d0280b74c416f2f89";
+    private static final String TWILIO_PHONE_NUMBER = "+12513125202";
+
+    // NumVerify API Key (replace with your actual API key)
+    private static final String NUMVERIFY_API_KEY = "YOUR_NUMVERIFY_API_KEY";
+
+    private final OkHttpClient client = new OkHttpClient();
+
+    @FXML
+    public void initialize() {
+        submitButton.setOnAction(this::ajouterReservationPack);
+        cancelButton.setOnAction(event -> annuler());
+
+        loadPackNames();
+
+        idPackfield.setItems(packNames);
+
+        // Date validation
+        datefield.setDayCellFactory(picker -> new DateCell() {
+            @Override
+            public void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                LocalDate today = LocalDate.now();
+                setDisable(empty || date.isBefore(today));
+            }
+        });
+
+        datefield.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null && newValue.isBefore(LocalDate.now())) {
+                showAlert("Erreur", "Vous ne pouvez pas sélectionner une date antérieure à la date actuelle.");
+                datefield.setValue(null);
+            }
+        });
+    }
+
+    private void loadPackNames() {
+        List<Pack> packs = packService.rechercher();
+        for (Pack pack : packs) {
+            packNames.add(pack.getNomPack());
+        }
+    }
+
+    public void setSelectedPack(String packName) {
+        if (packNames.contains(packName)) {
+            idPackfield.setValue(packName);
+        } else {
+            System.out.println("Pack not found: " + packName);
+        }
+    }
+
+    public void ajouterReservationPack(ActionEvent event) {
+        String nom = nomfield.getText().trim();
+        String prenom = prenomfield.getText().trim();
+        String email = emailfield.getText().trim();
+        String numTel = numtelfield.getText().trim();
+        String description = descriptionfield.getText().trim();
+        LocalDate date = datefield.getValue();
+        String selectedPackName = idPackfield.getValue();
+
+        // Vérification des champs vides
+        if (nom.isEmpty() || prenom.isEmpty() || email.isEmpty() || numTel.isEmpty() || description.isEmpty() || date == null || selectedPackName == null || selectedPackName.isEmpty()) {
+            showAlert("Erreur", "Veuillez remplir tous les champs !");
+            return;
+        }
+
+        // Vérification du format de l'email
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+            showAlert("Erreur", "Veuillez entrer une adresse email valide !");
+            return;
+        }
+
+        // Vérification du numéro de téléphone (exactement 8 chiffres)
+        if (!numTel.matches("^\\d{8}$")) {
+            showAlert("Erreur", "Le numéro de téléphone doit contenir exactement 8 chiffres !");
+            return;
+        }
+
+        // Validation via NumVerify API
+        try {
+            String formattedNumTel = "+216" + numTel; // Ajout du code pays pour la Tunisie
+            boolean isValidPhoneNumber = validatePhoneNumber(formattedNumTel);
+            if (!isValidPhoneNumber) {
+                showAlert("Erreur", "Le numéro de téléphone n'est pas valide selon NumVerify !");
+                return;
+            }
+        } catch (Exception e) {
+            showAlert("Erreur", "Erreur lors de la validation du numéro via NumVerify : " + e.getMessage());
+            return;
+        }
+
+        // Vérification que la date n'est pas dans le passé
+        if (date.isBefore(LocalDate.now())) {
+            showAlert("Erreur", "La date ne peut pas être dans le passé !");
+            return;
+        }
+
+        // Récupération de l'ID du pack
+        int idPack = packService.getIdPackByNom(selectedPackName);
+        if (idPack == -1) {
+            showAlert("Erreur", "Le pack sélectionné est invalide.");
+            return;
+        }
+
+        // Conversion de LocalDate en Date
+        Date reservationDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        try {
+            // Création de l'objet ReservationPack
+            ReservationPack reservation = new ReservationPack(idPack, nom, prenom, email, numTel, description, reservationDate);
+            reservationservice.ajouterReservationPack(reservation);
+
+            showAlert("Succès", "Réservation ajoutée avec succès !");
+            clearFields();
+            goToReservationListePack();
+
+            // Send SMS confirmation after successful reservation
+            sendSMSConfirmation(reservation);
+
+        } catch (Exception e) {
+            showAlert("Erreur", "Une erreur est survenue lors de l'ajout de la réservation.");
+        }
+    }
+
+    // Méthode pour valider le numéro via NumVerify
+    private boolean validatePhoneNumber(String phoneNumber) throws IOException {
+        String url = "http://apilayer.net/api/validate?access_key=" + NUMVERIFY_API_KEY + "&number=" + phoneNumber;
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            if (!response.isSuccessful()) {
+                throw new IOException("Erreur lors de la requête à NumVerify : " + response);
+            }
+
+            String jsonData = response.body().string();
+            JSONObject json = new JSONObject(jsonData);
+
+            return json.getBoolean("valid");
+        }
+    }
+
+    private void sendSMSConfirmation(ReservationPack reservation) {
+        Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+
+        String customerPhoneNumber = "+216" + reservation.getNumtel();
+        String messageBody = String.format(
+                "Réservation Confirmée ! ID: %d, Pack: %s, Date: %s. Répondez 'ANNULER' pour annuler.",
+                reservation.getIdReservationPack(), reservation.getNom(), reservation.getDate().toString()
+        );
+
+        try {
+            Message message = Message.creator(
+                    new PhoneNumber(customerPhoneNumber),
+                    new PhoneNumber(TWILIO_PHONE_NUMBER),
+                    messageBody
+            ).create();
+            System.out.println("SMS envoyé avec succès avec SID: " + message.getSid());
+        } catch (Exception e) {
+            System.err.println("Échec lors de l'envoi du SMS: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void annuler() {
+        clearFields();
+    }
+
+    private void clearFields() {
+        nomfield.clear();
+        prenomfield.clear();
+        emailfield.clear();
+        numtelfield.clear();
+        descriptionfield.clear();
+        datefield.setValue(null);
+        idPackfield.setValue(null);
+    }
+
+    private void showAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void goToReservation(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/Reservation.fxml"));
+        AnchorPane ReservationLayout = loader.load();
+        Scene scene = new Scene(ReservationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    private void goToReservationListePack() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reservation/AfficheReservationPack.fxml"));
+            AnchorPane ReservationLayout = loader.load();
+            Scene scene = new Scene(ReservationLayout);
+            Stage stage = (Stage) submitButton.getScene().getWindow();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    private void goToReclamation(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Reclamation.fxml"));
+        AnchorPane reclamationLayout = loader.load();
+        Scene scene = new Scene(reclamationLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    @FXML
+    private void goToFeedback(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Reclamation/Feedback.fxml"));
+        AnchorPane feedbackLayout = loader.load();
+        Scene feedbackScene = new Scene(feedbackLayout);
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.setScene(feedbackScene);
+        currentStage.show();
+    }
+
+    @FXML
+    private void goToService(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Service/Service.fxml"));
+        Parent root = loader.load();
+        Scene newScene = new Scene(root);
+
+        Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        currentStage.close();
+        Stage newStage = new Stage();
+        newStage.setScene(newScene);
+        newStage.show();
+    }
+
+    @FXML
+    private void goToPack(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Pack/Packs.fxml"));
+        AnchorPane packLayout = loader.load();
+        Scene scene = new Scene(packLayout);
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+}

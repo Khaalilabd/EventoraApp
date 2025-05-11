@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Pos?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Reclamation.Controllers.AjouterFeedback"
+            stylesheets="/style.css">
+
+    <!-- Barre de navigation moderne avec effets de survol -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
+    </HBox>
+
+    <VBox alignment="CENTER" spacing="20" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0">
+
+        <VBox alignment="CENTER" spacing="20" styleClass="feedback-container">
+            <Label text="Feedback Us ❤️" styleClass="title-label"/>
+            <Label text="Partagez votre expérience avec nous !" styleClass="subtitle-label"/>
+
+            <ComboBox fx:id="userField" promptText="Sélectionner un utilisateur" styleClass="input-field"/>
+
+            <HBox alignment="CENTER" spacing="10">
+                <JFXButton fx:id="star1" text="★" styleClass="star-button"/>
+                <JFXButton fx:id="star2" text="★" styleClass="star-button"/>
+                <JFXButton fx:id="star3" text="★" styleClass="star-button"/>
+                <JFXButton fx:id="star4" text="★" styleClass="star-button"/>
+                <JFXButton fx:id="star5" text="★" styleClass="star-button"/>
+            </HBox>
+            <JFXTextArea fx:id="descField" promptText="Écrivez votre expérience..." styleClass="text-area"/>
+            <JFXCheckBox fx:id="recommendCheck" text="Recommandez-vous nos services ?" styleClass="checkbox"/>
+            <JFXButton fx:id="submitButton" text="Soumettre" onAction="#handleSubmit" styleClass="submit-button"/>
+        </VBox>
+    </VBox>
+</AnchorPane>

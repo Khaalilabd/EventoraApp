@@ -8,26 +8,62 @@ public class Utilisateurs {
     private String email;
     private String adresse;
     private String numTel;
+    private Role role;
 
-    public Utilisateurs(String nom, String prenom, String cin, String email, String adresse, String numTel) {
+    public void setAdresse(String adresse) {
+        this.adresse = adresse;
+    }
+
+    public String getNumTel() {
+        return numTel;
+    }
+
+    public void setNumTel(String numTel) {
+        this.numTel = numTel;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public String getMotDePasse() {
+        return motDePasse;
+    }
+
+    public void setMotDePasse(String motDePasse) {
+        this.motDePasse = motDePasse;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    private String motDePasse;
+    private String image; // Nouveau champ
+
+    // Constructeur avec tous les paramètres sauf l'ID
+    public Utilisateurs(String nom, String prenom, String cin, String email, String adresse, String numTel, String motDePasse, String image) {
         this.nom = nom;
         this.prenom = prenom;
         this.cin = cin;
         this.email = email;
         this.adresse = adresse;
         this.numTel = numTel;
+        this.role = Role.MEMBRE; // Définir le rôle par défaut comme MEMBRE
+        this.motDePasse = motDePasse;
+        this.image = image; // Ajout du champ image
     }
 
-    public Utilisateurs() {
-        this.nom = nom;
-        this.prenom = prenom;
-        this.cin = cin;
-        this.email = email;
-        this.adresse = adresse;
-        this.numTel = numTel;
-    }
-
-    public Utilisateurs(int id, String nom, String prenom, String cin, String email, String adresse, String numTel) {
+    // Constructeur avec tous les paramètres, y compris l'ID
+    public Utilisateurs(int id, String nom, String prenom, String cin, String email, String adresse, String numTel, Role role, String motDePasse, String image) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -35,8 +71,15 @@ public class Utilisateurs {
         this.email = email;
         this.adresse = adresse;
         this.numTel = numTel;
+        this.role = role != null ? role : Role.MEMBRE; // Définir le rôle par défaut comme MEMBRE si non spécifié
+        this.motDePasse = motDePasse;
+        this.image = image; // Ajout du champ image
     }
 
+    // Constructeur sans paramètres (optionnel)
+    public Utilisateurs() {}
+
+    // Getters et setters
     public int getId() {
         return id;
     }
@@ -81,28 +124,4 @@ public class Utilisateurs {
         return adresse;
     }
 
-    public void setAdresse(String adresse) {
-        this.adresse = adresse;
-    }
-
-    public String getNumTel() {
-        return numTel;
-    }
-
-    public void setNumTel(String numTel) {
-        this.numTel = numTel;
-    }
-
-    @Override
-    public String toString() {
-        return "Membre{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", cin='" + cin + '\'' +
-                ", email='" + email + '\'' +
-                ", adresse='" + adresse + '\'' +
-                ", numTel='" + numTel + '\'' +
-                '}';
-    }
 }

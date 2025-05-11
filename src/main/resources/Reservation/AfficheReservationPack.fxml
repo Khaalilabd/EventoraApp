@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<AnchorPane stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Reservation.Controllers.AfficheReservationPack">
+
+    <!-- Navbar horizontale en haut -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
+    </HBox>
+
+    <!-- Contenu principal -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+
+        <!-- Titre principal -->
+        <Label text="⛔ Liste des Réservations par Packs" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Consultez, ajoutez ou gérez vos réservations de packs en toute simplicité."/>
+
+        <!-- Panneau de statistiques -->
+        <HBox spacing="20" alignment="CENTER" styleClass="stats-panel">
+            <Label fx:id="totalLabel" text="Total: 0" styleClass="stat-label"/>
+        </HBox>
+
+        <!-- Barre d'outils (Ajout, Actualisation, Recherche) -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="addReservationPack" text="➕ Ajouter" styleClass="card-button" onAction="#addReservationPack"/>
+            <Button fx:id="refreshList" text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
+            <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
+        </HBox>
+
+        <!-- Conteneur des bulles en grille -->
+        <ScrollPane prefHeight="575.0" prefWidth="999.0">
+            <GridPane fx:id="reservationGrid" hgap="20" vgap="20" alignment="CENTER" styleClass="grid-list"/>
+        </ScrollPane>
+    </VBox>
+</AnchorPane>

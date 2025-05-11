@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Pack.Controllers.ModifierPack"
+
+            stylesheets="/style.css">
+
+    <!-- Navbar horizontale (identique à AjouterRec) -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
+    </HBox>
+
+    <!-- Contenu principal (structure identique à AjouterRec) -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+
+        <!-- Titre principal -->
+        <Label text="Modifier un Pack" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Modifiez les détails du pack en remplissant le formulaire ci-dessous."/>
+
+        <!-- Formulaire -->
+        <VBox spacing="15" alignment="CENTER" styleClass="form-container">
+            <TextField fx:id="NomPackField" promptText="Titre du pack" styleClass="input-field"/>
+            <TextArea fx:id="DescriptionField" promptText="Donner la description du pack" styleClass="input-field"/>
+            <TextField fx:id="PrixField" promptText="Prix du pack" styleClass="input-field"/>
+            <ComboBox fx:id="LocationField" promptText="Sélectionner la localisation" styleClass="input-field"/>
+            <ComboBox fx:id="TypeField" promptText="Sélectionner le type du pack" styleClass="input-field"/>
+            <TextField fx:id="NbrGuestsField" promptText="Le nombre max des invités" styleClass="input-field"/>
+            <CheckComboBox fx:id="ServiceField" title="Sélectionner les services" styleClass="input-field" prefWidth="200.0"/>
+        </VBox>
+
+        <!-- Boutons avec icônes (similaire à AjouterRec) -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="submitButton" text="✔ Sauvegarder" styleClass="card-button" onAction="#modifierPack"/>
+            <Button fx:id="cancelButton" text="❌ Annuler" styleClass="card-button" onAction="#annuler"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

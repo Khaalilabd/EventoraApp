@@ -7,9 +7,11 @@ public class Reclamation {
     private String titre;
     private String description;
     private TypeReclamation type;
+    private Statut statut;
+    private String qrCodeUrl;
 
-    // Constructeurs
     public Reclamation() {
+        this.statut = Statut.EN_ATTENTE;
     }
 
     public Reclamation(int idUser, String titre, String description, TypeReclamation type) {
@@ -17,18 +19,22 @@ public class Reclamation {
         this.titre = titre;
         this.description = description;
         this.type = type;
+        this.statut = Statut.EN_ATTENTE;
     }
 
-    public Reclamation(int id, int idUser, String titre, String description, TypeReclamation type) {
+    public Reclamation(int id, int idUser, String titre, String description, TypeReclamation type, Statut statut) {
         this.id = id;
         this.idUser = idUser;
         this.titre = titre;
         this.description = description;
         this.type = type;
+        this.statut = statut;
     }
+
 
     public Reclamation(int id) {
         this.id = id;
+        this.statut = Statut.EN_ATTENTE;
     }
 
     // Getters et Setters
@@ -72,6 +78,18 @@ public class Reclamation {
         this.type = type;
     }
 
+    public Statut getStatut() {
+        return statut;
+    }
+
+    public void setStatut(Statut statut) {
+        this.statut = statut;
+    }
+
+    public String getQrCodeUrl() { return qrCodeUrl; }
+    public void setQrCodeUrl(String qrCodeUrl) { this.qrCodeUrl = qrCodeUrl; }
+
+
     // Méthode toString pour afficher les détails de la réclamation
     @Override
     public String toString() {
@@ -81,6 +99,7 @@ public class Reclamation {
                 ", titre='" + titre + '\'' +
                 ", description='" + description + '\'' +
                 ", type='" + type.getLabel() + '\'' +
+                ", statut='" + statut.getLabel() + '\'' +  // Affichage du statut
                 '}';
     }
 }

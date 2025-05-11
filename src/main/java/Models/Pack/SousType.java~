@@ -1,0 +1,5 @@
+package Models.Pack;
+
+public enum SousType {
+    'Bridal Shower','Bachelor Party','Engagement Party','Rehearsal Dinner','Wedding Ceremony','Wedding Reception','Vow Renewal','Kids’ Birthday Party','Teen Birthday Party','Theme Birthday Party','Birthday Dinner','High School Graduation Party','College Graduation Party','Graduation Ceremony','Graduation Dinner','Themed Graduation Party'
+}

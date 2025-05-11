@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane
+            xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Service.Controllers.AjouterPartenaire"
+    prefHeight="600.0" prefWidth="900.0"
+    stylesheets="style.css"
+    style="-fx-background-color: #F4F1F1;">
+
+    <!-- Barre de navigation latérale -->
+    <VBox prefWidth="220" prefHeight="600" style="-fx-background-color: #2C3E50; -fx-padding: 20px; -fx-spacing: 15px;">
+
+        <!-- Titre -->
+        <Label text="Eventora Menu" styleClass="menu-title" alignment="CENTER"/>
+
+        <!-- Menu Buttons -->
+        <VBox spacing="10">
+            <Button text="🏠 Accueil" styleClass="menu-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="menu-button"/>
+            <Button text="📲 Réservation" styleClass="menu-button" onAction="#goToReservation" />
+            <Button text="🎁 Services" styleClass="menu-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="menu-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="menu-button" onAction="#goToFeedback"/>
+            <Button styleClass="menu-button" text="🚨 Réclamations" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="menu-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </VBox>
+    </VBox>
+
+    <!-- Contenu principal -->
+    <VBox layoutX="240" layoutY="50" spacing="20" alignment="CENTER" prefWidth="650" prefHeight="500">
+        <!-- Titre -->
+        <Label text="Ajouter un Partenaire" styleClass="main-title"/>
+
+        <!-- Champ nom de partenaire -->
+        <TextField fx:id="nomField" promptText="nom de partenaire" styleClass="input-field" />
+        <!-- Champ email de partenaire -->
+        <TextField fx:id="emailField" promptText="email de partenaire" styleClass="input-field" />
+        <!-- Champ telephone de partenaire -->
+        <TextField fx:id="telephoneField" promptText="telephone de partenaire" styleClass="input-field" />
+        <!-- Champ adresse de partenaire -->
+        <TextField fx:id="adresseField" promptText="adresse de partenaire" styleClass="input-field" />
+        <!-- Champ site web de partenaire -->
+        <TextField fx:id="site_webField" promptText="site web de partenaire" styleClass="input-field" />
+        <!-- Champ montant de partenariat -->
+        <TextField fx:id="montantPartField" promptText="montant de partenariat" styleClass="input-field" />
+        <!-- Champ type partenariat -->
+        <ComboBox fx:id="typefield" promptText="Type de partenariat" styleClass="input-field">
+        </ComboBox>
+
+
+        <!-- Boutons -->
+        <HBox alignment="CENTER" spacing="20">
+            <Button fx:id="submitButton" styleClass="submit-button" text="Soumettre" />
+            <Button fx:id="cancelButton" styleClass="cancel-button" text="Annuler" />
+        </HBox>
+    </VBox>
+
+</AnchorPane>

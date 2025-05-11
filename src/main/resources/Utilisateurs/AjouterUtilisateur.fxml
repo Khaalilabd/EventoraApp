@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane styleClass="main-container"
+            stylesheets="/style.css"
+            xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Utilisateurs.Controllers.AjouterUtilisateur">
+    <!-- ScrollPane pour permettre le défilement -->
+    <ScrollPane fitToWidth="true" vbarPolicy="AS_NEEDED" pannable="true"
+                AnchorPane.topAnchor="0.0"
+                AnchorPane.bottomAnchor="0.0"
+                AnchorPane.leftAnchor="0.0"
+                AnchorPane.rightAnchor="0.0">
+        <VBox alignment="CENTER" spacing="20" style="-fx-padding: 40px;">
+            <!-- Header Section -->
+            <VBox alignment="CENTER" spacing="10">
+                <Button fx:id="retourButton" text="⬅" onAction="#goToAuth"
+                        styleClass="retour-button"/>
+                <Label text="Ajouter un Utilisateur"
+                       styleClass="title-label">
+                    <font>
+                        <Font size="36.0" />
+                    </font>
+                </Label>
+                <Label text="Créez un compte pour célébrer avec nous !"
+                       styleClass="subtitle-label"/>
+            </VBox>
+
+            <!-- Form Section -->
+            <HBox alignment="CENTER" spacing="40" styleClass="form-container" style="-fx-pref-width: 100%;">
+                <!-- Partie 1 (Gauche) -->
+                <VBox spacing="15" style="-fx-max-width: 450px; -fx-min-width: 400px;">
+                    <Label text="Nom" styleClass="form-label"/>
+                    <TextField fx:id="nomField" promptText="Entrez le nom" styleClass="form-field"/>
+
+                    <Label text="Prénom" styleClass="form-label"/>
+                    <TextField fx:id="prenomField" promptText="Entrez le prénom" styleClass="form-field"/>
+
+                    <Label text="Email" styleClass="form-label"/>
+                    <TextField fx:id="emailField" promptText="Entrez l'email" styleClass="form-field"/>
+
+                    <Label text="CIN" styleClass="form-label"/>
+                    <TextField fx:id="cinField" promptText="Entrez le CIN" styleClass="form-field"/>
+                </VBox>
+
+                <!-- Partie 2 (Droite) -->
+                <VBox spacing="15" style="-fx-max-width: 450px; -fx-min-width: 400px;">
+                    <Label text="Numéro de téléphone" styleClass="form-label"/>
+                    <TextField fx:id="numTelField" promptText="Entrez le numéro de téléphone" styleClass="form-field"/>
+
+                    <Label text="Adresse" styleClass="form-label"/>
+                    <TextField fx:id="adresseField" promptText="Entrez l'adresse" styleClass="form-field"/>
+
+                    <Label text="Mot de passe" styleClass="form-label"/>
+                    <PasswordField fx:id="motDePasseField" promptText="Entrez le mot de passe" styleClass="form-field"/>
+
+                    <!-- Nouveau champ pour l'image -->
+                    <Label text="Image" styleClass="form-label"/>
+                    <HBox spacing="10" alignment="CENTER_LEFT">
+                        <TextField fx:id="imageField" promptText="Chemin de l'image" styleClass="form-field" editable="false"/>
+                        <Button fx:id="chooseImageButton" text="Choisir" onAction="#chooseImage" styleClass="button-choose-image"/>
+                    </HBox>
+                </VBox>
+            </HBox>
+
+            <!-- Buttons -->
+            <VBox spacing="15" alignment="CENTER" style="-fx-padding: 20px 0 0 0;">
+                <Button fx:id="ajouterButton" text="S'inscrire" onAction="#ajouterMembre"
+                        styleClass="button-sinscrire"/>
+                <Button fx:id="annulerButton" text="Annuler" onAction="#goToAuth"
+                        styleClass="button-annuler"/>
+            </VBox>
+
+            <!-- Footer -->
+            <Label text="© Copyright 2025. Votre Entreprise"
+                   styleClass="footer-label"/>
+        </VBox>
+    </ScrollPane>
+</AnchorPane>

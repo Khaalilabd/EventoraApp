@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.XYChart?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/20.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Gui.Service.Controllers.StatisticsController" spacing="20" style="-fx-padding: 20px;">
+    <Label text="Statistiques des Locations et Sponsors" style="-fx-font-size: 24px; -fx-font-weight: bold;"/>
+
+    <!-- Graphique des locations -->
+    <LineChart fx:id="locationChart" title="Statistiques des Locations" style="-fx-pref-width: 500px; -fx-pref-height: 300px;">
+        <xAxis>
+            <CategoryAxis fx:id="locationXAxis" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="locationYAxis" label="Nombre" />
+        </yAxis>
+    </LineChart>
+
+    <!-- Graphique des sponsors -->
+    <LineChart fx:id="sponsorChart" title="Statistiques des Sponsors" style="-fx-pref-width: 500px; -fx-pref-height: 300px;">
+        <xAxis>
+            <CategoryAxis fx:id="sponsorXAxis" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="sponsorYAxis" label="Nombre" />
+        </yAxis>
+    </LineChart>
+</VBox>

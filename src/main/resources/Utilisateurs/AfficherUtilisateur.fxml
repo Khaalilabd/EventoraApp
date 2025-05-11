@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/20.0.2"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Gui.Utilisateurs.Controllers.AfficherUtilisateur"
+            stylesheets="/style.css">
+
+    <!-- Navbar horizontale -->
+    <HBox spacing="20" alignment="CENTER_RIGHT" prefHeight="80.0" styleClass="navbar"
+          AnchorPane.topAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="Eventora Menu" styleClass="nav-title"/>
+        </HBox>
+        <HBox spacing="20" alignment="CENTER_RIGHT">
+            <Button text="🏠 Accueil" styleClass="nav-button"/>
+            <Button text="👨🏻‍💼 Utilisateur" styleClass="nav-button"/>
+            <Button text="📲 Réservation" styleClass="nav-button" onAction="#goToReservation"/>
+            <Button text="🎁 Services" styleClass="nav-button" onAction="#goToService"/>
+            <Button text="💎 Packs" styleClass="nav-button" onAction="#goToPack"/>
+            <Button text="⭐ FeedBack" styleClass="nav-button" onAction="#goToFeedback"/>
+            <Button text="🚨 Réclamations" styleClass="nav-button" onAction="#goToReclamation"/>
+            <Button text="🔧 Paramètres" styleClass="nav-button"/>
+            <Button text="🛑 Déconnexion" styleClass="logout-button"/>
+        </HBox>
+    </HBox>
+
+    <!-- Contenu principal -->
+    <VBox alignment="CENTER" styleClass="main-content"
+          AnchorPane.topAnchor="80.0" AnchorPane.leftAnchor="0.0"
+          AnchorPane.rightAnchor="0.0" AnchorPane.bottomAnchor="0.0" spacing="20">
+
+        <!-- Titre principal -->
+        <Label text="👥 Liste des Utilisateurs 👥" styleClass="main-title"/>
+
+        <!-- Sous-titre descriptif -->
+        <Label wrapText="true" styleClass="main-description"
+               text="Consultez, ajoutez ou gérez les utilisateurs enregistrés dans le système."/>
+
+        <!-- Panneau de statistiques -->
+        <HBox spacing="20" alignment="CENTER" styleClass="stats-panel">
+            <Label fx:id="totalLabel" text="Total: 0" styleClass="stat-label"/>
+            <Label fx:id="adminLabel" text="Admins: 0" styleClass="stat-label"/>
+            <Label fx:id="clientLabel" text="Clients: 0" styleClass="stat-label"/>
+            <Label fx:id="blockedLabel" text="Bloqués: 0" styleClass="stat-label"/>
+        </HBox>
+
+        <!-- Barre d'outils -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="addUtilisateur" text="➕ Ajouter" styleClass="card-button" onAction="#ajouterUtilisateur"/>
+            <Button fx:id="refreshList" text="🔄 Actualiser" styleClass="card-button" onAction="#refreshList"/>
+            <TextField fx:id="searchField" promptText="Rechercher..." styleClass="search-field"/>
+            <ComboBox fx:id="roleFilter" promptText="Filtrer par rôle" styleClass="filter-combo">
+                <items>
+                    <FXCollections fx:factory="observableArrayList">
+                        <String fx:value="Tous"/>
+                        <String fx:value="Admin"/>
+                        <String fx:value="Client"/>
+                        <String fx:value="Bloqué"/>
+                    </FXCollections>
+                </items>
+            </ComboBox>
+        </HBox>
+
+        <!-- Grille des cartes dans un ScrollPane -->
+        <ScrollPane prefHeight="575.0" prefWidth="999.0" styleClass="transparent-scroll-pane">
+            <GridPane fx:id="utilisateurGrid" hgap="20" vgap="20" alignment="CENTER" styleClass="transparent-grid"/>
+        </ScrollPane>
+
+        <!-- Boutons d’action -->
+        <HBox spacing="10" alignment="CENTER" styleClass="card-container">
+            <Button fx:id="supprimerButton" text="🗑️ Supprimer" styleClass="card-button" onAction="#supprimerUtilisateur"/>
+            <Button fx:id="modifierButton" text="✏️ Modifier" styleClass="card-button" onAction="#modifierUtilisateur"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

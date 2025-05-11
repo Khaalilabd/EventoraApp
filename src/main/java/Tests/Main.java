@@ -1,54 +1,103 @@
 package Tests;
 
-import Models.Reservation.ReservationPack;
-import Models.Reservation.ReservationPersonalise;
-import Models.Utilisateur.Utilisateurs;
-import Services.Reservation.Crud.ReservationPackService;
-import Services.Reservation.Crud.ReservationPersonaliseService;
-import Services.Utilisateur.MembresService;
 import Services.Reclamation.Interface.Ireclamation;
-
-import java.util.Date;
+import Services.Reclamation.Crud.ReclamationService;
+import Models.Reclamation.Reclamation;
+import Models.Reclamation.TypeReclamation;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Création d'un objet ReservationPack
-       // ReservationPack reservationPack = new ReservationPack(1, 101, "trad", "rayen", "rayen@esprit.com", "123456789", "Pack Standard", new Date());
+        Ireclamation<Reclamation> reclamationService = new ReclamationService();
+        Scanner scanner = new Scanner(System.in);
+        int choix;
 
-        // Service ReservationPack
-     //   ReservationPackService servicePack = new ReservationPackService();
+        do {
+            System.out.println("\nMenu:");
+            System.out.println("1. Ajouter un membre");
+            System.out.println("2. Modifier un membre");
+            System.out.println("3. Supprimer un membre");
+            System.out.println("4. Afficher tous les membres");
+            System.out.println("5. Ajouter une réclamation");
+            System.out.println("6. Modifier une réclamation");
+            System.out.println("7. Supprimer une réclamation");
+            System.out.println("8. Afficher toutes les réclamations");
+            System.out.println("0. Quitter");
+            System.out.print("Choisissez une option: ");
+            choix = scanner.nextInt();
+            scanner.nextLine(); // Pour consommer la nouvelle ligne après nextInt()
 
-        // Test d'ajout
-        //servicePack.ajouterReservationPack(reservationPack);
+            switch (choix) {
+                case 1:
 
-        // Test de modification
-      //  reservationPack.setNom("rayuno");
-      //  reservationPack.setPrenom("tradisto");
-      //  servicePack.modifierReservationPack(reservationPack);
 
-        // Test de recherche
-       // servicePack.rechercherReservationPack();
+                case 2:
 
-        // Test de suppression
-       // servicePack.supprimerReservationPack(reservationPack);
-        // Création d'un objet ReservationPersonalise
-      // ReservationPersonalise reservationPersonalise = new ReservationPersonalise("birthday", "hmida", "nadhem", "nadhem@esprit.com", "123456789", "Séance de relaxation", new Date());
 
-        // Service ReservationPersonalise
-       // ReservationPersonaliseService servicePersonalise = new ReservationPersonaliseService();
+                case 3:
 
-        // Test d'ajout
-       // servicePersonalise.ajouterReservationPersonalise(reservationPersonalise);
+                    break;
 
-        // Test de modification
+                case 4:
 
-      // servicePersonalise.modifierReservationPersonalise(new ReservationPersonalise(2,"birthday", "trad", "nadhem", "nadhem@esprit.com", "00000000", "Séance de relaxation", new Date()));
-        // Test de recherche
-       // System.out.println(servicePersonalise.rechercherReservationPersonalise());
+                    break;
 
-        // Test de suppression
-     //  servicePersonalise.supprimerReservationPersonalise(new ReservationPersonalise(2));
+                case 5:
+                    // Ajouter une réclamation
+                    System.out.print("Entrez le titre de la réclamation: ");
+                    String titre = scanner.nextLine();
+                    System.out.print("Entrez la description de la réclamation: ");
+                    String description = scanner.nextLine();
+                    System.out.println("Choisissez un type de réclamation: ");
+                    for (TypeReclamation type : TypeReclamation.values()) {
+                        System.out.println(type.ordinal() + ". " + type);
+                    }
+                    System.out.print("Votre choix: ");
+                    int typeIndex = scanner.nextInt();
+                    scanner.nextLine();
+                    TypeReclamation type = TypeReclamation.values()[typeIndex];
+                    Reclamation nouvelleReclamation = new Reclamation(0, titre, description, type);
+                    reclamationService.AjouterRec(nouvelleReclamation);
+                    break;
+
+                case 6:
+                    // Modifier une réclamation
+                    System.out.print("Entrez l'ID de la réclamation à modifier: ");
+                    int idRecMod = scanner.nextInt();
+                    scanner.nextLine();
+                    System.out.print("Entrez le nouveau titre de la réclamation: ");
+                    String newTitre = scanner.nextLine();
+                    System.out.print("Entrez la nouvelle description de la réclamation: ");
+                    String newDescription = scanner.nextLine();
+                    System.out.println("Choisissez un nouveau type de réclamation: ");
+                    for (TypeReclamation t : TypeReclamation.values()) {
+                        System.out.println(t.ordinal() + ". " + t);
+                    }
+                    System.out.print("Votre choix: ");
+                    int newTypeIndex = scanner.nextInt();
+                    scanner.nextLine();
+                    TypeReclamation newType = TypeReclamation.values()[newTypeIndex];
+                    Reclamation reclamationModifiee = new Reclamation(idRecMod, newTitre, newDescription, newType);
+                    reclamationService.ModifierRec(reclamationModifiee);
+                    break;
+
+
+                case 8:
+                    // Afficher toutes les réclamations
+                    System.out.println("Liste des réclamations: " + reclamationService.RechercherRec());
+                    break;
+
+                case 0:
+                    System.out.println("Au revoir!");
+                    break;
+
+                default:
+                    System.out.println("Option invalide. Veuillez réessayer.");
+                    break;
+            }
+        } while (choix != 0);
+
+        scanner.close();
     }
 }
