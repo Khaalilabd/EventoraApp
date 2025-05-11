@@ -1,0 +1,28 @@
+
+.root {
+    -fx-background-color: #F4F4F8;
+}
+
+/ Zone de chat /
+#chatArea {
+    -fx-background-color: #FAFAFA;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 5;
+    -fx-font-size: 14px;
+}
+
+/ Champ de saisie /
+#inputField {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #D1D1D1;
+    -fx-border-radius: 20;
+    -fx-padding: 10;
+}
+
+/ Bouton envoyer */
+#sendButton {
+    -fx-background-color: #0078D7;
+    -fx-text-fill: white;
+    -fx-background-radius: 50%;
+    -fx-font-size: 18px;
+}
