@@ -234,6 +234,9 @@ src/
 
 Eventora was developed by a team of 5 students passionate about development and event management:
 
+* **Fahed ESSID ** - Tutor 
+    
+
 * **Khalil Abdelmoumen** - Claims and feedback management
   * Claims tracking and processing
   * Feedback system implementation
@@ -266,7 +269,7 @@ We thank everyone who has contributed to this project!
 ### Contributors
 
 The following people have contributed to this project by adding features, fixing bugs, or improving documentation:
-
+- [Fadhel ESIID](https://github.com/Khaalilabd/EventoraApp/tree/Reclamation) - Tutor
 - [Khalil Abdelmoumen](https://github.com/Khaalilabd/EventoraApp/tree/Reclamation) - Claims and feedback management
 - [Hedia Snoussi](https://github.com/Khaalilabd/EventoraApp/tree/Utilisateur) - User management
 - [Nadhem Hmida](https://github.com/Khaalilabd/EventoraApp/tree/Gestion_Service) - Service management

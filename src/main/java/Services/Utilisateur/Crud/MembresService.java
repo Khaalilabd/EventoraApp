@@ -4,6 +4,7 @@ import Models.Utilisateur.Role;
 import Models.Utilisateur.Utilisateurs;
 import Services.Utilisateur.Interface.Imembres;
 import Utils.Mydatasource;
+import org.mindrot.jbcrypt.BCrypt;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +28,12 @@ public class MembresService implements Imembres<Utilisateurs> {
             ps.setString(5, utilisateurs.getAdresse());
             ps.setString(6, utilisateurs.getNumTel());
             ps.setString(7, ROLE_MEMBRE);
-            ps.setString(8, utilisateurs.getMotDePasse());
+            // Hacher le mot de passe avec bcrypt
+            String hashedPassword = BCrypt.hashpw(utilisateurs.getMotDePasse(), BCrypt.gensalt());
+            ps.setString(8, hashedPassword);
             ps.setString(9, utilisateurs.getImage());
-            ps.setString(10, utilisateurs.getToken()); // Token généré dans le constructeur Utilisateurs
-            ps.setBoolean(11, utilisateurs.isConfirmed()); // False par défaut
+            ps.setString(10, utilisateurs.getToken());
+            ps.setBoolean(11, utilisateurs.isConfirmed());
 
             int rowsInserted = ps.executeUpdate();
             if (rowsInserted > 0) {
@@ -62,7 +65,6 @@ public class MembresService implements Imembres<Utilisateurs> {
         }
     }
 
-    // Nouvelle méthode pour activer un compte via le token
     public boolean activateAccount(String token) {
         String req = "UPDATE membres SET isConfirmed = TRUE, token = NULL WHERE token = ? AND isConfirmed = FALSE";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
@@ -94,7 +96,9 @@ public class MembresService implements Imembres<Utilisateurs> {
             ps.setString(5, membre.getAdresse());
             ps.setString(6, membre.getNumTel());
             ps.setString(7, membre.getRole().toString());
-            ps.setString(8, membre.getMotDePasse());
+            // Hacher le mot de passe avec bcrypt
+            String hashedPassword = BCrypt.hashpw(membre.getMotDePasse(), BCrypt.gensalt());
+            ps.setString(8, hashedPassword);
             ps.setString(9, membre.getImage());
             ps.setBoolean(10, membre.isConfirmed());
             ps.setString(11, membre.getToken());
@@ -167,21 +171,6 @@ public class MembresService implements Imembres<Utilisateurs> {
         return null;
     }
 
-    public Utilisateurs rechercherMemParNom(String email) {
-        String req = "SELECT * FROM membres WHERE Email = ?";
-        try (PreparedStatement ps = connection.prepareStatement(req)) {
-            ps.setString(1, email);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return extraireMembre(rs);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("Erreur lors de la recherche par nom : " + e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
-    }
     public Utilisateurs rechercherMemParEmail(String email) {
         String req = "SELECT * FROM membres WHERE Email = ?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
@@ -196,7 +185,7 @@ public class MembresService implements Imembres<Utilisateurs> {
                     utilisateur.setCin(rs.getString("CIN"));
                     utilisateur.setAdresse(rs.getString("Adresse"));
                     utilisateur.setNumTel(rs.getString("NumTel"));
-                    utilisateur.setRole(Role.valueOf(rs.getString("Role"))); // Récupérer le rôle
+                    utilisateur.setRole(Role.valueOf(rs.getString("Role")));
                     utilisateur.setMotDePasse(rs.getString("MotDePasse"));
                     utilisateur.setImage(rs.getString("Image"));
                     utilisateur.setToken(rs.getString("token"));
@@ -281,15 +270,16 @@ public class MembresService implements Imembres<Utilisateurs> {
             return Role.MEMBRE;
         }
     }
+
     public String getUserNameById(int userId) {
-        String req = "SELECT nom FROM users WHERE id = ?"; // Ajustez selon votre structure (par exemple, "username" au lieu de "nom")
+        String req = "SELECT Nom FROM membres WHERE Id = ?";
         try (PreparedStatement ps = connection.prepareStatement(req)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return rs.getString("nom");
+                return rs.getString("Nom");
             } else {
-                return "Utilisateur inconnu"; // Valeur par défaut si l'utilisateur n'est pas trouvé
+                return "Utilisateur inconnu";
             }
         } catch (SQLException e) {
             System.out.println("Erreur lors de la récupération du nom de l'utilisateur : " + e.getMessage());
@@ -297,10 +287,6 @@ public class MembresService implements Imembres<Utilisateurs> {
             return "Erreur utilisateur";
         }
     }
-
-
-
-
 
     public String generatePasswordResetToken(String email) {
         String token = UUID.randomUUID().toString();
@@ -338,15 +324,16 @@ public class MembresService implements Imembres<Utilisateurs> {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
         }
         return null;
     }
 
     public void updatePassword(Utilisateurs utilisateur, String newPassword) {
-        String sql = "UPDATE membres SET MotDePasse = ? WHERE id = ?";
+        String sql = "UPDATE membres SET MotDePasse = ? WHERE Id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, newPassword); // Should be hashed in production
+            // Hacher le nouveau mot de passe avec bcrypt
+            String hashedPassword = BCrypt.hashpw(newPassword, BCrypt.gensalt());
+            ps.setString(1, hashedPassword);
             ps.setInt(2, utilisateur.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -354,5 +341,9 @@ public class MembresService implements Imembres<Utilisateurs> {
         }
     }
 
-
+    // Nouvelle méthode pour vérifier un mot de passe
+    public boolean checkPassword(Utilisateurs utilisateur, String plainPassword) {
+        String hashedPassword = utilisateur.getMotDePasse();
+        return BCrypt.checkpw(plainPassword, hashedPassword);
+    }
 }

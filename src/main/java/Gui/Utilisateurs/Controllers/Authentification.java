@@ -2,7 +2,7 @@ package Gui.Utilisateurs.Controllers;
 
 import Models.Utilisateur.Utilisateurs;
 import Services.Utilisateur.Crud.MembresService;
-import Utils.SessionManager; // Importer SessionManager
+import Utils.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import org.mindrot.jbcrypt.BCrypt; // Importer BCrypt
 
 import java.io.IOException;
 import java.net.URI;
@@ -37,10 +38,12 @@ public class Authentification {
             return;
         }
 
-        // Utiliser rechercherMemParEmail au lieu de rechercherMemParNom
         Utilisateurs utilisateur = membresService.rechercherMemParEmail(email);
         if (utilisateur != null && verifierMotDePasse(password, utilisateur.getMotDePasse())) {
-            // Stocker l'utilisateur connecté dans SessionManager
+            if (!utilisateur.isConfirmed()) {
+                showError("Erreur", "Votre compte n'est pas activé. Veuillez vérifier votre email pour activer votre compte.");
+                return;
+            }
             SessionManager.getInstance().setUtilisateurConnecte(utilisateur);
             switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
         } else {
@@ -57,7 +60,7 @@ public class Authentification {
         }
 
         String normalizedEmail = email.toLowerCase();
-        Utilisateurs utilisateur = membresService.rechercherMemParEmail(normalizedEmail); // Utiliser rechercherMemParEmail
+        Utilisateurs utilisateur = membresService.rechercherMemParEmail(normalizedEmail);
         if (utilisateur == null) {
             showError("Erreur", "Email non trouvé.");
             return;
@@ -134,8 +137,11 @@ public class Authentification {
         }
     }
 
-    private boolean verifierMotDePasse(String motDePasseSaisi, String motDePasseStocke) throws SQLException {
-        return motDePasseStocke != null && motDePasseSaisi.equals(motDePasseStocke);
+    private boolean verifierMotDePasse(String motDePasseSaisi, String motDePasseStocke) {
+        if (motDePasseStocke == null || motDePasseSaisi == null) {
+            return false;
+        }
+        return BCrypt.checkpw(motDePasseSaisi, motDePasseStocke);
     }
 
     @FXML
