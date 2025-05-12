@@ -1,5 +1,12 @@
 package Gui.Pack.Controllers;
 
+import Models.Pack.Evenement;
+import Models.Pack.Pack;
+import Models.Service.Service;
+import Services.Pack.Crud.PackService;
+import Utils.SessionManager;
+import Models.Utilisateur.Role;
+import Models.Utilisateur.Utilisateurs;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,12 +21,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.layout.AnchorPane; // Ajouté pour le style
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import Services.Pack.Crud.PackService;
-import Models.Pack.Pack;
-import Models.Pack.Evenement;
-import Models.Service.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,12 +42,28 @@ public class AffichePack {
     private ComboBox<String> sortByCombo;
     @FXML
     private ToggleButton sortOrderToggle;
+    @FXML
+    private Button addPackButton;
 
     private PackService packService = new PackService();
     private ObservableList<Pack> packList = FXCollections.observableArrayList();
+    private Utilisateurs utilisateurConnecte;
 
     @FXML
     public void initialize() {
+        // Récupérer l'utilisateur connecté via SessionManager
+        utilisateurConnecte = SessionManager.getInstance().getUtilisateurConnecte();
+        if (utilisateurConnecte == null) {
+            showError("Erreur", "Aucun utilisateur connecté. Veuillez vous connecter.");
+        } else {
+            // Masquer addPackButton pour MEMBRE
+            if (utilisateurConnecte.getRole() == Role.MEMBRE && addPackButton != null) {
+                addPackButton.setVisible(false);
+                addPackButton.setManaged(false);
+            }
+        }
+
+        // Initialisation des ComboBox et filtres
         sortByCombo.getItems().addAll("Nom Pack", "Prix", "Invités");
         sortByCombo.setValue("Nom Pack");
         sortOrderToggle.setSelected(true);
@@ -261,6 +280,38 @@ public class AffichePack {
     @FXML
     private void goToFeedback(ActionEvent event) {
         switchScene(event, "/Reclamation/Feedback.fxml", null);
+    }
+
+    @FXML
+    private void goToAccueil(ActionEvent event) {
+        switchScene(event, "/EventoraAPP/EventoraAPP.fxml", null);
+    }
+
+    @FXML
+    private void goToUser(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml", null);
+    }
+
+    @FXML
+    private void goToParams(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/Parametres.fxml", null);
+    }
+
+    @FXML
+    private void deconnexion(ActionEvent event) {
+        // Effacer la session
+        SessionManager.getInstance().clearSession();
+        // Rediriger vers la page de connexion
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Authentification.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            showError("Erreur", "Erreur lors du chargement de la page de connexion.");
+            e.printStackTrace();
+        }
     }
 
     // Méthode switchScene modifiée selon le style mémorisé, avec support pour Pack

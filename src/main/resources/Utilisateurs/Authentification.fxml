@@ -57,11 +57,7 @@
             <PasswordField fx:id="passwordField" promptText="Mot de passe" style="-fx-pref-width: 300; -fx-pref-height: 40; -fx-font-size: 16px;"/>
 
             <!-- Forgot Password / Help links -->
-            <HBox spacing="10">
-                <Hyperlink text="Mot de passe oublié ?" onAction="#forgotPassword"
-                           style="-fx-text-fill: #C1272D; -fx-border-color: transparent; -fx-cursor: hand;"/>                <Label text="|" style="-fx-text-fill: gray;"/>
-                <Label text="Besoin d'aide ?" style="-fx-text-fill: #C1272D; -fx-underline: true; -fx-cursor: hand;"/>
-            </HBox>
+
 
             <!-- Buttons for login and sign up -->
             <Button fx:id="loginButton" text="Se connecter"

@@ -1,5 +1,8 @@
 package Gui.Pack.Controllers;
 
+import Models.Utilisateur.Role;
+import Models.Utilisateur.Utilisateurs;
+import Utils.SessionManager;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,21 +22,36 @@ import java.io.IOException;
 public class Pack {
 
     @FXML
-    private Button ajouterButton, viewButton;
+    private Button ajouterPackButton, viewPackButton;
     @FXML
     private ImageView imagePack;
 
+    private Utilisateurs utilisateurConnecte; // Utilisateur connecté
+
     @FXML
     public void initialize() {
+        // Récupérer l'utilisateur connecté via SessionManager
+        utilisateurConnecte = SessionManager.getInstance().getUtilisateurConnecte();
+        if (utilisateurConnecte == null) {
+            showError("Erreur", "Aucun utilisateur connecté. Veuillez vous connecter.");
+        } else {
+            // Masquer ajouterPackButton pour MEMBRE
+            if (utilisateurConnecte.getRole() == Role.MEMBRE && ajouterPackButton != null) {
+                ajouterPackButton.setVisible(false);
+                ajouterPackButton.setManaged(false);
+            }
+        }
         animateImage();
     }
 
     private void animateImage() {
-        TranslateTransition floating = new TranslateTransition(Duration.seconds(2), imagePack);
-        floating.setByY(10);
-        floating.setAutoReverse(true);
-        floating.setCycleCount(TranslateTransition.INDEFINITE);
-        floating.play();
+        if (imagePack != null) {
+            TranslateTransition floating = new TranslateTransition(Duration.seconds(2), imagePack);
+            floating.setByY(10);
+            floating.setAutoReverse(true);
+            floating.setCycleCount(TranslateTransition.INDEFINITE);
+            floating.play();
+        }
     }
 
     @FXML
@@ -46,31 +64,6 @@ public class Pack {
         switchScene(event, "/Pack/AffichePack.fxml");
     }
 
-
-
-
-    private void switchScene(ActionEvent event, String fxmlPath) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            AnchorPane layout = loader.load();
-            Scene scene = new Scene(layout);
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-            stage.setMaximized(true);
-            stage.show();
-        } catch (IOException e) {
-            showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
-            e.printStackTrace();
-        }
-    }
-
-    private void showError(String title, String content) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
-    }
     @FXML
     private void goToReclamation(ActionEvent event) {
         switchScene(event, "/Reclamation/Reclamation.fxml");
@@ -101,6 +94,53 @@ public class Pack {
         switchScene(event, "/EventoraAPP/EventoraAPP.fxml");
     }
 
+    @FXML
+    private void goToParams(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/Parametres.fxml");
+    }
 
+    @FXML
+    private void goToUser(ActionEvent event) {
+        switchScene(event, "/Utilisateurs/AfficherUtilisateur.fxml");
+    }
 
+    @FXML
+    private void deconnexion(ActionEvent event) {
+        // Effacer la session
+        SessionManager.getInstance().clearSession();
+        // Rediriger vers la page de connexion
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Utilisateurs/Authentification.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            showError("Erreur", "Erreur lors du chargement de la page de connexion.");
+            e.printStackTrace();
+        }
+    }
+
+    private void switchScene(ActionEvent event, String fxmlPath) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            AnchorPane layout = loader.load();
+            Scene scene = new Scene(layout);
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(scene);
+            stage.setMaximized(true);
+            stage.show();
+        } catch (IOException e) {
+            showError("Erreur de chargement", "Impossible d'afficher la page : " + fxmlPath);
+            e.printStackTrace();
+        }
+    }
+
+    private void showError(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
 }
